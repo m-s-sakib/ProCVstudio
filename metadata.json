@@ -1,0 +1,6 @@
+{
+  "name": "ProCV Studio - Professional CV Builder",
+  "description": "Create, customize, and download professional academic, data analytics, and executive CVs in PDF and editable Word DOCX formats with real-time preview.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+}
+
+.font-academic {
+  font-family: 'Merriweather', 'Source Serif 4', Georgia, serif;
+}
+
+.font-editorial {
+  font-family: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+}
+
+.font-modern {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Print & Multi-page Styles for Pixel-Perfect Document Organization */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 10mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .cv-document-container,
+  .biodata-document-container {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+  }
+
+  .cv-page-sheet,
+  .biodata-page-sheet {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* Prevent awkward slicing through individual job, education, or project entries */
+  .cv-item-avoid-break,
+  .cv-entry-avoid-break,
+  [data-cv-item="true"] {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Prevent headings from being orphaned at the bottom of a page */
+  h1, h2, h3, header, .cv-heading {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* Keep bullet items together */
+  li {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .cv-page-break-before {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  .cv-page-break-after {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  a {
+    text-decoration: underline !important;
+    color: inherit !important;
+  }
+}
+
+/* Screen Multi-Page Break Rules */
+.cv-item-avoid-break,
+.cv-entry-avoid-break,
+.cv-section-avoid-break,
+[data-cv-item="true"],
+li {
+  break-inside: avoid;
+}
+
+.cv-heading {
+  break-after: avoid;
+}
+
+
