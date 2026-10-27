@@ -1,0 +1,22 @@
+{
+  "name": "ProCVmaKer - Free Online CV Maker",
+  "short_name": "ProCVmaKer",
+  "description": "Free Online CV Maker and Resume Builder (PDF & Word) with Professional CV Templates",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    {
+      "src": "/assets/aistudio/Resume_Pencil_P_App_Icon_aee26849.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

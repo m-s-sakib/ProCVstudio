@@ -132,6 +132,61 @@ export const CustomizationPanel: React.FC<CustomizationPanelProps> = ({ customiz
           </div>
         </div>
       </div>
+
+      {/* Sizing & Spacing Optimization */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-slate-100">
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-2">
+            Font Scale
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { id: 'sm', label: 'Compact' },
+              { id: 'base', label: 'Standard' },
+              { id: 'lg', label: 'Large' },
+            ].map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => update('fontSize', s.id as FontSize)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg border text-center transition-colors ${
+                  customization.fontSize === s.id
+                    ? 'border-blue-600 bg-blue-50 text-blue-900'
+                    : 'border-slate-200 text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-2">
+            Document Spacing
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { id: 'compact', label: 'Tight' },
+              { id: 'normal', label: 'Balanced' },
+              { id: 'relaxed', label: 'Spacious' },
+            ].map((sp) => (
+              <button
+                key={sp.id}
+                type="button"
+                onClick={() => update('spacing', sp.id as Spacing)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg border text-center transition-colors ${
+                  customization.spacing === sp.id
+                    ? 'border-blue-600 bg-blue-50 text-blue-900'
+                    : 'border-slate-200 text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                {sp.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

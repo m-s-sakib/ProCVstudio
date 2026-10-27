@@ -113,4 +113,32 @@ li {
   break-after: avoid;
 }
 
+/* Customization font scaling & document spacing */
+.cv-scale-compact {
+  font-size: 0.92em;
+}
+.cv-scale-large {
+  font-size: 1.08em;
+}
+
+.cv-spacing-tight {
+  line-height: 1.35;
+}
+.cv-spacing-tight section {
+  margin-bottom: 0.65rem !important;
+}
+.cv-spacing-tight [data-cv-item="true"] {
+  margin-bottom: 0.4rem !important;
+}
+
+.cv-spacing-relaxed {
+  line-height: 1.6;
+}
+.cv-spacing-relaxed section {
+  margin-bottom: 1.35rem !important;
+}
+.cv-spacing-relaxed [data-cv-item="true"] {
+  margin-bottom: 0.85rem !important;
+}
+
 

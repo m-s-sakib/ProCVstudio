@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { TemplateId } from '../types/cv';
-import { ArrowRight, CheckCircle2, FileCheck, Layers, DownloadCloud, Sparkles, BookOpen, BarChart3, ShieldCheck, Award, Heart } from 'lucide-react';
+import { ArrowRight, CheckCircle2, FileCheck, Layers, DownloadCloud, Sparkles, BookOpen, BarChart3, ShieldCheck, Award, Heart, HelpCircle } from 'lucide-react';
 
 interface HeroProps {
   onStartBuilder: (templateId?: TemplateId) => void;
@@ -20,18 +20,18 @@ export const Hero: React.FC<HeroProps> = ({ onStartBuilder, onLoadPreset, onOpen
       <section className="relative pt-12 pb-16 lg:pt-20 lg:pb-24 overflow-hidden border-b border-slate-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-semibold text-blue-900">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-semibold text-blue-900 shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-              <span>Production-Ready PDF & Editable Word (.docx) Generator</span>
+              <span>Free Online CV Maker &amp; Resume Builder PDF and Word</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 text-balance leading-tight">
-              Create Your Professional CV <br className="hidden sm:inline" />
-              <span className="text-[#0f2b48]">in Minutes</span>
+              Free Online CV Maker &amp; <br className="hidden sm:inline" />
+              <span className="text-[#0f2b48]">Resume Builder (PDF and Word)</span>
             </h1>
 
             <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Design, customize, and export ATS-friendly resumes tailored for academic applications, data science careers, and executive leadership. Featuring real-time preview, live formatting, and genuine Word and PDF downloads.
+              Build recruiter-approved resumes with the best <strong className="font-semibold text-slate-800">Free Online CV Maker</strong>. Choose from proven <strong className="font-semibold text-slate-800">Professional CV Templates</strong> tailored for data science, academic fellowships, and corporate careers with instant <strong className="font-semibold text-slate-800">Resume Builder PDF and Word</strong> downloads.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
@@ -39,7 +39,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartBuilder, onLoadPreset, onOpen
                 onClick={() => onStartBuilder('data-analyst')}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all shadow-md hover:shadow-lg"
               >
-                <span>Create My CV</span>
+                <span>Create My CV Now</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -55,15 +55,15 @@ export const Hero: React.FC<HeroProps> = ({ onStartBuilder, onLoadPreset, onOpen
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-slate-500 pt-4">
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>100% Free & No Sign-up Needed</span>
+                <span>100% Free Online CV Maker (No Sign-Up)</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Editable .docx & Selectable PDF</span>
+                <span>Resume Builder PDF and Word (.docx)</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Private Local Draft Auto-Save</span>
+                <span>Recruiter-Approved Professional CV Templates</span>
               </div>
             </div>
           </div>
@@ -349,6 +349,60 @@ export const Hero: React.FC<HeroProps> = ({ onStartBuilder, onLoadPreset, onOpen
           </div>
         </section>
       )}
+
+      {/* SEO FAQ & Knowledge Base Section */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-xs font-semibold text-blue-800 border border-blue-200 mb-2">
+            <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
+            <span>Frequently Asked Questions</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Free Online CV Maker &amp; Resume Builder FAQ
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 mt-2">
+            Everything you need to know about building ATS-friendly resumes with our free resume builder in PDF and Word formats.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-2">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span className="text-blue-600 font-extrabold">Q1.</span> Is this a truly Free Online CV Maker?
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Yes, <strong>ProCVmaKer</strong> is a 100% <strong>Free Online CV Maker</strong>. Unlike other platforms that ask for your credit card or charge surprise fees at download, all our features, templates, and downloads are completely free forever with no account needed.
+            </p>
+          </div>
+
+          <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-2">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span className="text-blue-600 font-extrabold">Q2.</span> How does the Resume Builder PDF and Word export work?
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Our <strong>Resume Builder PDF and Word</strong> tool generates true editable Microsoft Word (.docx) documents with native paragraphs, fonts, and tables, as well as publication-grade selectable PDF files with live clickable hyperlinks for LinkedIn and GitHub.
+            </p>
+          </div>
+
+          <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-2">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span className="text-blue-600 font-extrabold">Q3.</span> Are the Professional CV Templates ATS-friendly?
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Yes. All our <strong>Professional CV Templates</strong> follow proven Applicant Tracking System (ATS) parsing rules used by Fortune 500 recruiters and academic admissions committees, ensuring your application gets seen by hiring managers.
+            </p>
+          </div>
+
+          <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-2">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span className="text-blue-600 font-extrabold">Q4.</span> Can I also make a Marriage Biodata?
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Yes! We offer a dedicated, romantic <strong>Marriage Biodata Maker</strong> with 5 exquisite templates (Romantic Elegant, Traditional Islamic, Modern Minimal, Floral, Classic Family) with privacy field toggles and instant PDF download.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

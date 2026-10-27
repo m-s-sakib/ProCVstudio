@@ -110,19 +110,40 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
     }
   };
 
-  // Font family mapping
-  const getFontClass = () => {
+  // Font family, scale and spacing mapping
+  const getCustomizationClasses = () => {
+    let fontClass = 'font-modern';
     switch (cv.customization.fontFamily) {
       case 'academic':
-        return 'font-academic';
+        fontClass = 'font-academic';
+        break;
       case 'editorial':
-        return 'font-editorial';
+        fontClass = 'font-editorial';
+        break;
       case 'mono':
-        return 'font-mono-code';
+        fontClass = 'font-mono-code';
+        break;
       case 'modern':
       default:
-        return 'font-modern';
+        fontClass = 'font-modern';
+        break;
     }
+
+    const scaleClass =
+      cv.customization.fontSize === 'sm'
+        ? 'cv-scale-compact'
+        : cv.customization.fontSize === 'lg'
+        ? 'cv-scale-large'
+        : '';
+
+    const spacingClass =
+      cv.customization.spacing === 'compact'
+        ? 'cv-spacing-tight'
+        : cv.customization.spacing === 'relaxed'
+        ? 'cv-spacing-relaxed'
+        : '';
+
+    return `${fontClass} ${scaleClass} ${spacingClass}`.trim();
   };
 
   return (
@@ -366,7 +387,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
           <div
             ref={docRef}
             id="cv-document-render"
-            className={`cv-document-container relative bg-white shadow-xl border border-slate-300 w-[210mm] min-h-[297mm] ${getFontClass()} print:border-none print:shadow-none print:w-full print:m-0`}
+            className={`cv-document-container relative bg-white shadow-xl border border-slate-300 w-[210mm] min-h-[297mm] ${getCustomizationClasses()} print:border-none print:shadow-none print:w-full print:m-0`}
           >
             {/* Dynamic Visual Page Break Guides for Every Page (Hidden in Print & Export) */}
             {Array.from({ length: totalPages - 1 }).map((_, idx) => {
