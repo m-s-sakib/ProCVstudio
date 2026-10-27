@@ -20,18 +20,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenQ
         {/* Zone 1: Brand wordmark */}
         <div
           onClick={() => onNavigate('home')}
-          className="flex items-center gap-2.5 cursor-pointer shrink-0"
+          className="flex items-center cursor-pointer shrink-0 py-1"
+          aria-label="ProCVmaKer Home"
         >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg overflow-hidden flex items-center justify-center bg-white shadow-xs border border-slate-200/80 p-0.5 shrink-0">
-            <img
-              src="/assets/aistudio/ProCV_Studio_Resume_Logo_4dcddd70.png"
-              alt="ProCV Studio Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <span className="text-lg font-bold tracking-tight text-slate-900 whitespace-nowrap">
-            ProCV <span className="text-blue-600">Studio</span>
-          </span>
+          <img
+            src="/assets/aistudio/ProCVmaKer_Resume_Builder_Logo_ccf153de.png"
+            alt="ProCVmaKer"
+            className="h-8 sm:h-9 w-auto object-contain hover:opacity-90 transition-opacity"
+          />
         </div>
 
         {/* Zone 2: 4-5 concise single-line links */}

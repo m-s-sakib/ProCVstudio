@@ -49,13 +49,21 @@ export function applyPageBoundaries(container: HTMLElement): () => void {
   // At 794px width, standard page height is 1123px
   const pageHeightPx = Math.round(containerWidth * (297 / 210));
 
+  // Spacing constants:
+  // 1 blank line buffer for the footer of the previous page (~24px)
+  // 2 blank lines buffer for the header of the next page (~44px)
+  const FOOTER_BUFFER_PX = 24; // 1 line blank for footer
+  const HEADER_BUFFER_PX = 44; // 2 lines blank for header
+
   // Support up to 10 pages
   for (let page = 1; page <= 10; page++) {
     const unscaledContainerHeight = containerRect.height / currentScale;
     const cutY = page * pageHeightPx;
+    // Page 1 footer safe boundary line (1 line blank before cut)
+    const pageFooterCutY = cutY - FOOTER_BUFFER_PX;
 
     // If document content does not reach this page cut, stop
-    if (unscaledContainerHeight <= cutY + 20) {
+    if (unscaledContainerHeight <= pageFooterCutY + 10) {
       break;
     }
 
@@ -86,21 +94,23 @@ export function applyPageBoundaries(container: HTMLElement): () => void {
         el.tagName.toLowerCase() === 'h3' ||
         el.classList.contains('cv-heading');
 
-      // Prevent orphan heading at the bottom of the page (within 50px of cut)
-      if (isHeading && itemTop < cutY && itemBottom + 45 > cutY) {
+      // Prevent orphan heading at the bottom of the page (ensure room for content before 1-line footer buffer)
+      if (isHeading && itemTop < pageFooterCutY && itemBottom + 45 > pageFooterCutY) {
         targetElement = el;
-        pushDistance = cutY - itemTop + 16;
+        // Push past cut line into next page with 2 blank lines reserved for header
+        pushDistance = cutY - itemTop + HEADER_BUFFER_PX;
         break;
       }
 
-      // If a bullet item or entry crosses the page boundary line (text spilling into next page)
-      // OR starts within 16px of the cutY line (orphan edge line)
-      const crossesCut = itemTop < cutY - 2 && itemBottom > cutY;
-      const startsAtEdge = itemTop >= cutY - 16 && itemTop < cutY;
+      // If a bullet item or entry crosses into the 1-line footer buffer or spills into next page
+      // OR starts within 18px of the footer buffer line
+      const crossesFooterZone = itemTop < pageFooterCutY && itemBottom > pageFooterCutY;
+      const startsInFooterZone = itemTop >= pageFooterCutY - 18 && itemTop < cutY;
 
-      if ((crossesCut || startsAtEdge) && itemHeight < pageHeightPx * 0.85) {
+      if ((crossesFooterZone || startsInFooterZone) && itemHeight < pageHeightPx * 0.85) {
         targetElement = el;
-        pushDistance = cutY - itemTop + 16;
+        // Push past cut line into next page with 2 blank lines reserved for header
+        pushDistance = cutY - itemTop + HEADER_BUFFER_PX;
         break;
       }
     }
@@ -120,9 +130,9 @@ export function applyPageBoundaries(container: HTMLElement): () => void {
         const itemBottom = (r.bottom - containerRect.top) / currentScale;
         const itemHeight = r.height / currentScale;
 
-        if (itemTop < cutY && itemBottom > cutY && itemHeight < pageHeightPx * 0.85) {
+        if (itemTop < pageFooterCutY && itemBottom > pageFooterCutY && itemHeight < pageHeightPx * 0.85) {
           targetElement = el;
-          pushDistance = cutY - itemTop + 16;
+          pushDistance = cutY - itemTop + HEADER_BUFFER_PX;
           break;
         }
       }

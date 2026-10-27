@@ -11,11 +11,11 @@ export const Footer: React.FC = () => {
 
   const openAbout = () => {
     setModalContent({
-      title: 'About ProCV Studio',
+      title: 'About ProCVmaKer',
       content: (
         <div className="space-y-3 text-xs text-slate-600 leading-relaxed">
           <p>
-            ProCV Studio is an open, private, and client-first CV and Resume Builder designed to give candidates total control over their career documents without paywalls, hidden watermarks, or intrusive subscriptions.
+            ProCVmaKer is an open, private, and client-first CV and Resume Builder designed to give candidates total control over their career documents without paywalls, hidden watermarks, or intrusive subscriptions.
           </p>
           <p>
             Our templates are crafted based on real-world hiring standards across elite academic institutions, data analytics companies, and Fortune 500 engineering organizations.
@@ -42,7 +42,7 @@ export const Footer: React.FC = () => {
             Your Data Stays on Your Device.
           </p>
           <p>
-            ProCV Studio values your privacy above all else. We do not transmit, sell, or index your personal information, work history, or contact details to any remote backend server.
+            ProCVmaKer values your privacy above all else. We do not transmit, sell, or index your personal information, work history, or contact details to any remote backend server.
           </p>
           <p>
             All draft resumes are stored strictly in your browser's standard <code className="bg-slate-100 px-1 py-0.5 rounded text-blue-800">localStorage</code>. This means your drafts remain on this specific device and will only be cleared if you manually clear your browser's site data or click "Clear All Data".
@@ -61,7 +61,7 @@ export const Footer: React.FC = () => {
       content: (
         <div className="space-y-3 text-xs text-slate-600 leading-relaxed">
           <p>
-            By using ProCV Studio, you are granted complete, royalty-free ownership of any CV, resume, or document generated using this platform.
+            By using ProCVmaKer, you are granted complete, royalty-free ownership of any CV, resume, or document generated using this platform.
           </p>
           <p>
             You are free to download, distribute, print, and submit your exported .docx and .pdf files to any employer, university, scholarship board, or client worldwide.
@@ -80,7 +80,7 @@ export const Footer: React.FC = () => {
       content: (
         <div className="space-y-3 text-xs text-slate-600 leading-relaxed">
           <p>
-            Have feedback, feature suggestions, or questions regarding ProCV Studio? We would love to hear from you.
+            Have feedback, feature suggestions, or questions regarding ProCVmaKer? We would love to hear from you.
           </p>
           <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
             <div className="font-semibold text-slate-800">Direct Support:</div>
@@ -98,16 +98,13 @@ export const Footer: React.FC = () => {
     <>
       <footer className="bg-white border-t border-slate-200 py-10 no-print">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-center sm:text-left justify-center md:justify-start">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-3 text-center sm:text-left justify-center md:justify-start">
+            <div className="flex items-center">
               <img
-                src="/assets/aistudio/ProCV_Studio_Resume_Logo_4dcddd70.png"
-                alt="ProCV Studio Logo"
-                className="w-7 h-7 rounded-md object-contain border border-slate-200/80 p-0.5 bg-white"
+                src="/assets/aistudio/ProCVmaKer_Resume_Builder_Logo_ccf153de.png"
+                alt="ProCVmaKer Logo"
+                className="h-7 w-auto object-contain"
               />
-              <span className="text-sm font-bold text-slate-900">
-                ProCV <span className="text-blue-600">Studio</span>
-              </span>
             </div>
             <span className="text-xs text-slate-400">
               © {new Date().getFullYear()} Professional CV Builder.

@@ -382,9 +382,9 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
                   <div className="w-full border-b-2 border-dashed border-rose-400/80" />
                   <div className="-translate-y-1/2 flex items-center gap-2 bg-rose-50 border border-rose-300 px-3 py-0.5 rounded-full shadow-2xs">
                     <span className="text-[10px] font-bold text-rose-800 flex items-center gap-1.5">
-                      <span>✂ Page {pageIndex} Ends (After Full Stop)</span>
+                      <span>✂ Page {pageIndex} Ends (1-Line Footer Space)</span>
                       <span className="text-rose-400">·</span>
-                      <span>Page {pageIndex + 1} Starts With Next Sentence</span>
+                      <span>Page {pageIndex + 1} Starts (2-Line Header Space)</span>
                     </span>
                   </div>
                 </div>
