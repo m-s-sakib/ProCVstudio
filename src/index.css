@@ -67,21 +67,29 @@
   /* Prevent awkward slicing through individual job, education, or project entries */
   .cv-item-avoid-break,
   .cv-entry-avoid-break,
-  [data-cv-item="true"] {
+  .cv-card-avoid-break,
+  .cv-section-avoid-break,
+  .biodata-card,
+  [data-cv-item="true"],
+  [data-cv-subitem="true"],
+  [data-biodata-card="true"],
+  [data-biodata-row="true"] {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
   /* Prevent headings from being orphaned at the bottom of a page */
-  h1, h2, h3, header, .cv-heading {
+  h1, h2, h3, h4, header, .cv-heading, [data-cv-heading="true"] {
     page-break-after: avoid !important;
     break-after: avoid !important;
   }
 
-  /* Keep bullet items together */
-  li {
+  /* Keep bullet items and paragraphs intact across pages */
+  li, p, .cv-paragraph, [data-cv-paragraph="true"] {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    orphans: 3;
+    widows: 3;
   }
 
   .cv-page-break-before {
@@ -103,13 +111,21 @@
 /* Screen Multi-Page Break Rules */
 .cv-item-avoid-break,
 .cv-entry-avoid-break,
+.cv-card-avoid-break,
 .cv-section-avoid-break,
+.biodata-card,
 [data-cv-item="true"],
-li {
+[data-cv-subitem="true"],
+[data-biodata-card="true"],
+[data-biodata-row="true"],
+li,
+p.cv-paragraph,
+[data-cv-paragraph="true"] {
   break-inside: avoid;
 }
 
-.cv-heading {
+.cv-heading,
+[data-cv-heading="true"] {
   break-after: avoid;
 }
 
@@ -140,5 +156,3 @@ li {
 .cv-spacing-relaxed [data-cv-item="true"] {
   margin-bottom: 0.85rem !important;
 }
-
-

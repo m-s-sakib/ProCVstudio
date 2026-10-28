@@ -18,8 +18,9 @@ import {
 } from 'docx';
 import { CVData } from '../types/cv';
 import { formatUrlLabel, normalizeUrl } from './links';
+import { downloadBlobFile } from './mobileDownload';
 
-export async function exportToDocx(cv: CVData): Promise<void> {
+export async function exportToDocx(cv: CVData): Promise<{ blobUrl: string }> {
   const isAcademic = cv.customization.templateId === 'academic';
   const isNavy = cv.customization.templateId === 'premium-navy';
   const isEuropass = cv.customization.templateId === 'europass';
@@ -792,13 +793,5 @@ export async function exportToDocx(cv: CVData): Promise<void> {
   const blob = await Packer.toBlob(doc);
   const cleanName = (cv.personal.fullName || 'Professional').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
   const filename = `${cleanName}_CV.docx`;
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  return downloadBlobFile(blob, filename);
 }

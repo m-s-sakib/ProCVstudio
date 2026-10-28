@@ -5,13 +5,14 @@
 
 import React from 'react';
 import { MarriageBiodata } from '../../../types/biodata';
-import { Heart, Sparkles, User, Briefcase, GraduationCap, Home, HeartHandshake, Phone, Mail, MapPin, Calendar, Compass, ShieldCheck } from 'lucide-react';
+import { Heart, Sparkles, User, GraduationCap, Home, HeartHandshake, Phone, Mail, MapPin, Calendar, Compass } from 'lucide-react';
 
 interface TemplateProps {
   biodata: MarriageBiodata;
+  totalPages?: number;
 }
 
-export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) => {
+export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, totalPages = 1 }) => {
   const { personal, educationCareer, family, profile, preferences, contact, privacy, customization } = biodata;
 
   const fontClass =
@@ -21,6 +22,9 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
       ? 'font-serif'
       : 'font-sans';
 
+  const A4_HEIGHT_PX = 1123;
+  const numPages = Math.max(1, totalPages);
+
   return (
     <div
       className={`w-full min-h-[1123px] bg-[#fffafb] text-[#3d2c2e] p-8 sm:p-12 leading-relaxed relative ${fontClass} selection:bg-rose-100`}
@@ -28,27 +32,41 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
         boxSizing: 'border-box',
       }}
     >
-      {/* Decorative Elegant Outer & Inner Border */}
-      <div className="absolute inset-3 sm:inset-4 border-2 border-[#e8b4b8] rounded-2xl pointer-events-none" />
-      <div className="absolute inset-4 sm:inset-5 border border-[#f3d2d5] rounded-xl pointer-events-none" />
+      {/* Decorative Elegant Outer & Inner Border for each A4 Page */}
+      {Array.from({ length: numPages }).map((_, pageIdx) => {
+        const pageTop = pageIdx * A4_HEIGHT_PX;
+        return (
+          <div
+            key={`romantic-frame-${pageIdx}`}
+            className="absolute left-0 right-0 pointer-events-none"
+            style={{
+              top: `${pageTop}px`,
+              height: `${A4_HEIGHT_PX}px`,
+            }}
+          >
+            <div className="absolute inset-3 sm:inset-4 border-2 border-[#e8b4b8] rounded-2xl pointer-events-none" />
+            <div className="absolute inset-4 sm:inset-5 border border-[#f3d2d5] rounded-xl pointer-events-none" />
 
-      {/* Corner Flourish Motifs */}
-      <div className="absolute top-5 left-5 text-[#d8829d] pointer-events-none opacity-80">
-        <Heart className="w-4 h-4 fill-[#fce7f3]" />
-      </div>
-      <div className="absolute top-5 right-5 text-[#d8829d] pointer-events-none opacity-80">
-        <Heart className="w-4 h-4 fill-[#fce7f3]" />
-      </div>
-      <div className="absolute bottom-5 left-5 text-[#d8829d] pointer-events-none opacity-80">
-        <Heart className="w-4 h-4 fill-[#fce7f3]" />
-      </div>
-      <div className="absolute bottom-5 right-5 text-[#d8829d] pointer-events-none opacity-80">
-        <Heart className="w-4 h-4 fill-[#fce7f3]" />
-      </div>
+            {/* Corner Flourish Motifs */}
+            <div className="absolute top-5 left-5 text-[#d8829d] pointer-events-none opacity-80">
+              <Heart className="w-4 h-4 fill-[#fce7f3]" />
+            </div>
+            <div className="absolute top-5 right-5 text-[#d8829d] pointer-events-none opacity-80">
+              <Heart className="w-4 h-4 fill-[#fce7f3]" />
+            </div>
+            <div className="absolute bottom-5 left-5 text-[#d8829d] pointer-events-none opacity-80">
+              <Heart className="w-4 h-4 fill-[#fce7f3]" />
+            </div>
+            <div className="absolute bottom-5 right-5 text-[#d8829d] pointer-events-none opacity-80">
+              <Heart className="w-4 h-4 fill-[#fce7f3]" />
+            </div>
+          </div>
+        );
+      })}
 
       <div className="relative z-10 max-w-3xl mx-auto space-y-7">
         {/* Header Section */}
-        <header className="text-center space-y-2 pt-2">
+        <header className="text-center space-y-2 pt-2 cv-item-avoid-break">
           {customization.showBismillah && customization.bismillahText && (
             <div className="text-lg sm:text-xl font-arabic text-[#9d3a5a] tracking-wider mb-2 font-serif">
               {customization.bismillahText}
@@ -89,7 +107,10 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
         </header>
 
         {/* Top Profile Card: Photo + Core Quick Stats */}
-        <div className="bg-white/80 backdrop-blur-xs rounded-xl p-5 border border-[#f3d2d5] shadow-2xs flex flex-col sm:flex-row items-center sm:items-start gap-6">
+        <div
+          data-cv-item="true"
+          className="cv-item-avoid-break bg-white/80 backdrop-blur-xs rounded-xl p-5 border border-[#f3d2d5] shadow-2xs flex flex-col sm:flex-row items-center sm:items-start gap-6"
+        >
           {privacy.showPhoto && personal.photoUrl ? (
             <div className="relative shrink-0">
               <div className="w-32 h-40 sm:w-36 sm:h-44 rounded-xl overflow-hidden border-3 border-[#e8b4b8] shadow-xs bg-rose-50">
@@ -178,19 +199,19 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
 
         {/* Section 1: Education & Career */}
         {(educationCareer.highestDegree || educationCareer.currentOccupation) && (
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5]">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5] cv-heading">
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <GraduationCap className="w-3.5 h-3.5" />
               </div>
               <h2 className="text-base sm:text-lg font-bold text-[#7a2040]">
-                Education & Career
+                Education &amp; Career
               </h2>
             </div>
 
             <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2.5 text-xs sm:text-sm">
               {educationCareer.highestDegree && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Highest Qualification:</span>{' '}
                   <span className="font-medium text-[#2f1920]">
                     {educationCareer.highestDegree}
@@ -206,14 +227,14 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
               )}
 
               {educationCareer.additionalEducation && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Academic Background:</span>{' '}
                   <span className="text-[#3b2228]">{educationCareer.additionalEducation}</span>
                 </div>
               )}
 
               {educationCareer.currentOccupation && (
-                <div className="pt-1 border-t border-[#fae4e7]">
+                <div data-cv-subitem="true" className="pt-1 border-t border-[#fae4e7] cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Current Occupation:</span>{' '}
                   <span className="font-medium text-[#2f1920]">
                     {educationCareer.designation || educationCareer.currentOccupation}
@@ -228,14 +249,14 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
               )}
 
               {privacy.showIncome && educationCareer.annualIncome && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Annual Income:</span>{' '}
                   <span className="text-[#3b2228]">{educationCareer.annualIncome}</span>
                 </div>
               )}
 
               {educationCareer.careerAspirations && (
-                <div className="text-xs italic text-[#724550] pt-1">
+                <div className="text-xs italic text-[#724550] pt-1 cv-paragraph">
                   "{educationCareer.careerAspirations}"
                 </div>
               )}
@@ -245,8 +266,8 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
 
         {/* Section 2: Family Background */}
         {(family.fatherName || family.motherName || family.familyAbout) && (
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5]">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5] cv-heading">
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <Home className="w-3.5 h-3.5" />
               </div>
@@ -256,7 +277,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
             </div>
 
             <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2.5 text-xs sm:text-sm">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-3 cv-item-avoid-break">
                 {family.fatherName && (
                   <div>
                     <span className="font-semibold text-[#8c3554]">Father:</span>{' '}
@@ -278,7 +299,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
               </div>
 
               {(family.numberOfBrothers || family.brotherDetails) && (
-                <div className="pt-1.5 border-t border-[#fae4e7]">
+                <div data-cv-subitem="true" className="pt-1.5 border-t border-[#fae4e7] cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Brothers:</span>{' '}
                   <span className="text-[#3b2228]">
                     {family.numberOfBrothers} {family.brotherDetails ? `— ${family.brotherDetails}` : ''}
@@ -287,7 +308,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
               )}
 
               {(family.numberOfSisters || family.sisterDetails) && (
-                <div className="pt-1 border-t border-[#fae4e7]">
+                <div data-cv-subitem="true" className="pt-1 border-t border-[#fae4e7] cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Sisters:</span>{' '}
                   <span className="text-[#3b2228]">
                     {family.numberOfSisters} {family.sisterDetails ? `— ${family.sisterDetails}` : ''}
@@ -295,7 +316,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#fae4e7] text-xs text-[#6e414c]">
+              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#fae4e7] text-xs text-[#6e414c] cv-item-avoid-break">
                 {family.familyType && (
                   <div>
                     <span className="font-semibold text-[#8c3554]">Type:</span> {family.familyType} Family
@@ -314,14 +335,14 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
               </div>
 
               {family.nativePlace && (
-                <div className="text-xs text-[#6e414c]">
+                <div data-cv-subitem="true" className="text-xs text-[#6e414c] cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Native Place / Ancestral Roots:</span>{' '}
                   {family.nativePlace} {family.ancestralRoots ? `(${family.ancestralRoots})` : ''}
                 </div>
               )}
 
               {family.familyAbout && (
-                <p className="text-xs italic text-[#724550] pt-1">
+                <p className="text-xs italic text-[#724550] pt-1 cv-paragraph">
                   {family.familyAbout}
                 </p>
               )}
@@ -331,46 +352,46 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
 
         {/* Section 3: Personal Profile & Lifestyle */}
         {(profile.aboutMe || profile.hobbiesAndInterests) && (
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5]">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5] cv-heading">
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <HeartHandshake className="w-3.5 h-3.5" />
               </div>
               <h2 className="text-base sm:text-lg font-bold text-[#7a2040]">
-                About Me & Lifestyle
+                About Me &amp; Lifestyle
               </h2>
             </div>
 
             <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2 text-xs sm:text-sm">
               {profile.aboutMe && (
-                <p className="text-[#3b2228] leading-relaxed">
+                <p className="text-[#3b2228] leading-relaxed cv-paragraph">
                   {profile.aboutMe}
                 </p>
               )}
 
               {profile.personalityTraits && (
-                <div className="pt-1.5">
+                <div data-cv-subitem="true" className="pt-1.5 cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Personality Traits:</span>{' '}
                   <span className="text-[#3b2228]">{profile.personalityTraits}</span>
                 </div>
               )}
 
               {profile.hobbiesAndInterests && (
-                <div>
-                  <span className="font-semibold text-[#8c3554]">Hobbies & Interests:</span>{' '}
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
+                  <span className="font-semibold text-[#8c3554]">Hobbies &amp; Interests:</span>{' '}
                   <span className="text-[#3b2228]">{profile.hobbiesAndInterests}</span>
                 </div>
               )}
 
               {profile.lifestyleAndDiet && (
-                <div>
-                  <span className="font-semibold text-[#8c3554]">Lifestyle & Diet:</span>{' '}
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
+                  <span className="font-semibold text-[#8c3554]">Lifestyle &amp; Diet:</span>{' '}
                   <span className="text-[#3b2228]">{profile.lifestyleAndDiet}</span>
                 </div>
               )}
 
               {profile.personalValues && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Personal Values:</span>{' '}
                   <span className="text-[#3b2228]">{profile.personalValues}</span>
                 </div>
@@ -381,8 +402,8 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
 
         {/* Section 4: Partner Preferences */}
         {(preferences.ageRange || preferences.educationPreference || preferences.valuesExpectations) && (
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5]">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5] cv-heading">
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <Compass className="w-3.5 h-3.5" />
               </div>
@@ -392,7 +413,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
             </div>
 
             <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2 text-xs sm:text-sm">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 cv-item-avoid-break">
                 {preferences.ageRange && (
                   <div>
                     <span className="font-semibold text-[#8c3554]">Age Range:</span>{' '}
@@ -420,22 +441,22 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
               </div>
 
               {preferences.educationPreference && (
-                <div className="pt-1.5 border-t border-[#fae4e7]">
+                <div data-cv-subitem="true" className="pt-1.5 border-t border-[#fae4e7] cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Education:</span>{' '}
                   <span className="text-[#3b2228]">{preferences.educationPreference}</span>
                 </div>
               )}
 
               {preferences.professionPreference && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Profession:</span>{' '}
                   <span className="text-[#3b2228]">{preferences.professionPreference}</span>
                 </div>
               )}
 
               {preferences.valuesExpectations && (
-                <div className="pt-1">
-                  <span className="font-semibold text-[#8c3554]">Expectations & Values:</span>{' '}
+                <div className="pt-1 cv-paragraph">
+                  <span className="font-semibold text-[#8c3554]">Expectations &amp; Values:</span>{' '}
                   <span className="text-[#3b2228]">{preferences.valuesExpectations}</span>
                 </div>
               )}
@@ -445,18 +466,18 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
 
         {/* Section 5: Contact Details */}
         {(contact.contactPersonName || contact.phone || contact.email) && (
-          <section className="space-y-3 pt-2">
-            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5]">
+          <section data-cv-item="true" className="space-y-3 pt-2 cv-item-avoid-break">
+            <div className="flex items-center gap-2 pb-1.5 border-b border-[#f3d2d5] cv-heading">
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <Phone className="w-3.5 h-3.5" />
               </div>
               <h2 className="text-base sm:text-lg font-bold text-[#7a2040]">
-                Contact & Communication
+                Contact &amp; Communication
               </h2>
             </div>
 
             <div className="bg-white/80 rounded-xl p-4 border border-[#f3d2d5] space-y-2 text-xs sm:text-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2">
+              <div data-cv-subitem="true" className="flex flex-wrap items-center justify-between gap-2 cv-item-avoid-break">
                 {contact.contactPersonName && (
                   <div>
                     <span className="font-semibold text-[#8c3554]">Contact Person:</span>{' '}
@@ -474,7 +495,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 border-t border-[#fae4e7]">
+              <div data-cv-subitem="true" className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 border-t border-[#fae4e7] cv-item-avoid-break">
                 {privacy.showPhone && contact.phone && (
                   <div className="flex items-center gap-1.5 text-[#3b2228]">
                     <Phone className="w-3.5 h-3.5 text-[#d8829d]" />
@@ -500,7 +521,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
               </div>
 
               {contact.address && (
-                <div className="text-xs text-[#6e414c] pt-1">
+                <div data-cv-subitem="true" className="text-xs text-[#6e414c] pt-1 cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Address:</span> {contact.address}
                 </div>
               )}
@@ -509,7 +530,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata }) =>
         )}
 
         {/* Footer Note */}
-        <footer className="text-center pt-4 border-t border-[#f3d2d5] text-[11px] text-[#915664]">
+        <footer data-cv-item="true" className="text-center pt-4 border-t border-[#f3d2d5] text-[11px] text-[#915664] cv-item-avoid-break">
           <p>
             This document is prepared with sincere intentions for marriage alliance. All details provided are true to the best of our knowledge.
           </p>

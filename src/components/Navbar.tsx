@@ -7,12 +7,20 @@ import React, { useState } from 'react';
 import { Sparkles, FileText, Download, Menu, X } from 'lucide-react';
 
 interface NavbarProps {
-  currentView: 'home' | 'builder' | 'biodata';
-  onNavigate: (view: 'home' | 'builder' | 'biodata') => void;
+  currentView: 'home' | 'builder' | 'student-builder' | 'biodata';
+  onNavigate: (view: 'home' | 'builder' | 'student-builder' | 'biodata') => void;
   onOpenQuickExport?: () => void;
+  onOpenTypeModal?: () => void;
+  onStartProfessional?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenQuickExport }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  currentView,
+  onNavigate,
+  onOpenQuickExport,
+  onOpenTypeModal,
+  onStartProfessional,
+}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 no-print">
@@ -30,8 +38,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenQ
           />
         </div>
 
-        {/* Zone 2: 4-5 concise single-line links */}
-        <nav className="hidden md:flex items-center gap-5 lg:gap-6 text-sm font-medium text-slate-600">
+        {/* Zone 2: Navigation Links */}
+        <nav className="hidden md:flex items-center gap-4 lg:gap-5 text-sm font-medium text-slate-600">
           <button
             onClick={() => onNavigate('home')}
             className={`hover:text-slate-900 transition-colors whitespace-nowrap ${
@@ -41,12 +49,31 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenQ
             Home
           </button>
           <button
-            onClick={() => onNavigate('builder')}
+            onClick={() => onNavigate('student-builder')}
+            className={`hover:text-blue-700 transition-colors whitespace-nowrap flex items-center gap-1.5 ${
+              currentView === 'student-builder'
+                ? 'text-blue-600 font-bold'
+                : 'text-slate-700 hover:text-blue-600'
+            }`}
+          >
+            <span>Student CV</span>
+            <span className="text-[10px] bg-blue-100 text-blue-800 border border-blue-200 px-1.5 py-0.2 rounded-full font-bold">
+              🎓 New
+            </span>
+          </button>
+          <button
+            onClick={() => {
+              if (onStartProfessional) {
+                onStartProfessional();
+              } else {
+                onNavigate('builder');
+              }
+            }}
             className={`hover:text-slate-900 transition-colors whitespace-nowrap ${
               currentView === 'builder' ? 'text-blue-600 font-semibold' : ''
             }`}
           >
-            CV Builder
+            Professional CV
           </button>
           <button
             onClick={() => onNavigate('biodata')}
@@ -57,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenQ
             }`}
           >
             <span>Marriage Biodata</span>
-            <span className="text-xs bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.5 rounded-full font-semibold">
+            <span className="text-[10px] bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.2 rounded-full font-semibold">
               💍 New
             </span>
           </button>
@@ -104,7 +131,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenQ
                 <span>Biodata 💍</span>
               </button>
               <button
-                onClick={() => onNavigate('builder')}
+                onClick={() => {
+                  if (onStartProfessional) {
+                    onStartProfessional();
+                  } else {
+                    onNavigate('builder');
+                  }
+                }}
                 className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-xs whitespace-nowrap"
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -113,7 +146,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenQ
             </div>
           ) : currentView === 'biodata' ? (
             <button
-              onClick={() => onNavigate('builder')}
+              onClick={() => {
+                if (onStartProfessional) {
+                  onStartProfessional();
+                } else {
+                  onNavigate('builder');
+                }
+              }}
               className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-xs whitespace-nowrap"
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -157,14 +196,30 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenQ
           </button>
           <button
             onClick={() => {
-              onNavigate('builder');
+              onNavigate('student-builder');
+              setMobileMenuOpen(false);
+            }}
+            className={`w-full text-left px-3 py-2 text-sm font-medium rounded-lg transition-colors flex items-center justify-between ${
+              currentView === 'student-builder' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            <span>College Student CV 🎓</span>
+            <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">New</span>
+          </button>
+          <button
+            onClick={() => {
+              if (onStartProfessional) {
+                onStartProfessional();
+              } else {
+                onNavigate('builder');
+              }
               setMobileMenuOpen(false);
             }}
             className={`w-full text-left px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
               currentView === 'builder' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50'
             }`}
           >
-            CV Builder
+            Professional CV Builder (Blank)
           </button>
           <button
             onClick={() => {

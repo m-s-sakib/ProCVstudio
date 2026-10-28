@@ -37,20 +37,20 @@ import {
   ChevronRight,
   Save,
   RotateCcw,
-  Sparkles,
   Download,
   Copy,
   Eye,
   FileEdit,
   CheckCircle2,
-  Columns2,
 } from 'lucide-react';
 
 interface BuilderProps {
   initialCv?: CVData;
+  onOpenTypeModal?: () => void;
+  onSwitchToStudent?: () => void;
 }
 
-export type ViewMode = 'form' | 'preview' | 'split';
+export type ViewMode = 'form' | 'preview';
 
 const STEPS = [
   { id: 'personal', title: 'Personal Info', icon: User },
@@ -70,7 +70,7 @@ const STEPS = [
 const LOCAL_STORAGE_KEY = 'procv_studio_draft_v1';
 const VIEW_MODE_STORAGE_KEY = 'procv_studio_view_mode';
 
-export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
+export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, onSwitchToStudent }) => {
   const [cv, setCv] = useState<CVData>(() => {
     if (initialCv) return initialCv;
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -81,14 +81,21 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
         console.error('Failed to parse saved draft from localStorage:', e);
       }
     }
-    return dataAnalystSample;
+    return emptyCVData;
   });
+
+  // Automatically sync state when initialCv changes (e.g. user clicks Professional CV or Demo)
+  useEffect(() => {
+    if (initialCv) {
+      setCv(initialCv);
+    }
+  }, [initialCv]);
 
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(VIEW_MODE_STORAGE_KEY) as ViewMode | null;
-      if (saved && (saved === 'form' || saved === 'preview' || saved === 'split')) {
+      if (saved && (saved === 'form' || saved === 'preview')) {
         return saved;
       }
     }
@@ -188,10 +195,10 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
-      {/* Responsive View Mode Switcher: Edit Form vs Live CV Preview vs Split View (PC, Tablet & Mobile) */}
+      {/* Responsive View Mode Switcher: Edit Form vs Live CV Preview */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-2 sm:p-2.5 rounded-2xl border border-slate-200 shadow-2xs mb-5 sm:mb-6 no-print print:hidden">
-        {/* The 2 Primary Mode Buttons: 'Edit Form' and 'Live CV Preview' (Same to same as tab mode, plus Split View on PC) */}
-        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl flex-1 max-w-2xl">
+        {/* The 2 Primary Mode Buttons: 'Edit Form' and 'Live CV Preview' */}
+        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl flex-1 max-w-xl">
           <button
             type="button"
             onClick={() => handleSetViewMode('form')}
@@ -220,21 +227,6 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
             <Eye className={`w-4 h-4 ${viewMode === 'preview' ? 'text-blue-600' : 'text-slate-500'}`} />
             <span>Live CV Preview</span>
           </button>
-
-          {/* On PC / Large Screens (≥ 1024px): Split View (Side-by-Side) */}
-          <button
-            type="button"
-            onClick={() => handleSetViewMode('split')}
-            className={`hidden lg:flex items-center justify-center gap-1.5 py-2 px-4 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
-              viewMode === 'split'
-                ? 'bg-white text-blue-700 shadow-xs font-bold border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-            }`}
-            title="Side-by-side view (Form and Preview together)"
-          >
-            <Columns2 className={`w-4 h-4 ${viewMode === 'split' ? 'text-blue-600' : 'text-slate-500'}`} />
-            <span>Split View</span>
-          </button>
         </div>
 
         {/* Device View Status & Quick Actions */}
@@ -259,22 +251,10 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
       </div>
 
       {/* Main Content Layout Container */}
-      <div
-        className={
-          viewMode === 'split'
-            ? 'grid grid-cols-1 lg:grid-cols-12 gap-8 items-start'
-            : 'w-full'
-        }
-      >
-        {/* LEFT COLUMN: FORM & STEP NAVIGATION */}
-        {(viewMode === 'form' || viewMode === 'split') && (
-          <div
-            className={`space-y-4 no-print print:hidden ${
-              viewMode === 'split'
-                ? 'lg:col-span-6 w-full'
-                : 'max-w-4xl mx-auto w-full'
-            }`}
-          >
+      <div className="w-full">
+        {/* FORM & STEP NAVIGATION */}
+        {viewMode === 'form' && (
+          <div className="max-w-4xl mx-auto w-full space-y-4 no-print print:hidden">
           {/* Top Step Bar & Quick Preset Bar */}
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-3 no-print">
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -333,8 +313,8 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
                     defaultValue=""
                     className="px-2 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors outline-none cursor-pointer"
                   >
-                    <option value="" disabled>Load Preset...</option>
-                    <option value="data-analyst">Salman Sakib (Data Analyst)</option>
+                    <option value="" disabled>Other Presets...</option>
+                    <option value="data-analyst">Demo: Salman Sakib (Data Analyst)</option>
                     <option value="academic">Dr. Elena Rostova (Academic)</option>
                     <option value="corporate">Marcus Vance (Corporate Leader)</option>
                   </select>
@@ -539,20 +519,14 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
         </div>
         )}
 
-        {/* RIGHT COLUMN / PREVIEW VIEW */}
-        {(viewMode === 'preview' || viewMode === 'split') && (
-          <div
-            className={`print:static print:h-auto print:w-full print:block ${
-              viewMode === 'split'
-                ? 'lg:col-span-6 lg:sticky lg:top-20 lg:h-[calc(100vh-6rem)] w-full'
-                : 'max-w-5xl mx-auto w-full min-h-[85vh]'
-            }`}
-          >
+        {/* PREVIEW VIEW */}
+        {viewMode === 'preview' && (
+          <div className="max-w-5xl mx-auto w-full min-h-[85vh] print:static print:h-auto print:w-full print:block">
             <CVPreview
               cv={cv}
               onUpdateCV={(updater) => setCv((prev) => updater(prev))}
               onBackToForm={() => handleSetViewMode('form')}
-              showBackToFormButton={viewMode === 'preview'}
+              showBackToFormButton={true}
             />
           </div>
         )}

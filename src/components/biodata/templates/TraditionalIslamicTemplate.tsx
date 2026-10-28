@@ -5,33 +5,51 @@
 
 import React from 'react';
 import { MarriageBiodata } from '../../../types/biodata';
-import { GraduationCap, Home, BookOpen, User, Phone, Mail, MapPin, Calendar, Compass, Shield } from 'lucide-react';
+import { GraduationCap, Home, BookOpen, User, Phone, Mail, MapPin, Calendar, Compass } from 'lucide-react';
 
 interface TemplateProps {
   biodata: MarriageBiodata;
+  totalPages?: number;
 }
 
-export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata }) => {
+export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata, totalPages = 1 }) => {
   const { personal, educationCareer, family, profile, preferences, contact, privacy, customization } = biodata;
+
+  const A4_HEIGHT_PX = 1123;
+  const numPages = Math.max(1, totalPages);
 
   return (
     <div
       className="w-full min-h-[1123px] bg-[#fcfdfa] text-[#1a2e22] p-8 sm:p-12 leading-relaxed relative font-serif selection:bg-emerald-100"
       style={{ boxSizing: 'border-box' }}
     >
-      {/* Islamic Arch & Gold Border Motif */}
-      <div className="absolute inset-3 sm:inset-4 border-2 border-[#15803d]/40 rounded-2xl pointer-events-none" />
-      <div className="absolute inset-4 sm:inset-5 border border-[#d4af37]/60 rounded-xl pointer-events-none" />
+      {/* Islamic Arch & Gold Border Motif for each A4 Page */}
+      {Array.from({ length: numPages }).map((_, pageIdx) => {
+        const pageTop = pageIdx * A4_HEIGHT_PX;
+        return (
+          <div
+            key={`islamic-frame-${pageIdx}`}
+            className="absolute left-0 right-0 pointer-events-none"
+            style={{
+              top: `${pageTop}px`,
+              height: `${A4_HEIGHT_PX}px`,
+            }}
+          >
+            <div className="absolute inset-3 sm:inset-4 border-2 border-[#15803d]/40 rounded-2xl pointer-events-none" />
+            <div className="absolute inset-4 sm:inset-5 border border-[#d4af37]/60 rounded-xl pointer-events-none" />
 
-      {/* Star / Crescent Ornaments in Corners */}
-      <div className="absolute top-5 left-5 text-[#b45309] pointer-events-none text-xs">۞</div>
-      <div className="absolute top-5 right-5 text-[#b45309] pointer-events-none text-xs">۞</div>
-      <div className="absolute bottom-5 left-5 text-[#b45309] pointer-events-none text-xs">۞</div>
-      <div className="absolute bottom-5 right-5 text-[#b45309] pointer-events-none text-xs">۞</div>
+            {/* Star / Crescent Ornaments in Corners */}
+            <div className="absolute top-5 left-5 text-[#b45309] pointer-events-none text-xs">۞</div>
+            <div className="absolute top-5 right-5 text-[#b45309] pointer-events-none text-xs">۞</div>
+            <div className="absolute bottom-5 left-5 text-[#b45309] pointer-events-none text-xs">۞</div>
+            <div className="absolute bottom-5 right-5 text-[#b45309] pointer-events-none text-xs">۞</div>
+          </div>
+        );
+      })}
 
       <div className="relative z-10 max-w-3xl mx-auto space-y-7">
         {/* Header */}
-        <header className="text-center space-y-2 pt-2">
+        <header className="text-center space-y-2 pt-2 cv-item-avoid-break">
           {/* Bismillah Always Present or Configured */}
           <div className="text-xl sm:text-2xl text-[#064e3b] font-bold tracking-widest font-serif drop-shadow-2xs">
             {customization.bismillahText || 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ'}
@@ -53,7 +71,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
           )}
 
           {customization.subtitleQuote && (
-            <p className="text-xs sm:text-sm italic text-[#166534] max-w-xl mx-auto pt-1">
+            <p className="text-xs sm:text-sm italic text-[#166534] max-w-xl mx-auto pt-1 cv-paragraph">
               {customization.subtitleQuote}
             </p>
           )}
@@ -66,7 +84,10 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
         </header>
 
         {/* Top Profile Summary with Photo */}
-        <div className="bg-[#f2f8f4] rounded-xl p-5 border border-emerald-200 shadow-2xs flex flex-col sm:flex-row items-center sm:items-start gap-6">
+        <div
+          data-cv-item="true"
+          className="cv-item-avoid-break bg-[#f2f8f4] rounded-xl p-5 border border-emerald-200 shadow-2xs flex flex-col sm:flex-row items-center sm:items-start gap-6"
+        >
           {privacy.showPhoto && personal.photoUrl ? (
             <div className="relative shrink-0">
               <div className="w-32 h-40 sm:w-36 sm:h-44 rounded-xl overflow-hidden border-3 border-[#047857]/40 shadow-xs bg-emerald-50">
@@ -146,17 +167,17 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
 
         {/* Education & Profession */}
         {(educationCareer.highestDegree || educationCareer.currentOccupation) && (
-          <section className="space-y-3">
-            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20 cv-heading">
               <h2 className="text-base sm:text-lg font-bold text-[#064e3b] flex items-center gap-2">
                 <GraduationCap className="w-4 h-4 text-emerald-700" />
-                <span>Education & Occupation</span>
+                <span>Education &amp; Occupation</span>
               </h2>
             </div>
 
             <div className="bg-white/90 rounded-xl p-4 border border-emerald-100 space-y-2 text-xs sm:text-sm font-sans">
               {educationCareer.highestDegree && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-emerald-900">Highest Degree:</span>{' '}
                   <span className="font-medium text-slate-900">
                     {educationCareer.highestDegree}
@@ -172,14 +193,14 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
               )}
 
               {educationCareer.additionalEducation && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-emerald-900">Academic Background:</span>{' '}
                   <span className="text-slate-800">{educationCareer.additionalEducation}</span>
                 </div>
               )}
 
               {educationCareer.currentOccupation && (
-                <div className="pt-1 border-t border-emerald-50">
+                <div data-cv-subitem="true" className="pt-1 border-t border-emerald-50 cv-item-avoid-break">
                   <span className="font-semibold text-emerald-900">Profession / Designation:</span>{' '}
                   <span className="font-medium text-slate-900">
                     {educationCareer.designation || educationCareer.currentOccupation}
@@ -194,7 +215,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
               )}
 
               {privacy.showIncome && educationCareer.annualIncome && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-emerald-900">Annual Income:</span>{' '}
                   <span className="text-slate-800">{educationCareer.annualIncome}</span>
                 </div>
@@ -205,16 +226,16 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
 
         {/* Family Details */}
         {(family.fatherName || family.motherName || family.familyAbout) && (
-          <section className="space-y-3">
-            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20 cv-heading">
               <h2 className="text-base sm:text-lg font-bold text-[#064e3b] flex items-center gap-2">
                 <Home className="w-4 h-4 text-emerald-700" />
-                <span>Family Background & Heritage</span>
+                <span>Family Background &amp; Heritage</span>
               </h2>
             </div>
 
             <div className="bg-white/90 rounded-xl p-4 border border-emerald-100 space-y-2 text-xs sm:text-sm font-sans">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-3 cv-item-avoid-break">
                 {family.fatherName && (
                   <div>
                     <span className="font-semibold text-emerald-900">Father's Name:</span>{' '}
@@ -236,7 +257,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
               </div>
 
               {(family.numberOfBrothers || family.brotherDetails) && (
-                <div className="pt-1 border-t border-emerald-50">
+                <div data-cv-subitem="true" className="pt-1 border-t border-emerald-50 cv-item-avoid-break">
                   <span className="font-semibold text-emerald-900">Brothers:</span>{' '}
                   <span className="text-slate-800">
                     {family.numberOfBrothers} {family.brotherDetails ? `(${family.brotherDetails})` : ''}
@@ -245,7 +266,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
               )}
 
               {(family.numberOfSisters || family.sisterDetails) && (
-                <div className="pt-1 border-t border-emerald-50">
+                <div data-cv-subitem="true" className="pt-1 border-t border-emerald-50 cv-item-avoid-break">
                   <span className="font-semibold text-emerald-900">Sisters:</span>{' '}
                   <span className="text-slate-800">
                     {family.numberOfSisters} {family.sisterDetails ? `(${family.sisterDetails})` : ''}
@@ -253,7 +274,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 border-t border-emerald-50 text-xs text-slate-600">
+              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 border-t border-emerald-50 text-xs text-slate-600 cv-item-avoid-break">
                 {family.familyValues && (
                   <div>
                     <span className="font-semibold text-emerald-900">Religious Environment:</span>{' '}
@@ -275,7 +296,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
               </div>
 
               {family.familyAbout && (
-                <p className="text-xs italic text-slate-700 pt-1 font-serif">
+                <p className="text-xs italic text-slate-700 pt-1 font-serif cv-paragraph">
                   {family.familyAbout}
                 </p>
               )}
@@ -285,38 +306,38 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
 
         {/* Deen, Akhlaq & Personal Profile */}
         {(profile.aboutMe || profile.personalValues) && (
-          <section className="space-y-3">
-            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20 cv-heading">
               <h2 className="text-base sm:text-lg font-bold text-[#064e3b] flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-emerald-700" />
-                <span>Religious Practice & Personal Profile</span>
+                <span>Religious Practice &amp; Personal Profile</span>
               </h2>
             </div>
 
             <div className="bg-white/90 rounded-xl p-4 border border-emerald-100 space-y-2 text-xs sm:text-sm font-sans">
               {profile.aboutMe && (
-                <p className="text-slate-800 leading-relaxed font-serif">
+                <p className="text-slate-800 leading-relaxed font-serif cv-paragraph">
                   {profile.aboutMe}
                 </p>
               )}
 
               {profile.personalValues && (
-                <div className="pt-1">
-                  <span className="font-semibold text-emerald-900">Islamic Practice & Values:</span>{' '}
+                <div data-cv-subitem="true" className="pt-1 cv-item-avoid-break">
+                  <span className="font-semibold text-emerald-900">Islamic Practice &amp; Values:</span>{' '}
                   <span className="text-slate-800">{profile.personalValues}</span>
                 </div>
               )}
 
               {profile.lifestyleAndDiet && (
-                <div>
-                  <span className="font-semibold text-emerald-900">Diet & Lifestyle:</span>{' '}
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
+                  <span className="font-semibold text-emerald-900">Diet &amp; Lifestyle:</span>{' '}
                   <span className="text-slate-800">{profile.lifestyleAndDiet}</span>
                 </div>
               )}
 
               {profile.hobbiesAndInterests && (
-                <div>
-                  <span className="font-semibold text-emerald-900">Interests & Activities:</span>{' '}
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
+                  <span className="font-semibold text-emerald-900">Interests &amp; Activities:</span>{' '}
                   <span className="text-slate-800">{profile.hobbiesAndInterests}</span>
                 </div>
               )}
@@ -326,8 +347,8 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
 
         {/* Partner Preferences */}
         {(preferences.ageRange || preferences.educationPreference || preferences.valuesExpectations) && (
-          <section className="space-y-3">
-            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20 cv-heading">
               <h2 className="text-base sm:text-lg font-bold text-[#064e3b] flex items-center gap-2">
                 <Compass className="w-4 h-4 text-emerald-700" />
                 <span>Partner Expectations</span>
@@ -335,7 +356,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
             </div>
 
             <div className="bg-white/90 rounded-xl p-4 border border-emerald-100 space-y-2 text-xs sm:text-sm font-sans">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-2 cv-item-avoid-break">
                 {preferences.ageRange && (
                   <div>
                     <span className="font-semibold text-emerald-900">Age:</span>{' '}
@@ -351,15 +372,15 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
               </div>
 
               {preferences.educationPreference && (
-                <div className="pt-1 border-t border-emerald-50">
+                <div data-cv-subitem="true" className="pt-1 border-t border-emerald-50 cv-item-avoid-break">
                   <span className="font-semibold text-emerald-900">Educational Background:</span>{' '}
                   <span>{preferences.educationPreference}</span>
                 </div>
               )}
 
               {preferences.valuesExpectations && (
-                <div className="pt-1">
-                  <span className="font-semibold text-emerald-900">Character & Religious Commitment:</span>{' '}
+                <div className="pt-1 cv-paragraph">
+                  <span className="font-semibold text-emerald-900">Character &amp; Religious Commitment:</span>{' '}
                   <span>{preferences.valuesExpectations}</span>
                 </div>
               )}
@@ -369,17 +390,17 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
 
         {/* Contact Information */}
         {(contact.contactPersonName || contact.phone || contact.email) && (
-          <section className="space-y-3 pt-2">
-            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20">
+          <section data-cv-item="true" className="space-y-3 pt-2 cv-item-avoid-break">
+            <div className="flex items-center justify-between pb-1.5 border-b-2 border-emerald-700/20 cv-heading">
               <h2 className="text-base sm:text-lg font-bold text-[#064e3b] flex items-center gap-2">
                 <Phone className="w-4 h-4 text-emerald-700" />
-                <span>Guardian & Contact Information</span>
+                <span>Guardian &amp; Contact Information</span>
               </h2>
             </div>
 
             <div className="bg-white/90 rounded-xl p-4 border border-emerald-100 space-y-2 text-xs sm:text-sm font-sans">
               {contact.contactPersonName && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-emerald-900">Contact Person / Guardian:</span>{' '}
                   <span className="font-medium text-slate-900">
                     {contact.contactPersonName}{' '}
@@ -388,7 +409,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
                 </div>
               )}
 
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1 border-t border-emerald-50">
+              <div data-cv-subitem="true" className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1 border-t border-emerald-50 cv-item-avoid-break">
                 {privacy.showPhone && contact.phone && (
                   <div className="flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-emerald-700" />
@@ -414,7 +435,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
               </div>
 
               {contact.convenientTimeToCall && (
-                <div className="text-xs text-slate-600 pt-1">
+                <div data-cv-subitem="true" className="text-xs text-slate-600 pt-1 cv-item-avoid-break">
                   <span className="font-semibold text-emerald-900">Suitable Calling Time:</span>{' '}
                   {contact.convenientTimeToCall}
                 </div>
@@ -424,7 +445,7 @@ export const TraditionalIslamicTemplate: React.FC<TemplateProps> = ({ biodata })
         )}
 
         {/* Modest Footer Dua */}
-        <footer className="text-center pt-4 border-t border-emerald-200 text-xs text-emerald-800 italic font-serif">
+        <footer data-cv-item="true" className="text-center pt-4 border-t border-emerald-200 text-xs text-emerald-800 italic font-serif cv-item-avoid-break">
           <p>
             رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا
           </p>

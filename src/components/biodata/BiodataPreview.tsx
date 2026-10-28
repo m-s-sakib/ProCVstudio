@@ -11,6 +11,7 @@ import { ModernMinimalTemplate } from './templates/ModernMinimalTemplate';
 import { PremiumFloralTemplate } from './templates/PremiumFloralTemplate';
 import { ClassicFamilyTemplate } from './templates/ClassicFamilyTemplate';
 import { exportBiodataToPdf, printBiodata } from '../../utils/biodataPdfExport';
+import { applyPageBoundaries, resetPageBoundaries } from '../../utils/pagination';
 import {
   ZoomIn,
   ZoomOut,
@@ -22,6 +23,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Eye,
+  Layers,
 } from 'lucide-react';
 
 interface BiodataPreviewProps {
@@ -31,9 +33,13 @@ interface BiodataPreviewProps {
 
 export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
   const [zoom, setZoom] = useState<number>(0.85);
+  const [docHeight, setDocHeight] = useState<number>(1123);
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const A4_HEIGHT_PX = 1123;
+  const totalPages = Math.max(1, Math.ceil((docHeight - 20) / A4_HEIGHT_PX));
 
   // Auto-fit on small screens initially
   useEffect(() => {
@@ -49,6 +55,26 @@ export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
     handleResize();
   }, []);
 
+  // Dynamically apply intelligent page breaks and update height
+  useEffect(() => {
+    const updatePaginationAndHeight = () => {
+      const renderEl = document.getElementById('biodata-document-render');
+      if (renderEl) {
+        applyPageBoundaries(renderEl);
+        setDocHeight(renderEl.offsetHeight);
+      }
+    };
+    updatePaginationAndHeight();
+    const t1 = setTimeout(updatePaginationAndHeight, 100);
+    const t2 = setTimeout(updatePaginationAndHeight, 350);
+    window.addEventListener('resize', updatePaginationAndHeight);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener('resize', updatePaginationAndHeight);
+    };
+  }, [biodata, zoom, biodata.customization.templateId]);
+
   const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.1, 1.4));
   const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.1, 0.4));
   const handleResetZoom = () => setZoom(0.85);
@@ -61,13 +87,20 @@ export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
     }
   };
 
+  const [downloadBlobUrl, setDownloadBlobUrl] = useState<string | null>(null);
+  const [downloadFilename, setDownloadFilename] = useState<string>('Marriage_Biodata.pdf');
+
   const handleDownloadPdf = async () => {
     setIsExporting(true);
     setExportMessage('Generating high-resolution Biodata PDF...');
     try {
-      await exportBiodataToPdf(biodata, { elementId: 'biodata-document-render' });
-      setExportMessage('PDF downloaded successfully!');
-      setTimeout(() => setExportMessage(null), 3000);
+      const res = await exportBiodataToPdf(biodata, { elementId: 'biodata-document-render' });
+      if (res?.blobUrl) {
+        setDownloadBlobUrl(res.blobUrl);
+        setDownloadFilename(`${(biodata.personal.fullName || 'Marriage_Biodata').trim().replace(/[^a-zA-Z0-9_-]/g, '_')}_Marriage_Biodata.pdf`);
+      }
+      setExportMessage('Biodata PDF is ready and downloading!');
+      setTimeout(() => setExportMessage(null), 8000);
     } catch (err) {
       console.error('Biodata PDF Export error:', err);
       setExportMessage('Opening browser print to save PDF...');
@@ -85,17 +118,17 @@ export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
   const renderActiveTemplate = () => {
     switch (biodata.customization.templateId) {
       case 'romantic-elegant':
-        return <RomanticElegantTemplate biodata={biodata} />;
+        return <RomanticElegantTemplate biodata={biodata} totalPages={totalPages} />;
       case 'traditional-islamic':
-        return <TraditionalIslamicTemplate biodata={biodata} />;
+        return <TraditionalIslamicTemplate biodata={biodata} totalPages={totalPages} />;
       case 'modern-minimal':
-        return <ModernMinimalTemplate biodata={biodata} />;
+        return <ModernMinimalTemplate biodata={biodata} totalPages={totalPages} />;
       case 'premium-floral':
-        return <PremiumFloralTemplate biodata={biodata} />;
+        return <PremiumFloralTemplate biodata={biodata} totalPages={totalPages} />;
       case 'classic-family':
-        return <ClassicFamilyTemplate biodata={biodata} />;
+        return <ClassicFamilyTemplate biodata={biodata} totalPages={totalPages} />;
       default:
-        return <RomanticElegantTemplate biodata={biodata} />;
+        return <RomanticElegantTemplate biodata={biodata} totalPages={totalPages} />;
     }
   };
 
@@ -115,6 +148,17 @@ export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
           <span className="hidden sm:inline-block text-[11px] font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full capitalize">
             {biodata.customization.templateId.replace('-', ' ')}
           </span>
+          {/* Dynamic Page Count Badge */}
+          <div
+            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold border transition-colors ${
+              totalPages > 1
+                ? 'bg-rose-50 text-rose-800 border-rose-200'
+                : 'bg-slate-50 text-slate-700 border-slate-200'
+            }`}
+          >
+            <Layers className="w-3 h-3 text-rose-500" />
+            <span>{totalPages === 1 ? '1 Page (A4)' : `${totalPages} Pages (A4)`}</span>
+          </div>
         </div>
 
         {/* Zoom Controls */}
@@ -176,11 +220,25 @@ export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
 
       {/* Export notification banner */}
       {exportMessage && (
-        <div className="bg-rose-50 border-b border-rose-200 px-4 py-2 text-xs font-medium text-rose-800 flex items-center justify-between animate-in fade-in no-print">
+        <div className="bg-rose-50 border-b border-rose-200 px-4 py-2.5 text-xs font-medium text-rose-900 flex flex-wrap items-center justify-between gap-2 animate-in fade-in no-print">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-rose-600 shrink-0" />
-            <span>{exportMessage}</span>
+            <span className="font-semibold">{exportMessage}</span>
           </div>
+          {downloadBlobUrl && (
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-rose-700 hidden sm:inline">Mobile download didn't start?</span>
+              <a
+                href={downloadBlobUrl}
+                download={downloadFilename}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-1 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-md shadow-2xs transition-colors"
+              >
+                <span>📱 Tap to Open / Save PDF</span>
+              </a>
+            </div>
+          )}
         </div>
       )}
 
@@ -191,7 +249,7 @@ export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
       >
         <div
           id="biodata-document-render"
-          className="biodata-document-container bg-white shadow-xl transition-transform origin-top duration-150"
+          className="biodata-document-container relative bg-white shadow-xl transition-transform origin-top duration-150"
           style={{
             width: '794px', // A4 width in standard screen pixels
             minHeight: '1123px', // A4 height
@@ -199,6 +257,27 @@ export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
             transformOrigin: 'top center',
           }}
         >
+          {/* Visual Page Break Guides for preview */}
+          {Array.from({ length: totalPages - 1 }).map((_, idx) => {
+            const pageIndex = idx + 1;
+            const breakTopPx = pageIndex * A4_HEIGHT_PX;
+            return (
+              <div
+                key={`biodata-break-${pageIndex}`}
+                data-html2canvas-ignore="true"
+                className="absolute left-0 right-0 pointer-events-none no-print print:hidden z-20 flex flex-col items-center"
+                style={{ top: `${breakTopPx}px` }}
+              >
+                <div className="w-full border-b-2 border-dashed border-rose-400/80" />
+                <div className="-translate-y-1/2 flex items-center gap-2 bg-rose-50 border border-rose-300 px-3 py-0.5 rounded-full shadow-2xs">
+                  <span className="text-[10px] font-bold text-rose-800">
+                    ✂ Page {pageIndex} Ends · Page {pageIndex + 1} Starts
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+
           {renderActiveTemplate()}
         </div>
       </div>

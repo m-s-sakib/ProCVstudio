@@ -128,9 +128,15 @@ export const BiodataBuilder: React.FC<BiodataBuilderProps> = ({
   };
 
   const handleDownloadPdf = async () => {
+    if (viewMode !== 'preview') {
+      setViewMode('preview');
+      // Allow preview DOM to mount and paginate
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
     try {
-      await exportBiodataToPdf(biodata);
-    } catch {
+      await exportBiodataToPdf(biodata, { elementId: 'biodata-document-render' });
+    } catch (err) {
+      console.warn('PDF export fallback:', err);
       printBiodata(biodata);
     }
   };

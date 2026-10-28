@@ -28,7 +28,7 @@ export const PremiumNavyTemplate: React.FC<TemplateProps> = ({ cv }) => {
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <h1 style={{ color: navyColor }} className="text-3xl font-extrabold tracking-tight uppercase">
-                {personal.fullName || 'Marcus Aurelius Vance'}
+                {personal.fullName || 'Full Name'}
               </h1>
               {personal.jobTitle && (
                 <p className="text-xs font-bold tracking-widest uppercase text-slate-600 mt-1">

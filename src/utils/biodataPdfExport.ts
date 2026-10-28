@@ -6,18 +6,21 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
 import { MarriageBiodata } from '../types/biodata';
+import { applyPageBoundaries } from './pagination';
+import { downloadPdfSafely, getSafeCanvasScale } from './mobileDownload';
 
 export interface ExportBiodataPdfOptions {
   elementId?: string;
 }
 
 /**
- * Downloads a high-quality PDF of the marriage biodata
+ * Downloads a high-quality PDF of the marriage biodata with consistent margins
+ * and intelligent page boundaries preventing sentence and block splitting.
  */
 export async function exportBiodataToPdf(
   biodata: MarriageBiodata,
   options?: ExportBiodataPdfOptions
-): Promise<void> {
+): Promise<{ blobUrl: string }> {
   const elementId = options?.elementId || 'biodata-document-render';
   const element = document.getElementById(elementId);
 
@@ -46,19 +49,35 @@ export async function exportBiodataToPdf(
   element.style.transform = 'none';
   element.style.transition = 'none';
 
+  const originalMinHeight = element.style.minHeight;
+
   try {
     if (document.fonts) {
       await document.fonts.ready;
     }
 
+    // Apply intelligent page breaks to prevent sentence/card splitting
+    applyPageBoundaries(element);
+
     const targetWidth = element.offsetWidth || 794;
+    const pageHeightPx = Math.round(targetWidth * (297 / 210));
+    const totalPages = Math.max(1, Math.ceil((element.offsetHeight - 20) / pageHeightPx));
+
+    // Pad container to exact multiple of A4 page height for full background coverage
+    element.style.minHeight = `${totalPages * pageHeightPx}px`;
+
+    const safeScale = getSafeCanvasScale(element.offsetHeight);
 
     const canvas = await html2canvas(element, {
-      scale: 2, // High resolution
+      scale: safeScale,
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
       windowWidth: targetWidth,
+      scrollX: 0,
+      scrollY: 0,
+      x: 0,
+      y: 0,
       onclone: (clonedDoc, clonedElement) => {
         clonedElement.style.transform = 'none';
         clonedElement.style.transition = 'none';
@@ -86,6 +105,7 @@ export async function exportBiodataToPdf(
 
     let heightLeft = imgHeight;
     let position = 0;
+    let pageCount = 1;
 
     // First page
     pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
@@ -93,24 +113,29 @@ export async function exportBiodataToPdf(
 
     // Additional pages if biodata is long
     while (heightLeft > 2) {
-      position = -(imgHeight - heightLeft);
+      position = -(pageCount * pageHeight);
       pdf.addPage();
       pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
       heightLeft -= pageHeight;
+      pageCount++;
     }
 
     const cleanName = (biodata.personal.fullName || 'Marriage_Biodata')
       .trim()
       .replace(/[^a-zA-Z0-9_-]/g, '_');
     const filename = `${cleanName}_Marriage_Biodata.pdf`;
-    pdf.save(filename);
+    const { blobUrl } = downloadPdfSafely(pdf, filename);
+    return { blobUrl };
   } finally {
+    element.style.minHeight = originalMinHeight;
     ancestorTransforms.forEach(({ el, transform, transition }) => {
       el.style.transform = transform;
       el.style.transition = transition;
     });
     element.style.transform = originalTransform;
     element.style.transition = originalTransition;
+    // Re-apply boundaries for the live preview
+    applyPageBoundaries(element);
   }
 }
 
@@ -118,6 +143,11 @@ export async function exportBiodataToPdf(
  * Native vector print dialog for pixel-perfect printing or Save as PDF
  */
 export function printBiodata(biodata?: MarriageBiodata): void {
+  const element = document.getElementById('biodata-document-render');
+  if (element) {
+    applyPageBoundaries(element);
+  }
+
   const originalTitle = document.title;
   if (biodata?.personal.fullName) {
     const cleanName = biodata.personal.fullName.trim().replace(/[^a-zA-Z0-9_-]/g, '_');

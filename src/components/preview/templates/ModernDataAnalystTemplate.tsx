@@ -23,7 +23,7 @@ export const ModernDataAnalystTemplate: React.FC<TemplateProps> = ({ cv }) => {
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
-              {personal.fullName || 'Salman Sakib'}
+              {personal.fullName || 'Full Name'}
             </h1>
             {personal.jobTitle && (
               <p className="text-sm font-semibold text-blue-900 mt-0.5 tracking-wide">

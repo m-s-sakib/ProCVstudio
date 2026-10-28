@@ -9,22 +9,40 @@ import { Mail, Phone, MapPin, Calendar, Heart, Shield, Sparkles } from 'lucide-r
 
 interface TemplateProps {
   biodata: MarriageBiodata;
+  totalPages?: number;
 }
 
-export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
+export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalPages = 1 }) => {
   const { personal, educationCareer, family, profile, preferences, contact, privacy, customization } = biodata;
+
+  const A4_HEIGHT_PX = 1123;
+  const numPages = Math.max(1, totalPages);
 
   return (
     <div
       className="w-full min-h-[1123px] bg-white text-slate-800 p-8 sm:p-12 leading-relaxed relative font-sans selection:bg-slate-200"
       style={{ boxSizing: 'border-box' }}
     >
-      {/* Sleek Minimal Border */}
-      <div className="absolute inset-4 sm:inset-5 border border-slate-200 rounded-lg pointer-events-none" />
+      {/* Sleek Minimal Border for each A4 Page */}
+      {Array.from({ length: numPages }).map((_, pageIdx) => {
+        const pageTop = pageIdx * A4_HEIGHT_PX;
+        return (
+          <div
+            key={`minimal-frame-${pageIdx}`}
+            className="absolute left-0 right-0 pointer-events-none"
+            style={{
+              top: `${pageTop}px`,
+              height: `${A4_HEIGHT_PX}px`,
+            }}
+          >
+            <div className="absolute inset-4 sm:inset-5 border border-slate-200 rounded-lg pointer-events-none" />
+          </div>
+        );
+      })}
 
       <div className="relative z-10 max-w-3xl mx-auto space-y-7">
         {/* Header */}
-        <header className="border-b border-slate-200 pb-5 pt-2">
+        <header className="border-b border-slate-200 pb-5 pt-2 cv-item-avoid-break">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <span className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
@@ -54,15 +72,15 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
           </div>
 
           {customization.subtitleQuote && (
-            <p className="text-xs sm:text-sm text-slate-500 italic mt-3 pt-2 border-t border-slate-100">
+            <p className="text-xs sm:text-sm text-slate-500 italic mt-3 pt-2 border-t border-slate-100 cv-paragraph">
               {customization.subtitleQuote}
             </p>
           )}
         </header>
 
         {/* Vital Personal Information Grid */}
-        <section className="space-y-3">
-          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+        <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 cv-heading">
             <span className="w-2 h-2 bg-slate-800 rounded-full" />
             <span>Personal Particulars</span>
           </h2>
@@ -129,15 +147,15 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
 
         {/* Education & Career */}
         {(educationCareer.highestDegree || educationCareer.currentOccupation) && (
-          <section className="space-y-3">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 cv-heading">
               <span className="w-2 h-2 bg-slate-800 rounded-full" />
-              <span>Education & Career</span>
+              <span>Education &amp; Career</span>
             </h2>
 
             <div className="border border-slate-200 rounded-lg p-4 space-y-3 text-xs sm:text-sm">
               {educationCareer.highestDegree && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <div className="font-bold text-slate-900 text-sm sm:text-base">
                     {educationCareer.highestDegree}
                     {educationCareer.majorOrField ? ` in ${educationCareer.majorOrField}` : ''}
@@ -157,7 +175,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
               )}
 
               {educationCareer.currentOccupation && (
-                <div className="pt-2 border-t border-slate-100">
+                <div data-cv-subitem="true" className="pt-2 border-t border-slate-100 cv-item-avoid-break">
                   <div className="font-bold text-slate-900">
                     {educationCareer.designation || educationCareer.currentOccupation}
                   </div>
@@ -171,7 +189,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
               )}
 
               {privacy.showIncome && educationCareer.annualIncome && (
-                <div className="text-xs text-slate-600">
+                <div data-cv-subitem="true" className="text-xs text-slate-600 cv-item-avoid-break">
                   <span className="font-semibold text-slate-800">Compensation:</span>{' '}
                   {educationCareer.annualIncome}
                 </div>
@@ -182,14 +200,14 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
 
         {/* Family Background */}
         {(family.fatherName || family.motherName || family.familyAbout) && (
-          <section className="space-y-3">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 cv-heading">
               <span className="w-2 h-2 bg-slate-800 rounded-full" />
               <span>Family Background</span>
             </h2>
 
             <div className="border border-slate-200 rounded-lg p-4 space-y-2 text-xs sm:text-sm">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-3 cv-item-avoid-break">
                 {family.fatherName && (
                   <div>
                     <span className="text-slate-500 block text-[11px]">Father</span>
@@ -211,7 +229,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
               </div>
 
               {(family.numberOfBrothers || family.numberOfSisters) && (
-                <div className="pt-2 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div data-cv-subitem="true" className="pt-2 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2 cv-item-avoid-break">
                   {family.numberOfBrothers && (
                     <div>
                       <span className="text-slate-500 text-xs">Brothers:</span>{' '}
@@ -232,7 +250,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
               )}
 
               {(family.familyType || family.familyStatus || family.nativePlace) && (
-                <div className="text-xs text-slate-500 pt-1">
+                <div data-cv-subitem="true" className="text-xs text-slate-500 pt-1 cv-item-avoid-break">
                   {[
                     family.familyType ? `${family.familyType} Family` : null,
                     family.familyStatus,
@@ -245,7 +263,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
               )}
 
               {family.familyAbout && (
-                <p className="text-xs text-slate-600 italic pt-1">{family.familyAbout}</p>
+                <p className="text-xs text-slate-600 italic pt-1 cv-paragraph">{family.familyAbout}</p>
               )}
             </div>
           </section>
@@ -253,25 +271,25 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
 
         {/* Profile & Values */}
         {(profile.aboutMe || profile.hobbiesAndInterests) && (
-          <section className="space-y-3">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 cv-heading">
               <span className="w-2 h-2 bg-slate-800 rounded-full" />
-              <span>Personal Outlook & Lifestyle</span>
+              <span>Personal Outlook &amp; Lifestyle</span>
             </h2>
 
             <div className="border border-slate-200 rounded-lg p-4 space-y-2 text-xs sm:text-sm">
-              {profile.aboutMe && <p className="text-slate-700 leading-relaxed">{profile.aboutMe}</p>}
+              {profile.aboutMe && <p className="text-slate-700 leading-relaxed cv-paragraph">{profile.aboutMe}</p>}
 
               {profile.hobbiesAndInterests && (
-                <div className="pt-1">
-                  <span className="font-semibold text-slate-900">Hobbies & Passions:</span>{' '}
+                <div data-cv-subitem="true" className="pt-1 cv-item-avoid-break">
+                  <span className="font-semibold text-slate-900">Hobbies &amp; Passions:</span>{' '}
                   <span className="text-slate-600">{profile.hobbiesAndInterests}</span>
                 </div>
               )}
 
               {profile.lifestyleAndDiet && (
-                <div>
-                  <span className="font-semibold text-slate-900">Diet & Lifestyle:</span>{' '}
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
+                  <span className="font-semibold text-slate-900">Diet &amp; Lifestyle:</span>{' '}
                   <span className="text-slate-600">{profile.lifestyleAndDiet}</span>
                 </div>
               )}
@@ -281,14 +299,14 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
 
         {/* Partner Preferences */}
         {(preferences.ageRange || preferences.educationPreference || preferences.valuesExpectations) && (
-          <section className="space-y-3">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+          <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 cv-heading">
               <span className="w-2 h-2 bg-slate-800 rounded-full" />
               <span>Partner Expectations</span>
             </h2>
 
             <div className="border border-slate-200 rounded-lg p-4 space-y-2 text-xs sm:text-sm">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-2 cv-item-avoid-break">
                 {preferences.ageRange && (
                   <div>
                     <span className="text-slate-500 text-xs">Preferred Age:</span>{' '}
@@ -304,15 +322,15 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
               </div>
 
               {preferences.educationPreference && (
-                <div>
-                  <span className="text-slate-500 text-xs">Education & Profession:</span>{' '}
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
+                  <span className="text-slate-500 text-xs">Education &amp; Profession:</span>{' '}
                   <span className="text-slate-800">{preferences.educationPreference}</span>
                 </div>
               )}
 
               {preferences.valuesExpectations && (
-                <div className="text-xs text-slate-600 pt-1">
-                  <span className="font-semibold text-slate-800">Values & Expectations:</span>{' '}
+                <div className="text-xs text-slate-600 pt-1 cv-paragraph">
+                  <span className="font-semibold text-slate-800">Values &amp; Expectations:</span>{' '}
                   {preferences.valuesExpectations}
                 </div>
               )}
@@ -322,15 +340,15 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
 
         {/* Contact Details */}
         {(contact.contactPersonName || contact.phone || contact.email) && (
-          <section className="space-y-3 pt-2">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+          <section data-cv-item="true" className="space-y-3 pt-2 cv-item-avoid-break">
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 cv-heading">
               <span className="w-2 h-2 bg-slate-800 rounded-full" />
               <span>Contact Information</span>
             </h2>
 
             <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-xs sm:text-sm space-y-2">
               {contact.contactPersonName && (
-                <div>
+                <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-bold text-slate-900">
                     {contact.contactPersonName}{' '}
                     {contact.relationship ? `(${contact.relationship})` : ''}
@@ -338,7 +356,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
                 </div>
               )}
 
-              <div className="flex flex-wrap items-center gap-6 pt-1">
+              <div data-cv-subitem="true" className="flex flex-wrap items-center gap-6 pt-1 cv-item-avoid-break">
                 {privacy.showPhone && contact.phone && (
                   <div className="flex items-center gap-1.5 text-slate-800">
                     <Phone className="w-3.5 h-3.5 text-slate-500" />
@@ -354,7 +372,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata }) => {
               </div>
 
               {contact.convenientTimeToCall && (
-                <div className="text-xs text-slate-500 pt-1">
+                <div data-cv-subitem="true" className="text-xs text-slate-500 pt-1 cv-item-avoid-break">
                   Calling Hours: {contact.convenientTimeToCall}
                 </div>
               )}

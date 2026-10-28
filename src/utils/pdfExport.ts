@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
 import { CVData } from '../types/cv';
 import { applyPageBoundaries, resetPageBoundaries } from './pagination';
+import { downloadPdfSafely, getSafeCanvasScale } from './mobileDownload';
 
 export interface ExportPdfOptions {
   elementId?: string;
@@ -17,7 +18,7 @@ export interface ExportPdfOptions {
  * and real clickable PDF hyperlink annotations for every link in the CV!
  * Strictly guarantees that Page 1 ends after the last full stop (.), and the spilling sentence starts on Page 2!
  */
-export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promise<void> {
+export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promise<{ blobUrl: string }> {
   const elementId = options?.elementId || 'cv-document-render';
   const element = document.getElementById(elementId);
 
@@ -75,13 +76,18 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
     });
 
     const targetWidth = element.offsetWidth || 794;
+    const safeScale = getSafeCanvasScale(element.offsetHeight);
 
     const canvas = await html2canvas(element, {
-      scale: 2, // 300 DPI equivalent for crisp text
+      scale: safeScale,
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
       windowWidth: targetWidth,
+      scrollX: 0,
+      scrollY: 0,
+      x: 0,
+      y: 0,
       onclone: (clonedDoc, clonedElement) => {
         // Ensure the cloned document has zero transform on all parent elements
         clonedElement.style.transform = 'none';
@@ -162,7 +168,8 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
     }
 
     const filename = `${cleanName}_CV.pdf`;
-    pdf.save(filename);
+    const { blobUrl } = downloadPdfSafely(pdf, filename);
+    return { blobUrl };
   } finally {
     // Restore styling on all ancestors and element
     ancestorTransforms.forEach(({ el, transform, transition }) => {

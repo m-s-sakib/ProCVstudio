@@ -77,13 +77,20 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
     }));
   };
 
+  const [downloadBlobUrl, setDownloadBlobUrl] = useState<string | null>(null);
+  const [downloadFilename, setDownloadFilename] = useState<string>('CV.pdf');
+
   const handleDownloadPdf = async () => {
     try {
       setIsExportingPdf(true);
       setExportError(null);
-      await exportToPdf(cv, { elementId: 'cv-document-render' });
+      const res = await exportToPdf(cv, { elementId: 'cv-document-render' });
+      if (res?.blobUrl) {
+        setDownloadBlobUrl(res.blobUrl);
+        setDownloadFilename(`${(cv.personal.fullName || 'Professional').trim().replace(/[^a-zA-Z0-9_-]/g, '_')}_CV.pdf`);
+      }
       setExportSuccess('PDF downloaded successfully!');
-      setTimeout(() => setExportSuccess(null), 3500);
+      setTimeout(() => setExportSuccess(null), 8000);
     } catch (err) {
       console.error('PDF Export Error:', err);
       setExportError('Failed to generate PDF. Using print dialog as backup.');
@@ -99,9 +106,13 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
     try {
       setIsExportingDocx(true);
       setExportError(null);
-      await exportToDocx(cv);
-      setExportSuccess('Word (.docx) document downloaded!');
-      setTimeout(() => setExportSuccess(null), 3500);
+      const res = await exportToDocx(cv);
+      if (res?.blobUrl) {
+        setDownloadBlobUrl(res.blobUrl);
+        setDownloadFilename(`${(cv.personal.fullName || 'Professional').trim().replace(/[^a-zA-Z0-9_-]/g, '_')}_CV.docx`);
+      }
+      setExportSuccess('Word (.docx) document ready!');
+      setTimeout(() => setExportSuccess(null), 8000);
     } catch (err) {
       console.error('DOCX Export Error:', err);
       setExportError('Failed to create .docx file. Please check input fields.');
@@ -163,58 +174,70 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
           )}
 
           {/* Template Selector in Preview */}
-          <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 scrollbar-none">
-            <span className="text-xs font-semibold text-slate-500 mr-1 hidden lg:inline">Template:</span>
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none bg-slate-50/80 px-2 rounded-xl border border-slate-200/80 shadow-2xs">
+            <span className="text-xs font-bold text-slate-800 mr-0.5 hidden lg:inline flex items-center gap-1">
+              Templates:
+            </span>
             <button
+              type="button"
               onClick={() => handleTemplateChange('academic')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
                 cv.customization.templateId === 'academic'
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-slate-900 text-white shadow-md ring-2 ring-slate-900/30'
+                  : 'bg-white text-slate-700 border border-slate-300 hover:border-slate-500 hover:text-slate-900 hover:bg-slate-50 shadow-2xs'
               }`}
+              title="Classic Academic Serif Template"
             >
-              Academic Serif
+              <span>Academic Serif</span>
             </button>
             <button
+              type="button"
               onClick={() => handleTemplateChange('data-analyst')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
                 cv.customization.templateId === 'data-analyst'
-                  ? 'bg-blue-800 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-500/30'
+                  : 'bg-white text-slate-700 border border-slate-300 hover:border-blue-400 hover:text-blue-700 hover:bg-blue-50/50 shadow-2xs'
               }`}
+              title="Modern Data Analyst & Developer Template"
             >
-              Data Analyst
+              <span>Data Analyst</span>
             </button>
             <button
+              type="button"
               onClick={() => handleTemplateChange('premium-navy')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
                 cv.customization.templateId === 'premium-navy'
-                  ? 'bg-[#0f2b48] text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-[#0f2b48] text-white shadow-md ring-2 ring-[#0f2b48]/30'
+                  : 'bg-white text-slate-700 border border-slate-300 hover:border-slate-500 hover:text-slate-900 hover:bg-slate-50 shadow-2xs'
               }`}
+              title="Executive Premium Navy Template"
             >
-              Premium Navy
+              <span>Premium Navy</span>
             </button>
             <button
+              type="button"
               onClick={() => handleTemplateChange('ats')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
                 cv.customization.templateId === 'ats'
-                  ? 'bg-slate-700 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-emerald-700 text-white shadow-md ring-2 ring-emerald-600/30'
+                  : 'bg-white text-slate-700 border border-slate-300 hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50/50 shadow-2xs'
               }`}
+              title="ATS-Optimized Minimal Template"
             >
-              ATS Minimal
+              <span>ATS Minimal</span>
             </button>
             <button
+              type="button"
               onClick={() => handleTemplateChange('europass')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap flex items-center gap-1 ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
                 cv.customization.templateId === 'europass'
-                  ? 'bg-[#0e4194] text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-[#0e4194] text-white shadow-md ring-2 ring-[#0e4194]/30'
+                  : 'bg-white text-slate-700 border border-slate-300 hover:border-[#0e4194] hover:text-[#0e4194] hover:bg-blue-50/50 shadow-2xs'
               }`}
+              title="Official European Union Europass CV"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-              Europass (EU)
+              <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+              <span>Europass (EU)</span>
             </button>
           </div>
         </div>
@@ -357,12 +380,26 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
 
       {/* Notifications toast */}
       {exportSuccess && (
-        <div className="bg-emerald-50 text-emerald-800 text-xs px-4 py-2 border-b border-emerald-200 flex items-center justify-between no-print">
+        <div className="bg-emerald-50 text-emerald-900 text-xs px-4 py-2.5 border-b border-emerald-200 flex flex-wrap items-center justify-between gap-2 no-print">
           <div className="flex items-center gap-2">
-            <Check className="w-4 h-4 text-emerald-600" />
-            <span>{exportSuccess}</span>
+            <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="font-semibold">{exportSuccess}</span>
+            <span className="hidden sm:inline text-emerald-700">· Saved to Downloads</span>
           </div>
-          <span className="text-[11px] text-emerald-600">Saved to your downloads folder</span>
+          {downloadBlobUrl && (
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-emerald-700 hidden sm:inline">Mobile download didn't start?</span>
+              <a
+                href={downloadBlobUrl}
+                download={downloadFilename}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-1 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-md shadow-2xs transition-colors"
+              >
+                <span>📱 Tap to Open / Save File</span>
+              </a>
+            </div>
+          )}
         </div>
       )}
 
