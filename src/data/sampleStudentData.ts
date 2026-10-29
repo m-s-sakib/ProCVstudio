@@ -196,9 +196,7 @@ export const emptyStudentCVData: StudentCVData = {
   experience: [],
   certifications: [],
   extracurricular: [],
-  languages: [
-    { id: 'lang_blank_1', name: 'English', proficiency: 'Professional' },
-  ],
+  languages: [],
   showReferences: false,
   references: [],
   customization: {

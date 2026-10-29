@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Sparkles, FileText, Download, Menu, X } from 'lucide-react';
+import { Sparkles, FileText, Download, Menu, X, Home, GraduationCap, Briefcase, Heart, Layers, HelpCircle } from 'lucide-react';
 
 interface NavbarProps {
   currentView: 'home' | 'builder' | 'student-builder' | 'biodata';
@@ -12,6 +12,7 @@ interface NavbarProps {
   onOpenQuickExport?: () => void;
   onOpenTypeModal?: () => void;
   onStartProfessional?: () => void;
+  onStartStudent?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -20,6 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenQuickExport,
   onOpenTypeModal,
   onStartProfessional,
+  onStartStudent,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
@@ -39,29 +41,44 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Zone 2: Navigation Links */}
-        <nav className="hidden md:flex items-center gap-4 lg:gap-5 text-sm font-medium text-slate-600">
+        <nav className="hidden md:flex items-center gap-1 bg-slate-100/80 p-1 rounded-full border border-slate-200/90 shadow-2xs">
           <button
+            type="button"
             onClick={() => onNavigate('home')}
-            className={`hover:text-slate-900 transition-colors whitespace-nowrap ${
-              currentView === 'home' ? 'text-blue-600 font-semibold' : ''
+            className={`px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 flex items-center gap-1.5 active:scale-95 ${
+              currentView === 'home'
+                ? 'bg-white text-blue-700 shadow-xs font-bold border border-slate-200/90'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            Home
+            <Home className="w-3.5 h-3.5" />
+            <span>Home</span>
           </button>
+
           <button
-            onClick={() => onNavigate('student-builder')}
-            className={`hover:text-blue-700 transition-colors whitespace-nowrap flex items-center gap-1.5 ${
+            type="button"
+            onClick={() => {
+              if (onStartStudent) {
+                onStartStudent();
+              } else {
+                onNavigate('student-builder');
+              }
+            }}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 flex items-center gap-1.5 active:scale-95 ${
               currentView === 'student-builder'
-                ? 'text-blue-600 font-bold'
-                : 'text-slate-700 hover:text-blue-600'
+                ? 'bg-white text-blue-700 shadow-xs font-bold border border-slate-200/90'
+                : 'text-slate-700 hover:text-blue-700 hover:bg-white/60'
             }`}
           >
+            <GraduationCap className="w-3.5 h-3.5 text-blue-600" />
             <span>Student CV</span>
             <span className="text-[10px] bg-blue-100 text-blue-800 border border-blue-200 px-1.5 py-0.2 rounded-full font-bold">
-              🎓 New
+              New
             </span>
           </button>
+
           <button
+            type="button"
             onClick={() => {
               if (onStartProfessional) {
                 onStartProfessional();
@@ -69,25 +86,32 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onNavigate('builder');
               }
             }}
-            className={`hover:text-slate-900 transition-colors whitespace-nowrap ${
-              currentView === 'builder' ? 'text-blue-600 font-semibold' : ''
+            className={`px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 flex items-center gap-1.5 active:scale-95 ${
+              currentView === 'builder'
+                ? 'bg-white text-blue-700 shadow-xs font-bold border border-slate-200/90'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            Professional CV
+            <Briefcase className="w-3.5 h-3.5 text-slate-700" />
+            <span>Professional CV</span>
           </button>
+
           <button
+            type="button"
             onClick={() => onNavigate('biodata')}
-            className={`hover:text-rose-700 transition-colors whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 flex items-center gap-1.5 active:scale-95 ${
               currentView === 'biodata'
-                ? 'text-rose-600 font-bold'
-                : 'text-slate-700 hover:text-rose-600'
+                ? 'bg-white text-rose-700 shadow-xs font-bold border border-rose-200/90'
+                : 'text-slate-600 hover:text-rose-700 hover:bg-white/60'
             }`}
           >
+            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
             <span>Marriage Biodata</span>
             <span className="text-[10px] bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.2 rounded-full font-semibold">
-              💍 New
+              💍
             </span>
           </button>
+
           <a
             href="#templates"
             onClick={(e) => {
@@ -99,10 +123,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }, 100);
               }
             }}
-            className="hover:text-slate-900 transition-colors whitespace-nowrap"
+            className="px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-1.5 active:scale-95"
           >
-            Templates
+            <Layers className="w-3.5 h-3.5 text-slate-500" />
+            <span>Templates</span>
           </a>
+
           <a
             href="#how-it-works"
             onClick={(e) => {
@@ -114,9 +140,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }, 100);
               }
             }}
-            className="hover:text-slate-900 transition-colors whitespace-nowrap"
+            className="px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 text-slate-600 hover:text-slate-900 hover:bg-white/60 hidden xl:flex items-center gap-1.5 active:scale-95"
           >
-            How it Works
+            <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
+            <span>How it Works</span>
           </a>
         </nav>
 
@@ -196,7 +223,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           <button
             onClick={() => {
-              onNavigate('student-builder');
+              if (onStartStudent) {
+                onStartStudent();
+              } else {
+                onNavigate('student-builder');
+              }
               setMobileMenuOpen(false);
             }}
             className={`w-full text-left px-3 py-2 text-sm font-medium rounded-lg transition-colors flex items-center justify-between ${

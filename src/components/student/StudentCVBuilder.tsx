@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { StudentCVData, StudentTemplateId } from '../../types/studentCv';
-import { sampleStudentCV, emptyStudentCVData, OBJECTIVE_PRESETS } from '../../data/sampleStudentData';
+import { emptyStudentCVData, OBJECTIVE_PRESETS } from '../../data/sampleStudentData';
 import { StudentCVPreview } from './StudentCVPreview';
 import { ConfirmModal } from '../ConfirmModal';
 import {
@@ -68,13 +68,18 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (saved) {
         try {
-          return JSON.parse(saved);
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.personal && parsed.personal.fullName === 'Tanvir Ahmed') {
+            localStorage.removeItem(LOCAL_STORAGE_KEY);
+            return emptyStudentCVData;
+          }
+          return parsed;
         } catch (e) {
           console.error('Failed to parse saved student CV draft:', e);
         }
       }
     }
-    return sampleStudentCV;
+    return emptyStudentCVData;
   });
 
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
@@ -127,14 +132,6 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
       updatedAt: new Date().toISOString(),
     });
     setShowClearModal(false);
-  };
-
-  const handleLoadSample = () => {
-    setCv({
-      ...sampleStudentCV,
-      id: `student_cv_${Date.now()}`,
-      updatedAt: new Date().toISOString(),
-    });
   };
 
   // Helper updates
@@ -503,19 +500,12 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={handleLoadSample}
-              className="text-xs font-semibold text-slate-700 hover:text-blue-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors"
-              title="Load sample student profile (Tanvir Ahmed)"
-            >
-              Demo Profile
-            </button>
-            <button
-              type="button"
               onClick={() => setShowClearModal(true)}
-              className="text-xs font-semibold text-slate-600 hover:text-rose-700 px-2.5 py-1.5 rounded-lg hover:bg-rose-50 transition-colors"
+              className="text-xs font-semibold text-slate-600 hover:text-rose-700 px-2.5 py-1.5 rounded-lg hover:bg-rose-50 transition-colors flex items-center gap-1 border border-slate-200"
               title="Clear all fields to blank"
             >
               <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Clear All</span>
             </button>
 
             {/* View Mode Toggle: Form / Split / Preview */}

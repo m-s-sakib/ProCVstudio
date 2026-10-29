@@ -47,6 +47,19 @@ export default function App() {
   };
 
   const handleStartStudentBuilder = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('procv_student_cv_draft_v1');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed?.personal?.fullName === 'Tanvir Ahmed') {
+            localStorage.removeItem('procv_student_cv_draft_v1');
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
     setCurrentView('student-builder');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -127,6 +140,7 @@ export default function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onStartProfessional={() => handleStartBuilder('data-analyst', true)}
+        onStartStudent={handleStartStudentBuilder}
         onOpenQuickExport={handleQuickExport}
         onOpenTypeModal={() => setIsTypeModalOpen(true)}
       />
