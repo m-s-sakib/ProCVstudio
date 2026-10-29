@@ -20,7 +20,7 @@ import { ContactForm } from './forms/ContactForm';
 import { BiodataCustomizationPanel } from './forms/BiodataCustomizationPanel';
 import { BiodataPreview } from './BiodataPreview';
 import { ConfirmModal } from '../ConfirmModal';
-import { exportBiodataToPdf, printBiodata } from '../../utils/biodataPdfExport';
+import { exportBiodataToPdf } from '../../utils/biodataPdfExport';
 import {
   User,
   GraduationCap,
@@ -35,7 +35,6 @@ import {
   RotateCcw,
   Sparkles,
   Download,
-  Printer,
   FileEdit,
   Eye,
   Columns2,
@@ -136,13 +135,8 @@ export const BiodataBuilder: React.FC<BiodataBuilderProps> = ({
     try {
       await exportBiodataToPdf(biodata, { elementId: 'biodata-document-render' });
     } catch (err) {
-      console.warn('PDF export fallback:', err);
-      printBiodata(biodata);
+      console.warn('PDF export failed:', err);
     }
-  };
-
-  const handlePrint = () => {
-    printBiodata(biodata);
   };
 
   const currentStep = BIODATA_STEPS[currentStepIndex];
@@ -234,16 +228,6 @@ export const BiodataBuilder: React.FC<BiodataBuilderProps> = ({
             >
               <Sparkles className="w-3.5 h-3.5 text-rose-500" />
               <span>Sample Profiles</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handlePrint}
-              title="Print Biodata"
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg shadow-2xs transition-colors"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Print</span>
             </button>
 
             <button

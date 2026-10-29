@@ -16,7 +16,7 @@ import {
   BorderStyle,
 } from 'docx';
 import { StudentCVData } from '../types/studentCv';
-import { normalizeUrl } from './links';
+import { normalizeUrl, normalizePdfLink } from './links';
 import { applyPageBoundaries } from './pagination';
 import { downloadPdfSafely, downloadBlobFile, getSafeCanvasScale } from './mobileDownload';
 
@@ -67,6 +67,10 @@ export async function exportStudentPdf(
       await document.fonts.ready;
     }
 
+    // Force layout reflow so client rects are measured on unscaled 1:1 dimensions
+    void element.offsetHeight;
+    void document.body.offsetHeight;
+
     // Apply intelligent page breaks to prevent sentence/block splitting
     applyPageBoundaries(element);
 
@@ -77,19 +81,37 @@ export async function exportStudentPdf(
     // Pad container to exact multiple of A4 page height for full background coverage
     element.style.minHeight = `${totalPages * pageHeightPx}px`;
 
+    const containerWidth = element.offsetWidth || 794;
     const containerRect = element.getBoundingClientRect();
+    const currentScale =
+      containerRect.width > 0 && containerWidth > 0
+        ? containerRect.width / containerWidth
+        : 1;
+
     const linkElements = Array.from(element.querySelectorAll('a[href]'));
 
-    const linksData = linkElements.map((a) => {
-      const rect = a.getBoundingClientRect();
-      return {
-        href: (a as HTMLAnchorElement).href,
-        x: rect.left - containerRect.left,
-        y: rect.top - containerRect.top,
-        w: rect.width,
-        h: rect.height,
-      };
-    });
+    const linksData = linkElements
+      .map((a) => {
+        const rect = a.getBoundingClientRect();
+        const rawHref = (a as HTMLAnchorElement).href || (a as HTMLAnchorElement).getAttribute('href') || '';
+        const cleanHref = normalizePdfLink(rawHref);
+        if (!cleanHref || rect.width <= 0 || rect.height <= 0) return null;
+
+        // Convert from scaled screen pixels to unscaled 1:1 CSS pixels
+        const unscaledX = (rect.left - containerRect.left) / currentScale;
+        const unscaledY = (rect.top - containerRect.top) / currentScale;
+        const unscaledW = rect.width / currentScale;
+        const unscaledH = rect.height / currentScale;
+
+        return {
+          href: cleanHref,
+          x: unscaledX,
+          y: unscaledY,
+          w: unscaledW,
+          h: unscaledH,
+        };
+      })
+      .filter((l): l is NonNullable<typeof l> => l !== null);
 
     const safeScale = getSafeCanvasScale(element.offsetHeight);
 
@@ -145,21 +167,28 @@ export async function exportStudentPdf(
       pageCount++;
     }
 
-    // Embed links
-    const mmPerPx = pdfWidth / containerRect.width;
+    // Embed genuine clickable hyperlink annotations into the PDF on the correct pages.
+    // 1 unscaled CSS pixel on the 794px-wide document is exactly (pdfWidth / containerWidth) mm!
+    const mmPerPx = pdfWidth / containerWidth;
     linksData.forEach((link) => {
-      if (!link.href || link.w <= 0 || link.h <= 0) return;
-      const xMm = link.x * mmPerPx;
-      const yMm = link.y * mmPerPx;
-      const wMm = Math.max(link.w * mmPerPx, 2);
-      const hMm = Math.max(link.h * mmPerPx, 2);
+      const rawXMm = link.x * mmPerPx;
+      const rawYMm = link.y * mmPerPx;
+      const rawWMm = link.w * mmPerPx;
+      const rawHMm = link.h * mmPerPx;
 
-      const targetPage = Math.floor(yMm / pageHeight) + 1;
-      const yOnPageMm = yMm % pageHeight;
+      // Expand touch area for finger tapping on mobile touchscreens (minimum 6.5mm height, 2mm horizontal pad)
+      const padX = 2.0;
+      const padY = 1.8;
+      const touchX = Math.max(0, rawXMm - padX);
+      const touchW = Math.min(pdfWidth - touchX, rawWMm + (padX * 2));
+      const touchH = Math.max(rawHMm + (padY * 2), 6.5);
+
+      const targetPage = Math.floor(rawYMm / pageHeight) + 1;
+      const yOnPageMm = Math.max(0, (rawYMm % pageHeight) - padY);
 
       if (targetPage <= pageCount) {
         pdf.setPage(targetPage);
-        pdf.link(xMm, yOnPageMm, wMm, hMm, { url: link.href });
+        pdf.link(touchX, yOnPageMm, touchW, touchH, { url: link.href });
       }
     });
 

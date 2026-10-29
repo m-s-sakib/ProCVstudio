@@ -49,17 +49,11 @@ export function downloadBlobFile(blob: Blob, filename: string): { blobUrl: strin
     link.rel = 'noopener noreferrer';
     document.body.appendChild(link);
     link.click();
+    setTimeout(() => {
+      link.remove();
+    }, 150);
   } catch (err) {
     console.warn('Programmatic anchor click failed:', err);
-  }
-
-  // On iOS Safari, programmatic anchor download is frequently ignored for blob URLs.
-  // In addition, if direct download did not trigger, opening the blob URL in a new window/tab
-  // allows iOS Safari's native PDF preview to display with the native "Share / Save to Files" option.
-  if (isIOS) {
-    setTimeout(() => {
-      window.open(blobUrl, '_blank');
-    }, 250);
   }
 
   // Keep the blob URL valid for 60 seconds so mobile download managers can complete reading the file

@@ -195,22 +195,24 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
-      {/* Responsive View Mode Switcher: Edit Form vs Live CV Preview */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-2 sm:p-2.5 rounded-2xl border border-slate-200 shadow-2xs mb-5 sm:mb-6 no-print print:hidden">
+      {/* Responsive View Mode Switcher: Edit Form vs Live CV Preview - Highlighted & Modern */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-gradient-to-r from-blue-50/70 via-indigo-50/30 to-white p-2.5 sm:p-3 rounded-2xl border-2 border-blue-200/90 shadow-xs ring-1 ring-blue-500/10 mb-5 sm:mb-6 no-print print:hidden">
         {/* The 2 Primary Mode Buttons: 'Edit Form' and 'Live CV Preview' */}
-        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl flex-1 max-w-xl">
+        <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl flex-1 max-w-xl border border-blue-200/80 shadow-2xs">
           <button
             type="button"
             onClick={() => handleSetViewMode('form')}
-            className={`flex-1 py-2 px-3 sm:px-5 text-xs sm:text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 py-2 px-3 sm:px-5 text-xs sm:text-sm font-bold rounded-lg flex items-center justify-center gap-2 transition-all ${
               viewMode === 'form'
-                ? 'bg-white text-slate-900 shadow-xs font-bold border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <FileEdit className={`w-4 h-4 ${viewMode === 'form' ? 'text-blue-600' : 'text-slate-500'}`} />
+            <FileEdit className={`w-4 h-4 ${viewMode === 'form' ? 'text-white' : 'text-blue-600'}`} />
             <span>Edit Form</span>
-            <span className="hidden sm:inline-block text-[11px] font-normal text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full ml-1">
+            <span className={`hidden sm:inline-block text-[11px] font-bold px-2 py-0.5 rounded-full ml-1 ${
+              viewMode === 'form' ? 'bg-blue-700/60 text-white' : 'bg-slate-100 text-slate-600'
+            }`}>
               Step {currentStepIndex + 1}/{STEPS.length}
             </span>
           </button>
@@ -218,32 +220,32 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
           <button
             type="button"
             onClick={() => handleSetViewMode('preview')}
-            className={`flex-1 py-2 px-3 sm:px-5 text-xs sm:text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 py-2 px-3 sm:px-5 text-xs sm:text-sm font-bold rounded-lg flex items-center justify-center gap-2 transition-all ${
               viewMode === 'preview'
-                ? 'bg-white text-blue-700 shadow-xs font-bold border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <Eye className={`w-4 h-4 ${viewMode === 'preview' ? 'text-blue-600' : 'text-slate-500'}`} />
+            <Eye className={`w-4 h-4 ${viewMode === 'preview' ? 'text-white' : 'text-blue-600'}`} />
             <span>Live CV Preview</span>
           </button>
         </div>
 
         {/* Device View Status & Quick Actions */}
-        <div className="flex items-center justify-between sm:justify-end gap-3 px-1 text-xs text-slate-500">
-          <div className="flex items-center gap-1.5 font-medium">
+        <div className="flex items-center justify-between sm:justify-end gap-3 px-1 text-xs text-slate-600">
+          <div className="flex items-center gap-1.5 font-semibold bg-white/80 border border-slate-200/80 px-2.5 py-1 rounded-full shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span className="text-[11px] text-slate-600">Draft saved locally</span>
+            <span className="text-[11px] text-slate-700">Draft saved locally</span>
           </div>
 
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={handleManualSave}
-              className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-2xs transition-all active:scale-95"
               title="Save draft"
             >
-              <Save className="w-3.5 h-3.5 text-slate-500" />
+              <Save className="w-3.5 h-3.5 text-blue-600" />
               <span>Save</span>
             </button>
           </div>
@@ -339,8 +341,11 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
               />
             </div>
 
-            {/* Horizontal step pills (scrollable on smaller screens) */}
-            <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
+            {/* Horizontal step pills (touch-slidable on mobile & smaller screens) */}
+            <div
+              className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none max-w-full touch-pan-x overscroll-x-contain scroll-smooth flex-nowrap"
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
               {STEPS.map((s, idx) => {
                 const Icon = s.icon;
                 const isActive = currentStepIndex === idx;
@@ -350,7 +355,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
                   <button
                     key={s.id}
                     onClick={() => setCurrentStepIndex(idx)}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-colors ${
+                    className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-colors active:scale-95 ${
                       isActive
                         ? 'bg-blue-600 text-white font-semibold shadow-2xs'
                         : isCompleted

@@ -10,7 +10,7 @@ import { TraditionalIslamicTemplate } from './templates/TraditionalIslamicTempla
 import { ModernMinimalTemplate } from './templates/ModernMinimalTemplate';
 import { PremiumFloralTemplate } from './templates/PremiumFloralTemplate';
 import { ClassicFamilyTemplate } from './templates/ClassicFamilyTemplate';
-import { exportBiodataToPdf, printBiodata } from '../../utils/biodataPdfExport';
+import { exportBiodataToPdf } from '../../utils/biodataPdfExport';
 import { applyPageBoundaries, resetPageBoundaries } from '../../utils/pagination';
 import {
   ZoomIn,
@@ -18,7 +18,6 @@ import {
   RotateCcw,
   Maximize2,
   Download,
-  Printer,
   Sparkles,
   CheckCircle2,
   AlertCircle,
@@ -103,16 +102,11 @@ export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
       setTimeout(() => setExportMessage(null), 8000);
     } catch (err) {
       console.error('Biodata PDF Export error:', err);
-      setExportMessage('Opening browser print to save PDF...');
-      printBiodata(biodata);
-      setTimeout(() => setExportMessage(null), 3000);
+      setExportMessage('Failed to export PDF. Please try again.');
+      setTimeout(() => setExportMessage(null), 4000);
     } finally {
       setIsExporting(false);
     }
-  };
-
-  const handlePrint = () => {
-    printBiodata(biodata);
   };
 
   const renderActiveTemplate = () => {
@@ -198,15 +192,6 @@ export const BiodataPreview: React.FC<BiodataPreviewProps> = ({ biodata }) => {
 
         {/* Action Buttons: Export PDF & Print */}
         <div className="flex items-center gap-2">
-          <button
-            onClick={handlePrint}
-            title="Print or Save as Vector PDF"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg shadow-2xs transition-colors"
-          >
-            <Printer className="w-3.5 h-3.5 text-slate-600" />
-            <span className="hidden sm:inline">Print</span>
-          </button>
-
           <button
             onClick={handleDownloadPdf}
             disabled={isExporting}

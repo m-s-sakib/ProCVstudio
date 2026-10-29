@@ -11,9 +11,9 @@ import { PremiumNavyTemplate } from './templates/PremiumNavyTemplate';
 import { ATSTemplate } from './templates/ATSTemplate';
 import { EuropassTemplate } from './templates/EuropassTemplate';
 import { exportToDocx } from '../../utils/docxExport';
-import { exportToPdf, printCV } from '../../utils/pdfExport';
+import { exportToPdf } from '../../utils/pdfExport';
 import { applyPageBoundaries, resetPageBoundaries } from '../../utils/pagination';
-import { Download, FileText, Printer, ZoomIn, ZoomOut, Check, Sparkles, AlertCircle, FileEdit, Maximize2, Layers } from 'lucide-react';
+import { Download, FileText, ZoomIn, ZoomOut, Check, Sparkles, AlertCircle, FileEdit, Maximize2, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CVPreviewProps {
   cv: CVData;
@@ -29,7 +29,15 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
   showBackToFormButton = false,
 }) => {
   const docRef = useRef<HTMLDivElement>(null);
+  const templateScrollRef = useRef<HTMLDivElement>(null);
   const [docHeight, setDocHeight] = useState<number>(1123);
+
+  const scrollTemplates = (direction: 'left' | 'right') => {
+    if (templateScrollRef.current) {
+      const scrollAmount = direction === 'left' ? -180 : 180;
+      templateScrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
   const [zoom, setZoom] = useState<number>(() => {
     if (typeof window !== 'undefined') {
       if (window.innerWidth < 480) return 46;
@@ -93,10 +101,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
       setTimeout(() => setExportSuccess(null), 8000);
     } catch (err) {
       console.error('PDF Export Error:', err);
-      setExportError('Failed to generate PDF. Using print dialog as backup.');
-      setTimeout(() => {
-        printCV();
-      }, 500);
+      setExportError('Failed to generate PDF. Please try again.');
     } finally {
       setIsExportingPdf(false);
     }
@@ -160,84 +165,113 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
   return (
     <div className="flex flex-col h-full bg-slate-100 rounded-xl border border-slate-200 overflow-hidden shadow-inner">
       {/* Top Preview Control Toolbar */}
-      <div className="bg-white px-4 py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0 no-print">
-        <div className="flex items-center gap-2 flex-wrap">
+      <div className="bg-white px-3 sm:px-4 py-2 sm:py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 shrink-0 no-print">
+        <div className="flex items-center gap-2 max-w-full w-full sm:w-auto min-w-0">
           {showBackToFormButton && onBackToForm && (
             <button
               type="button"
               onClick={onBackToForm}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors shadow-2xs mr-1"
+              className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors shadow-2xs mr-1"
             >
               <FileEdit className="w-3.5 h-3.5 text-blue-600" />
               <span>← Edit Form</span>
             </button>
           )}
 
-          {/* Template Selector in Preview */}
-          <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none bg-slate-50/80 px-2 rounded-xl border border-slate-200/80 shadow-2xs">
-            <span className="text-xs font-bold text-slate-800 mr-0.5 hidden lg:inline flex items-center gap-1">
-              Templates:
-            </span>
+          {/* Template Selector with horizontal touch sliding on mobile */}
+          <div className="relative flex items-center min-w-0 max-w-full w-full sm:w-auto">
+            {/* Mobile Left Slide Button */}
             <button
               type="button"
-              onClick={() => handleTemplateChange('academic')}
-              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
-                cv.customization.templateId === 'academic'
-                  ? 'bg-slate-900 text-white shadow-md ring-2 ring-slate-900/30'
-                  : 'bg-white text-slate-700 border border-slate-300 hover:border-slate-500 hover:text-slate-900 hover:bg-slate-50 shadow-2xs'
-              }`}
-              title="Classic Academic Serif Template"
+              onClick={() => scrollTemplates('left')}
+              className="sm:hidden shrink-0 p-1 mr-1 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 active:scale-90 shadow-2xs z-10"
+              title="Slide Left"
+              aria-label="Slide left"
             >
-              <span>Academic Serif</span>
+              <ChevronLeft className="w-3.5 h-3.5" />
             </button>
+
+            {/* Horizontally Slidable / Scrollable Container */}
+            <div
+              ref={templateScrollRef}
+              className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none bg-slate-50/90 px-2 rounded-xl border border-slate-200/90 shadow-2xs max-w-full touch-pan-x overscroll-x-contain scroll-smooth flex-nowrap min-w-0"
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
+              <span className="text-xs font-bold text-slate-800 mr-0.5 hidden lg:inline flex items-center gap-1 shrink-0">
+                Templates:
+              </span>
+              <button
+                type="button"
+                onClick={() => handleTemplateChange('academic')}
+                className={`shrink-0 px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
+                  cv.customization.templateId === 'academic'
+                    ? 'bg-slate-900 text-white shadow-md ring-2 ring-slate-900/30'
+                    : 'bg-white text-slate-700 border border-slate-300 hover:border-slate-500 hover:text-slate-900 hover:bg-slate-50 shadow-2xs'
+                }`}
+                title="Classic Academic Serif Template"
+              >
+                <span>Academic Serif</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTemplateChange('data-analyst')}
+                className={`shrink-0 px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
+                  cv.customization.templateId === 'data-analyst'
+                    ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-500/30'
+                    : 'bg-white text-slate-700 border border-slate-300 hover:border-blue-400 hover:text-blue-700 hover:bg-blue-50/50 shadow-2xs'
+                }`}
+                title="Modern Data Analyst & Developer Template"
+              >
+                <span>Data Analyst</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTemplateChange('premium-navy')}
+                className={`shrink-0 px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
+                  cv.customization.templateId === 'premium-navy'
+                    ? 'bg-[#0f2b48] text-white shadow-md ring-2 ring-[#0f2b48]/30'
+                    : 'bg-white text-slate-700 border border-slate-300 hover:border-slate-500 hover:text-slate-900 hover:bg-slate-50 shadow-2xs'
+                }`}
+                title="Executive Premium Navy Template"
+              >
+                <span>Premium Navy</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTemplateChange('ats')}
+                className={`shrink-0 px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
+                  cv.customization.templateId === 'ats'
+                    ? 'bg-emerald-700 text-white shadow-md ring-2 ring-emerald-600/30'
+                    : 'bg-white text-slate-700 border border-slate-300 hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50/50 shadow-2xs'
+                }`}
+                title="ATS-Optimized Minimal Template"
+              >
+                <span>ATS Minimal</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTemplateChange('europass')}
+                className={`shrink-0 px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
+                  cv.customization.templateId === 'europass'
+                    ? 'bg-[#0e4194] text-white shadow-md ring-2 ring-[#0e4194]/30'
+                    : 'bg-white text-slate-700 border border-slate-300 hover:border-[#0e4194] hover:text-[#0e4194] hover:bg-blue-50/50 shadow-2xs'
+                }`}
+                title="Official European Union Europass CV"
+              >
+                <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+                <span>Europass (EU)</span>
+              </button>
+            </div>
+
+            {/* Mobile Right Slide Button */}
             <button
               type="button"
-              onClick={() => handleTemplateChange('data-analyst')}
-              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
-                cv.customization.templateId === 'data-analyst'
-                  ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-500/30'
-                  : 'bg-white text-slate-700 border border-slate-300 hover:border-blue-400 hover:text-blue-700 hover:bg-blue-50/50 shadow-2xs'
-              }`}
-              title="Modern Data Analyst & Developer Template"
+              onClick={() => scrollTemplates('right')}
+              className="sm:hidden shrink-0 p-1 ml-1 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 active:scale-90 shadow-2xs z-10"
+              title="Slide Right"
+              aria-label="Slide right"
             >
-              <span>Data Analyst</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleTemplateChange('premium-navy')}
-              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
-                cv.customization.templateId === 'premium-navy'
-                  ? 'bg-[#0f2b48] text-white shadow-md ring-2 ring-[#0f2b48]/30'
-                  : 'bg-white text-slate-700 border border-slate-300 hover:border-slate-500 hover:text-slate-900 hover:bg-slate-50 shadow-2xs'
-              }`}
-              title="Executive Premium Navy Template"
-            >
-              <span>Premium Navy</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleTemplateChange('ats')}
-              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
-                cv.customization.templateId === 'ats'
-                  ? 'bg-emerald-700 text-white shadow-md ring-2 ring-emerald-600/30'
-                  : 'bg-white text-slate-700 border border-slate-300 hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50/50 shadow-2xs'
-              }`}
-              title="ATS-Optimized Minimal Template"
-            >
-              <span>ATS Minimal</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleTemplateChange('europass')}
-              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
-                cv.customization.templateId === 'europass'
-                  ? 'bg-[#0e4194] text-white shadow-md ring-2 ring-[#0e4194]/30'
-                  : 'bg-white text-slate-700 border border-slate-300 hover:border-[#0e4194] hover:text-[#0e4194] hover:bg-blue-50/50 shadow-2xs'
-              }`}
-              title="Official European Union Europass CV"
-            >
-              <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
-              <span>Europass (EU)</span>
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -293,16 +327,6 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
               Fit
             </button>
           </div>
-
-          {/* Native Print / Save */}
-          <button
-            onClick={() => printCV(cv)}
-            className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg transition-colors shadow-2xs whitespace-nowrap"
-            title="Print or Save as PDF with 100% vector-crisp selectable text & hyperlinks"
-          >
-            <Printer className="w-3.5 h-3.5 text-slate-500" />
-            <span>Print</span>
-          </button>
 
           {/* Word Export Button */}
           <button

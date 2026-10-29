@@ -91,8 +91,8 @@ export default function App() {
   const handleQuickExport = async () => {
     try {
       await exportToPdf(activeCv);
-    } catch {
-      window.print();
+    } catch (err) {
+      console.error('Quick export failed:', err);
     }
   };
 

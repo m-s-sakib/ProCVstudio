@@ -56,3 +56,33 @@ export function telHref(phone: string | undefined): string {
   const clean = phone.trim().replace(/[^0-9+]/g, '');
   return clean ? `tel:${clean}` : '';
 }
+
+/**
+ * Normalizes any link or text into a fully valid URI for PDF annotations
+ * so they are immediately clickable and recognized on all mobile PDF viewers (iOS & Android).
+ */
+export function normalizePdfLink(href: string | undefined): string {
+  if (!href) return '';
+  const clean = href.trim();
+  if (!clean || clean === '#') return '';
+
+  if (clean.startsWith('mailto:') || clean.startsWith('tel:')) {
+    return clean;
+  }
+
+  // If contains @ and no forward slashes, it is an email address
+  if (clean.includes('@') && !clean.includes('/')) {
+    return `mailto:${clean}`;
+  }
+
+  // If purely digits, plus sign, spaces, hyphens and at least 6 characters, it is a telephone number
+  if (/^[+0-9\s\-()]{6,}$/.test(clean) && !/[a-zA-Z]/.test(clean)) {
+    return `tel:${clean.replace(/[\s\-()]/g, '')}`;
+  }
+
+  if (/^https?:\/\//i.test(clean)) {
+    return clean;
+  }
+
+  return `https://${clean}`;
+}

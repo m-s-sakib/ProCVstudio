@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas-pro';
 import { MarriageBiodata } from '../types/biodata';
 import { applyPageBoundaries } from './pagination';
 import { downloadPdfSafely, getSafeCanvasScale } from './mobileDownload';
+import { normalizePdfLink } from './links';
 
 export interface ExportBiodataPdfOptions {
   elementId?: string;
@@ -56,6 +57,10 @@ export async function exportBiodataToPdf(
       await document.fonts.ready;
     }
 
+    // Force layout reflow so client rects are measured on unscaled 1:1 dimensions
+    void element.offsetHeight;
+    void document.body.offsetHeight;
+
     // Apply intelligent page breaks to prevent sentence/card splitting
     applyPageBoundaries(element);
 
@@ -65,6 +70,31 @@ export async function exportBiodataToPdf(
 
     // Pad container to exact multiple of A4 page height for full background coverage
     element.style.minHeight = `${totalPages * pageHeightPx}px`;
+
+    const containerWidth = element.offsetWidth || 794;
+    const containerRect = element.getBoundingClientRect();
+    const currentScale =
+      containerRect.width > 0 && containerWidth > 0
+        ? containerRect.width / containerWidth
+        : 1;
+
+    const linkElements = Array.from(element.querySelectorAll('a[href]'));
+    const linksData = linkElements
+      .map((a) => {
+        const rect = a.getBoundingClientRect();
+        const rawHref = (a as HTMLAnchorElement).href || (a as HTMLAnchorElement).getAttribute('href') || '';
+        const cleanHref = normalizePdfLink(rawHref);
+        if (!cleanHref || rect.width <= 0 || rect.height <= 0) return null;
+
+        return {
+          href: cleanHref,
+          x: (rect.left - containerRect.left) / currentScale,
+          y: (rect.top - containerRect.top) / currentScale,
+          w: rect.width / currentScale,
+          h: rect.height / currentScale,
+        };
+      })
+      .filter((l): l is NonNullable<typeof l> => l !== null);
 
     const safeScale = getSafeCanvasScale(element.offsetHeight);
 
@@ -119,6 +149,29 @@ export async function exportBiodataToPdf(
       heightLeft -= pageHeight;
       pageCount++;
     }
+
+    // Embed genuine clickable hyperlink annotations into the PDF on the correct pages
+    const mmPerPx = pdfWidth / containerWidth;
+    linksData.forEach((link) => {
+      const rawXMm = link.x * mmPerPx;
+      const rawYMm = link.y * mmPerPx;
+      const rawWMm = link.w * mmPerPx;
+      const rawHMm = link.h * mmPerPx;
+
+      const padX = 2.0;
+      const padY = 1.8;
+      const touchX = Math.max(0, rawXMm - padX);
+      const touchW = Math.min(pdfWidth - touchX, rawWMm + (padX * 2));
+      const touchH = Math.max(rawHMm + (padY * 2), 6.5);
+
+      const targetPage = Math.floor(rawYMm / pageHeight) + 1;
+      const yOnPageMm = Math.max(0, (rawYMm % pageHeight) - padY);
+
+      if (targetPage <= pageCount) {
+        pdf.setPage(targetPage);
+        pdf.link(touchX, yOnPageMm, touchW, touchH, { url: link.href });
+      }
+    });
 
     const cleanName = (biodata.personal.fullName || 'Marriage_Biodata')
       .trim()

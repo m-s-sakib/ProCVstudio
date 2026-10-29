@@ -32,7 +32,7 @@ export const ModernStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <h1 style={{ color: accent }} className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              {personal.fullName || 'Tanvir Ahmed'}
+              {personal.fullName || 'Student Name'}
             </h1>
             <p className="text-xs font-semibold text-slate-600 mt-0.5 tracking-wide uppercase">
               Student / Entry-Level Candidate
