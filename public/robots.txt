@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
 
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Host: https://pro-cv-make.vercel.app
 Sitemap: https://pro-cv-make.vercel.app/sitemap.xml
