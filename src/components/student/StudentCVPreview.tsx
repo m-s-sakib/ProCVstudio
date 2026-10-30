@@ -135,17 +135,6 @@ export const StudentCVPreview: React.FC<StudentCVPreviewProps> = ({
       {/* Top Preview Control Toolbar */}
       <div className="bg-white px-3 sm:px-4 py-2 sm:py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 shrink-0 no-print">
         <div className="flex items-center gap-2 max-w-full w-full sm:w-auto min-w-0">
-          {showBackToFormButton && onBackToForm && (
-            <button
-              type="button"
-              onClick={onBackToForm}
-              className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors shadow-2xs mr-1"
-            >
-              <FileEdit className="w-3.5 h-3.5 text-blue-600" />
-              <span>← Edit Form</span>
-            </button>
-          )}
-
           {/* Template Selector with horizontal touch sliding on mobile */}
           <div className="relative flex items-center min-w-0 max-w-full w-full sm:w-auto">
             {/* Mobile Left Slide Button */}

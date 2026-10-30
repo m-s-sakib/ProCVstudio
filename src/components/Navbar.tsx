@@ -185,15 +185,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Sparkles className="w-3.5 h-3.5" />
               <span>CV Maker</span>
             </button>
-          ) : (
-            <button
-              onClick={() => onOpenQuickExport && onOpenQuickExport()}
-              className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-xs font-semibold text-white bg-[#0f2b48] hover:bg-slate-900 rounded-lg transition-colors shadow-xs whitespace-nowrap"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Export CV</span>
-            </button>
-          )}
+          ) : null}
 
           {/* Mobile menu toggle button */}
           <button
