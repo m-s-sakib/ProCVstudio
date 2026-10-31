@@ -16,7 +16,7 @@ export const ATSTemplate: React.FC<TemplateProps> = ({ cv }) => {
   const { personal, education, experience, projects, skillCategories, certifications, leadership, languages, interests, references, sectionVisibility } = cv;
 
   return (
-    <div className="font-modern text-black text-[12px] leading-normal p-8 sm:p-12 bg-white min-h-[1050px]">
+    <div className="font-modern text-black text-[12px] leading-normal p-12 bg-white min-h-[1050px]">
       <header className="pb-3 mb-3 border-b border-black">
         <h1 className="text-2xl font-bold uppercase tracking-tight text-black">
           {personal.fullName || 'Candidate Name'}

@@ -22,6 +22,17 @@
   font-family: 'JetBrains Mono', monospace;
 }
 
+/* Ensure the A4 CV document paper always renders at canonical A4 dimensions on all devices */
+.cv-document-container,
+.biodata-document-container {
+  width: 210mm !important;
+  min-width: 210mm !important;
+  max-width: 210mm !important;
+  box-sizing: border-box !important;
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
 /* Print & Multi-page Styles for Pixel-Perfect Document Organization */
 @media print {
   @page {

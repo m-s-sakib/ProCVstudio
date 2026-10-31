@@ -64,39 +64,17 @@ export async function exportBiodataToPdf(
     // Apply intelligent page breaks to prevent sentence/card splitting
     applyPageBoundaries(element);
 
-    const targetWidth = element.offsetWidth || 794;
+    const targetWidth = 794;
     const pageHeightPx = Math.round(targetWidth * (297 / 210));
     const totalPages = Math.max(1, Math.ceil((element.offsetHeight - 20) / pageHeightPx));
 
     // Pad container to exact multiple of A4 page height for full background coverage
     element.style.minHeight = `${totalPages * pageHeightPx}px`;
 
-    const containerWidth = element.offsetWidth || 794;
-    const containerRect = element.getBoundingClientRect();
-    const currentScale =
-      containerRect.width > 0 && containerWidth > 0
-        ? containerRect.width / containerWidth
-        : 1;
+    let linksData: Array<{ href: string; x: number; y: number; w: number; h: number }> = [];
 
-    const linkElements = Array.from(element.querySelectorAll('a[href]'));
-    const linksData = linkElements
-      .map((a) => {
-        const rect = a.getBoundingClientRect();
-        const rawHref = (a as HTMLAnchorElement).href || (a as HTMLAnchorElement).getAttribute('href') || '';
-        const cleanHref = normalizePdfLink(rawHref);
-        if (!cleanHref || rect.width <= 0 || rect.height <= 0) return null;
-
-        return {
-          href: cleanHref,
-          x: (rect.left - containerRect.left) / currentScale,
-          y: (rect.top - containerRect.top) / currentScale,
-          w: rect.width / currentScale,
-          h: rect.height / currentScale,
-        };
-      })
-      .filter((l): l is NonNullable<typeof l> => l !== null);
-
-    const safeScale = getSafeCanvasScale(element.offsetHeight);
+    const elementHeight = Math.ceil(element.offsetHeight);
+    const safeScale = getSafeCanvasScale(elementHeight);
 
     const canvas = await html2canvas(element, {
       scale: safeScale,
@@ -104,19 +82,92 @@ export async function exportBiodataToPdf(
       logging: false,
       backgroundColor: '#ffffff',
       windowWidth: targetWidth,
+      windowHeight: Math.max(pageHeightPx, elementHeight + 200),
+      width: targetWidth,
+      height: elementHeight,
       scrollX: 0,
       scrollY: 0,
       x: 0,
       y: 0,
       onclone: (clonedDoc, clonedElement) => {
+        // Strip any mobile viewport meta tags
+        const viewportMetas = clonedDoc.querySelectorAll('meta[name="viewport"]');
+        viewportMetas.forEach((meta) => meta.remove());
+
+        const fixedMeta = clonedDoc.createElement('meta');
+        fixedMeta.name = 'viewport';
+        fixedMeta.content = 'width=794, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+        clonedDoc.head.appendChild(fixedMeta);
+
+        // Lock html and body
+        clonedDoc.documentElement.style.width = `${targetWidth}px`;
+        clonedDoc.documentElement.style.minWidth = `${targetWidth}px`;
+        clonedDoc.documentElement.style.maxWidth = `${targetWidth}px`;
+        clonedDoc.documentElement.style.margin = '0';
+        clonedDoc.documentElement.style.padding = '0';
+
+        clonedDoc.body.style.width = `${targetWidth}px`;
+        clonedDoc.body.style.minWidth = `${targetWidth}px`;
+        clonedDoc.body.style.maxWidth = `${targetWidth}px`;
+        clonedDoc.body.style.margin = '0';
+        clonedDoc.body.style.padding = '0';
+        clonedDoc.body.style.webkitTextSizeAdjust = '100%';
+
+        const overrideStyle = clonedDoc.createElement('style');
+        overrideStyle.textContent = `
+          * {
+            -webkit-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+          }
+          .cv-document-container,
+          .biodata-document-container {
+            width: ${targetWidth}px !important;
+            min-width: ${targetWidth}px !important;
+            max-width: ${targetWidth}px !important;
+            box-sizing: border-box !important;
+            margin: 0 auto !important;
+            transform: none !important;
+          }
+        `;
+        clonedDoc.head.appendChild(overrideStyle);
+
         clonedElement.style.transform = 'none';
         clonedElement.style.transition = 'none';
+        clonedElement.style.width = `${targetWidth}px`;
+        clonedElement.style.minWidth = `${targetWidth}px`;
+        clonedElement.style.maxWidth = `${targetWidth}px`;
+        clonedElement.style.boxSizing = 'border-box';
+        clonedElement.style.margin = '0 auto';
+
         let p = clonedElement.parentElement;
         while (p && p !== clonedDoc.body) {
           p.style.transform = 'none';
           p.style.transition = 'none';
+          p.style.margin = '0';
+          p.style.padding = '0';
           p = p.parentElement;
         }
+
+        // Measure links directly on clonedElement inside the unscaled iframe
+        const clonedContainerRect = clonedElement.getBoundingClientRect();
+        const linkElements = Array.from(clonedElement.querySelectorAll('a[href]'));
+
+        linksData = linkElements
+          .map((a) => {
+            const rect = a.getBoundingClientRect();
+            const rawHref = (a as HTMLAnchorElement).href || (a as HTMLAnchorElement).getAttribute('href') || '';
+            const cleanHref = normalizePdfLink(rawHref);
+            if (!cleanHref || rect.width <= 0 || rect.height <= 0) return null;
+
+            return {
+              href: cleanHref,
+              x: rect.left - clonedContainerRect.left,
+              y: rect.top - clonedContainerRect.top,
+              w: rect.width,
+              h: rect.height,
+            };
+          })
+          .filter((l): l is NonNullable<typeof l> => l !== null);
       },
     });
 
@@ -151,7 +202,7 @@ export async function exportBiodataToPdf(
     }
 
     // Embed genuine clickable hyperlink annotations into the PDF on the correct pages
-    const mmPerPx = pdfWidth / containerWidth;
+    const mmPerPx = pdfWidth / targetWidth;
     linksData.forEach((link) => {
       const rawXMm = link.x * mmPerPx;
       const rawYMm = link.y * mmPerPx;
@@ -159,10 +210,10 @@ export async function exportBiodataToPdf(
       const rawHMm = link.h * mmPerPx;
 
       const padX = 2.0;
-      const padY = 1.8;
+      const padY = 2.0;
       const touchX = Math.max(0, rawXMm - padX);
       const touchW = Math.min(pdfWidth - touchX, rawWMm + (padX * 2));
-      const touchH = Math.max(rawHMm + (padY * 2), 6.5);
+      const touchH = Math.max(rawHMm + (padY * 2), 7.0);
 
       const targetPage = Math.floor(rawYMm / pageHeight) + 1;
       const yOnPageMm = Math.max(0, (rawYMm % pageHeight) - padY);

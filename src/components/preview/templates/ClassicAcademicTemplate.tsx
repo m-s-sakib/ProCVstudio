@@ -16,7 +16,7 @@ export const ClassicAcademicTemplate: React.FC<TemplateProps> = ({ cv }) => {
   const { personal, education, experience, projects, skillCategories, certifications, leadership, languages, interests, references, sectionVisibility } = cv;
 
   return (
-    <div className="font-academic text-slate-900 text-[12px] leading-relaxed p-8 sm:p-12 bg-white min-h-[1050px]">
+    <div className="font-academic text-slate-900 text-[12px] leading-relaxed p-12 bg-white min-h-[1050px]">
       {/* Centered Academic Header */}
       <header className="text-center pb-4 mb-4 border-b border-slate-300">
         {personal.photoUrl && (
@@ -28,7 +28,7 @@ export const ClassicAcademicTemplate: React.FC<TemplateProps> = ({ cv }) => {
             />
           </div>
         )}
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 uppercase mb-1">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 uppercase mb-1">
           {personal.fullName || 'Full Name'}
         </h1>
         {personal.jobTitle && (
@@ -364,7 +364,7 @@ export const ClassicAcademicTemplate: React.FC<TemplateProps> = ({ cv }) => {
           <h2 className="text-[11px] font-bold tracking-widest text-slate-900 uppercase border-b border-slate-900 pb-0.5 mb-2 cv-heading">
             Academic References
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
+          <div className="grid grid-cols-2 gap-3 text-[11px]">
             {references.map((ref) => (
               <div key={ref.id} data-cv-item="true" className="cv-item-avoid-break border-l border-slate-400 pl-2">
                 <div className="font-bold text-slate-900">{ref.name}</div>

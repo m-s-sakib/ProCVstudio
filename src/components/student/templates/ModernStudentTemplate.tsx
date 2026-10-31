@@ -23,15 +23,15 @@ export const ModernStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
     skills.other.length > 0;
 
   return (
-    <div className="font-modern text-slate-800 text-[12px] leading-relaxed p-8 sm:p-11 bg-white min-h-[1050px]">
+    <div className="font-modern text-slate-800 text-[12px] leading-relaxed p-11 bg-white min-h-[1050px]">
       {/* Top Accent Strip */}
-      <div style={{ backgroundColor: accent }} className="h-2 -mt-8 sm:-mt-11 -mx-8 sm:-mx-11 mb-6" />
+      <div style={{ backgroundColor: accent }} className="h-2 -mt-11 -mx-11 mb-6" />
 
       {/* Modern Header */}
       <header className="pb-4 mb-4 border-b border-slate-200 cv-item-avoid-break">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h1 style={{ color: accent }} className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <h1 style={{ color: accent }} className="text-3xl font-extrabold tracking-tight">
               {personal.fullName || 'Student Name'}
             </h1>
             <p className="text-xs font-semibold text-slate-600 mt-0.5 tracking-wide uppercase">
@@ -363,7 +363,7 @@ export const ModernStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
           <h2 style={{ color: accent }} className="text-xs font-bold uppercase tracking-wider pb-1 mb-1.5 border-b border-slate-200 cv-heading">
             References
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
+          <div className="grid grid-cols-2 gap-3 text-[11px]">
             {references.map((ref) => (
               <div key={ref.id} data-cv-item="true" className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg cv-item-avoid-break">
                 <div className="font-bold text-slate-900">{ref.name}</div>

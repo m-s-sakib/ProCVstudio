@@ -21,7 +21,7 @@ export const SimpleStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
     skills.other.length > 0;
 
   return (
-    <div className="font-modern text-slate-800 text-[12px] leading-relaxed p-8 sm:p-12 bg-white min-h-[1050px]">
+    <div className="font-modern text-slate-800 text-[12px] leading-relaxed p-12 bg-white min-h-[1050px]">
       {/* Header */}
       <header className="border-b-2 border-slate-800 pb-3 mb-4 text-center cv-item-avoid-break">
         {personal.photoUrl && (
@@ -34,7 +34,7 @@ export const SimpleStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
           </div>
         )}
 
-        <h1 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-slate-900">
+        <h1 className="text-3xl font-extrabold uppercase tracking-tight text-slate-900">
           {personal.fullName || 'Student Name'}
         </h1>
 
@@ -146,40 +146,40 @@ export const SimpleStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
           <div className="space-y-1.5 text-[11.5px]">
             {skills.technical.length > 0 && (
               <div data-cv-subitem="true" className="grid grid-cols-12 gap-2 cv-item-avoid-break">
-                <span className="col-span-4 sm:col-span-3 font-bold text-slate-900">
+                <span className="col-span-3 font-bold text-slate-900">
                   Technical Skills:
                 </span>
-                <span className="col-span-8 sm:col-span-9 text-slate-700">
+                <span className="col-span-9 text-slate-700">
                   {skills.technical.join(', ')}
                 </span>
               </div>
             )}
             {skills.computer.length > 0 && (
               <div data-cv-subitem="true" className="grid grid-cols-12 gap-2 cv-item-avoid-break">
-                <span className="col-span-4 sm:col-span-3 font-bold text-slate-900">
+                <span className="col-span-3 font-bold text-slate-900">
                   Software &amp; Tools:
                 </span>
-                <span className="col-span-8 sm:col-span-9 text-slate-700">
+                <span className="col-span-9 text-slate-700">
                   {skills.computer.join(', ')}
                 </span>
               </div>
             )}
             {skills.communication.length > 0 && (
               <div data-cv-subitem="true" className="grid grid-cols-12 gap-2 cv-item-avoid-break">
-                <span className="col-span-4 sm:col-span-3 font-bold text-slate-900">
+                <span className="col-span-3 font-bold text-slate-900">
                   Communication:
                 </span>
-                <span className="col-span-8 sm:col-span-9 text-slate-700">
+                <span className="col-span-9 text-slate-700">
                   {skills.communication.join(', ')}
                 </span>
               </div>
             )}
             {skills.other.length > 0 && (
               <div data-cv-subitem="true" className="grid grid-cols-12 gap-2 cv-item-avoid-break">
-                <span className="col-span-4 sm:col-span-3 font-bold text-slate-900">
+                <span className="col-span-3 font-bold text-slate-900">
                   Other Strengths:
                 </span>
-                <span className="col-span-8 sm:col-span-9 text-slate-700">
+                <span className="col-span-9 text-slate-700">
                   {skills.other.join(', ')}
                 </span>
               </div>
@@ -350,7 +350,7 @@ export const SimpleStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 pb-1 mb-1.5 border-b border-slate-300 cv-heading">
             References
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
+          <div className="grid grid-cols-2 gap-3 text-[11px]">
             {references.map((ref) => (
               <div key={ref.id} data-cv-item="true" className="p-2 border border-slate-200 rounded cv-item-avoid-break">
                 <div className="font-bold text-slate-900">{ref.name}</div>

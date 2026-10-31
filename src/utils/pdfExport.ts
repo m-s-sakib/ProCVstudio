@@ -64,41 +64,13 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
     // 3. Apply page-break boundaries on the unscaled 1:1 layout
     applyPageBoundaries(element);
 
-    // 4. Get link elements and their positions in true unscaled 1:1 coordinates
-    const containerWidth = element.offsetWidth || 794;
-    const containerRect = element.getBoundingClientRect();
-    const currentScale =
-      containerRect.width > 0 && containerWidth > 0
-        ? containerRect.width / containerWidth
-        : 1;
+    // 4. Standard A4 width in CSS pixels (210mm at 96 DPI = 794px)
+    const targetWidth = 794;
+    const elementHeight = Math.ceil(element.offsetHeight);
+    const pageHeightPx = 1123;
+    let linksData: Array<{ href: string; x: number; y: number; w: number; h: number }> = [];
 
-    const linkElements = Array.from(element.querySelectorAll('a[href]'));
-
-    const linksData = linkElements
-      .map((a) => {
-        const rect = a.getBoundingClientRect();
-        const rawHref = (a as HTMLAnchorElement).href || (a as HTMLAnchorElement).getAttribute('href') || '';
-        const cleanHref = normalizePdfLink(rawHref);
-        if (!cleanHref || rect.width <= 0 || rect.height <= 0) return null;
-
-        // Convert from screen pixels to unscaled 1:1 CSS pixels
-        const unscaledX = (rect.left - containerRect.left) / currentScale;
-        const unscaledY = (rect.top - containerRect.top) / currentScale;
-        const unscaledW = rect.width / currentScale;
-        const unscaledH = rect.height / currentScale;
-
-        return {
-          href: cleanHref,
-          x: unscaledX,
-          y: unscaledY,
-          w: unscaledW,
-          h: unscaledH,
-        };
-      })
-      .filter((l): l is NonNullable<typeof l> => l !== null);
-
-    const targetWidth = containerWidth;
-    const safeScale = getSafeCanvasScale(element.offsetHeight);
+    const safeScale = getSafeCanvasScale(elementHeight);
 
     const canvas = await html2canvas(element, {
       scale: safeScale,
@@ -106,20 +78,95 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
       logging: false,
       backgroundColor: '#ffffff',
       windowWidth: targetWidth,
+      windowHeight: Math.max(pageHeightPx, elementHeight + 200),
+      width: targetWidth,
+      height: elementHeight,
       scrollX: 0,
       scrollY: 0,
       x: 0,
       y: 0,
       onclone: (clonedDoc, clonedElement) => {
-        // Ensure the cloned document has zero transform on all parent elements
+        // 1. Strip any mobile viewport meta tags from the cloned document
+        // to prevent mobile browser engines from overriding iframe media query thresholds
+        const viewportMetas = clonedDoc.querySelectorAll('meta[name="viewport"]');
+        viewportMetas.forEach((meta) => meta.remove());
+
+        const fixedMeta = clonedDoc.createElement('meta');
+        fixedMeta.name = 'viewport';
+        fixedMeta.content = 'width=794, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+        clonedDoc.head.appendChild(fixedMeta);
+
+        // 2. Lock html and body to exact 794px canonical A4 dimensions and disable text inflation
+        clonedDoc.documentElement.style.width = `${targetWidth}px`;
+        clonedDoc.documentElement.style.minWidth = `${targetWidth}px`;
+        clonedDoc.documentElement.style.maxWidth = `${targetWidth}px`;
+        clonedDoc.documentElement.style.margin = '0';
+        clonedDoc.documentElement.style.padding = '0';
+
+        clonedDoc.body.style.width = `${targetWidth}px`;
+        clonedDoc.body.style.minWidth = `${targetWidth}px`;
+        clonedDoc.body.style.maxWidth = `${targetWidth}px`;
+        clonedDoc.body.style.margin = '0';
+        clonedDoc.body.style.padding = '0';
+        clonedDoc.body.style.webkitTextSizeAdjust = '100%';
+
+        // 3. Inject CSS to lock A4 document container and ensure print consistency
+        const overrideStyle = clonedDoc.createElement('style');
+        overrideStyle.textContent = `
+          * {
+            -webkit-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+          }
+          .cv-document-container,
+          .biodata-document-container {
+            width: ${targetWidth}px !important;
+            min-width: ${targetWidth}px !important;
+            max-width: ${targetWidth}px !important;
+            box-sizing: border-box !important;
+            margin: 0 auto !important;
+            transform: none !important;
+          }
+        `;
+        clonedDoc.head.appendChild(overrideStyle);
+
+        // 4. Enforce exact 794px canonical A4 dimensions on the cloned element in iframe
         clonedElement.style.transform = 'none';
         clonedElement.style.transition = 'none';
+        clonedElement.style.width = `${targetWidth}px`;
+        clonedElement.style.minWidth = `${targetWidth}px`;
+        clonedElement.style.maxWidth = `${targetWidth}px`;
+        clonedElement.style.boxSizing = 'border-box';
+        clonedElement.style.margin = '0 auto';
+
         let p = clonedElement.parentElement;
         while (p && p !== clonedDoc.body) {
           p.style.transform = 'none';
           p.style.transition = 'none';
+          p.style.margin = '0';
+          p.style.padding = '0';
           p = p.parentElement;
         }
+
+        // 5. Measure links directly on clonedElement inside the unscaled iframe
+        const clonedContainerRect = clonedElement.getBoundingClientRect();
+        const linkElements = Array.from(clonedElement.querySelectorAll('a[href]'));
+
+        linksData = linkElements
+          .map((a) => {
+            const rect = a.getBoundingClientRect();
+            const rawHref = (a as HTMLAnchorElement).href || (a as HTMLAnchorElement).getAttribute('href') || '';
+            const cleanHref = normalizePdfLink(rawHref);
+            if (!cleanHref || rect.width <= 0 || rect.height <= 0) return null;
+
+            return {
+              href: cleanHref,
+              x: rect.left - clonedContainerRect.left,
+              y: rect.top - clonedContainerRect.top,
+              w: rect.width,
+              h: rect.height,
+            };
+          })
+          .filter((l): l is NonNullable<typeof l> => l !== null);
       },
     });
 
@@ -139,41 +186,41 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
 
     let heightLeft = imgHeight;
     let position = 0;
-    let totalPages = 1;
+    let pageCount = 1;
 
     // First page
     pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
     heightLeft -= pageHeight;
 
-    // Subsequent pages
+    // Subsequent pages with exact page-offset segment slicing
     while (heightLeft > 2) {
-      position = -(imgHeight - heightLeft);
+      position = -(pageCount * pageHeight);
       pdf.addPage();
       pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
       heightLeft -= pageHeight;
-      totalPages++;
+      pageCount++;
     }
 
     // Embed genuine clickable hyperlink annotations into the PDF on the correct pages.
-    // 1 unscaled CSS pixel on the 794px-wide document is exactly (pdfWidth / containerWidth) mm!
-    const mmPerPx = pdfWidth / containerWidth;
+    // 1 unscaled CSS pixel on the 794px-wide document is exactly (pdfWidth / targetWidth) mm!
+    const mmPerPx = pdfWidth / targetWidth;
     linksData.forEach((link) => {
       const rawXMm = link.x * mmPerPx;
       const rawYMm = link.y * mmPerPx;
       const rawWMm = link.w * mmPerPx;
       const rawHMm = link.h * mmPerPx;
 
-      // Expand touch area for finger tapping on mobile touchscreens (minimum 6.5mm height, 2mm horizontal pad)
+      // Expand touch area for finger tapping on mobile touchscreens (minimum 7.0mm height, 2mm horizontal pad)
       const padX = 2.0;
-      const padY = 1.8;
+      const padY = 2.0;
       const touchX = Math.max(0, rawXMm - padX);
       const touchW = Math.min(pdfWidth - touchX, rawWMm + (padX * 2));
-      const touchH = Math.max(rawHMm + (padY * 2), 6.5);
+      const touchH = Math.max(rawHMm + (padY * 2), 7.0);
 
       const targetPage = Math.floor(rawYMm / pageHeight) + 1;
       const yOnPageMm = Math.max(0, (rawYMm % pageHeight) - padY);
 
-      if (targetPage <= totalPages) {
+      if (targetPage <= pageCount) {
         pdf.setPage(targetPage);
         pdf.link(touchX, yOnPageMm, touchW, touchH, { url: link.href });
       }
@@ -181,13 +228,13 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
 
     // If multi-page, add clean running page numbers at the bottom of each page
     const cleanName = (cv.personal.fullName || 'Professional').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
-    if (totalPages > 1) {
-      for (let p = 1; p <= totalPages; p++) {
+    if (pageCount > 1) {
+      for (let p = 1; p <= pageCount; p++) {
         pdf.setPage(p);
         pdf.setFontSize(8);
         pdf.setTextColor(150, 150, 150);
         pdf.text(
-          `${cv.personal.fullName || 'Curriculum Vitae'}  ·  Page ${p} of ${totalPages}`,
+          `${cv.personal.fullName || 'Curriculum Vitae'}  ·  Page ${p} of ${pageCount}`,
           pdfWidth / 2,
           pageHeight - 5,
           { align: 'center' }

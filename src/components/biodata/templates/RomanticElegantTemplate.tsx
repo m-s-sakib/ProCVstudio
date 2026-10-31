@@ -27,7 +27,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
 
   return (
     <div
-      className={`w-full min-h-[1123px] bg-[#fffafb] text-[#3d2c2e] p-8 sm:p-12 leading-relaxed relative ${fontClass} selection:bg-rose-100`}
+      className={`w-full min-h-[1123px] bg-[#fffafb] text-[#3d2c2e] p-12 leading-relaxed relative ${fontClass} selection:bg-rose-100`}
       style={{
         boxSizing: 'border-box',
       }}
@@ -44,8 +44,8 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
               height: `${A4_HEIGHT_PX}px`,
             }}
           >
-            <div className="absolute inset-3 sm:inset-4 border-2 border-[#e8b4b8] rounded-2xl pointer-events-none" />
-            <div className="absolute inset-4 sm:inset-5 border border-[#f3d2d5] rounded-xl pointer-events-none" />
+            <div className="absolute inset-4 border-2 border-[#e8b4b8] rounded-2xl pointer-events-none" />
+            <div className="absolute inset-5 border border-[#f3d2d5] rounded-xl pointer-events-none" />
 
             {/* Corner Flourish Motifs */}
             <div className="absolute top-5 left-5 text-[#d8829d] pointer-events-none opacity-80">
@@ -68,7 +68,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
         {/* Header Section */}
         <header className="text-center space-y-2 pt-2 cv-item-avoid-break">
           {customization.showBismillah && customization.bismillahText && (
-            <div className="text-lg sm:text-xl font-arabic text-[#9d3a5a] tracking-wider mb-2 font-serif">
+            <div className="text-xl font-arabic text-[#9d3a5a] tracking-wider mb-2 font-serif">
               {customization.bismillahText}
             </div>
           )}
@@ -79,41 +79,41 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
             <Sparkles className="w-3 h-3 text-[#d8829d]" />
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#6d1b37] drop-shadow-2xs">
+          <h1 className="text-4xl font-bold tracking-tight text-[#6d1b37] drop-shadow-2xs">
             {personal.fullName || 'Candidate Full Name'}
           </h1>
 
           {educationCareer.currentOccupation && (
-            <p className="text-sm sm:text-base font-medium text-[#8c3554] tracking-wide">
+            <p className="text-base font-medium text-[#8c3554] tracking-wide">
               {educationCareer.currentOccupation}
               {educationCareer.organization ? ` • ${educationCareer.organization}` : ''}
             </p>
           )}
 
           {customization.subtitleQuote && (
-            <p className="text-xs sm:text-sm italic text-[#844d5a] max-w-xl mx-auto pt-1 font-serif">
+            <p className="text-sm italic text-[#844d5a] max-w-xl mx-auto pt-1 font-serif">
               {customization.subtitleQuote}
             </p>
           )}
 
           {/* Decorative Divider */}
           <div className="flex items-center justify-center gap-3 pt-2">
-            <div className="w-20 sm:w-28 h-[1px] bg-gradient-to-r from-transparent via-[#d8829d] to-transparent" />
+            <div className="w-28 h-[1px] bg-gradient-to-r from-transparent via-[#d8829d] to-transparent" />
             <div className="flex items-center gap-1 text-[#b8336a]">
               <Heart className="w-3.5 h-3.5 fill-[#f472b6] text-[#db2777]" />
             </div>
-            <div className="w-20 sm:w-28 h-[1px] bg-gradient-to-r from-transparent via-[#d8829d] to-transparent" />
+            <div className="w-28 h-[1px] bg-gradient-to-r from-transparent via-[#d8829d] to-transparent" />
           </div>
         </header>
 
         {/* Top Profile Card: Photo + Core Quick Stats */}
         <div
           data-cv-item="true"
-          className="cv-item-avoid-break bg-white/80 backdrop-blur-xs rounded-xl p-5 border border-[#f3d2d5] shadow-2xs flex flex-col sm:flex-row items-center sm:items-start gap-6"
+          className="cv-item-avoid-break bg-white/80 backdrop-blur-xs rounded-xl p-5 border border-[#f3d2d5] shadow-2xs flex flex-row items-start gap-6"
         >
           {privacy.showPhoto && personal.photoUrl ? (
             <div className="relative shrink-0">
-              <div className="w-32 h-40 sm:w-36 sm:h-44 rounded-xl overflow-hidden border-3 border-[#e8b4b8] shadow-xs bg-rose-50">
+              <div className="w-36 h-44 rounded-xl overflow-hidden border-3 border-[#e8b4b8] shadow-xs bg-rose-50">
                 <img
                   src={personal.photoUrl}
                   alt={personal.fullName || 'Candidate Photo'}
@@ -125,12 +125,12 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
               </div>
             </div>
           ) : (
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#e8b4b8] bg-[#fff1f2] flex items-center justify-center shrink-0 text-[#a8325a]">
+            <div className="w-28 h-28 rounded-full border-2 border-[#e8b4b8] bg-[#fff1f2] flex items-center justify-center shrink-0 text-[#a8325a]">
               <User className="w-10 h-10 opacity-70" />
             </div>
           )}
 
-          <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 text-xs sm:text-sm">
+          <div className="flex-1 w-full grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm">
             {personal.dateOfBirth && (
               <div className="flex items-center gap-2 text-[#4d2833]">
                 <Calendar className="w-3.5 h-3.5 text-[#d8829d] shrink-0" />
@@ -179,14 +179,14 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
               </div>
             )}
             {personal.currentLocation && (
-              <div className="flex items-center gap-2 text-[#4d2833] sm:col-span-2">
+              <div className="flex items-center gap-2 text-[#4d2833] col-span-2">
                 <MapPin className="w-3.5 h-3.5 text-[#d8829d] shrink-0" />
                 <span className="font-semibold text-[#8c3554]">Current Location:</span>
                 <span>{personal.currentLocation}</span>
               </div>
             )}
             {privacy.showPermanentAddress && personal.permanentAddress && (
-              <div className="flex items-start gap-2 text-[#4d2833] sm:col-span-2">
+              <div className="flex items-start gap-2 text-[#4d2833] col-span-2">
                 <Home className="w-3.5 h-3.5 text-[#d8829d] shrink-0 mt-0.5" />
                 <div>
                   <span className="font-semibold text-[#8c3554]">Permanent Address:</span>{' '}
@@ -204,12 +204,12 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <GraduationCap className="w-3.5 h-3.5" />
               </div>
-              <h2 className="text-base sm:text-lg font-bold text-[#7a2040]">
+              <h2 className="text-lg font-bold text-[#7a2040]">
                 Education &amp; Career
               </h2>
             </div>
 
-            <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2.5 text-xs sm:text-sm">
+            <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2.5 text-sm">
               {educationCareer.highestDegree && (
                 <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-[#8c3554]">Highest Qualification:</span>{' '}
@@ -271,13 +271,13 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <Home className="w-3.5 h-3.5" />
               </div>
-              <h2 className="text-base sm:text-lg font-bold text-[#7a2040]">
+              <h2 className="text-lg font-bold text-[#7a2040]">
                 Family Background
               </h2>
             </div>
 
-            <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2.5 text-xs sm:text-sm">
-              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-3 cv-item-avoid-break">
+            <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2.5 text-sm">
+              <div data-cv-subitem="true" className="grid grid-cols-2 gap-3 cv-item-avoid-break">
                 {family.fatherName && (
                   <div>
                     <span className="font-semibold text-[#8c3554]">Father:</span>{' '}
@@ -316,7 +316,7 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
                 </div>
               )}
 
-              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#fae4e7] text-xs text-[#6e414c] cv-item-avoid-break">
+              <div data-cv-subitem="true" className="grid grid-cols-3 gap-2 pt-2 border-t border-[#fae4e7] text-xs text-[#6e414c] cv-item-avoid-break">
                 {family.familyType && (
                   <div>
                     <span className="font-semibold text-[#8c3554]">Type:</span> {family.familyType} Family
@@ -357,12 +357,12 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <HeartHandshake className="w-3.5 h-3.5" />
               </div>
-              <h2 className="text-base sm:text-lg font-bold text-[#7a2040]">
+              <h2 className="text-lg font-bold text-[#7a2040]">
                 About Me &amp; Lifestyle
               </h2>
             </div>
 
-            <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2 text-xs sm:text-sm">
+            <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2 text-sm">
               {profile.aboutMe && (
                 <p className="text-[#3b2228] leading-relaxed cv-paragraph">
                   {profile.aboutMe}
@@ -407,13 +407,13 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <Compass className="w-3.5 h-3.5" />
               </div>
-              <h2 className="text-base sm:text-lg font-bold text-[#7a2040]">
+              <h2 className="text-lg font-bold text-[#7a2040]">
                 Partner Preferences
               </h2>
             </div>
 
-            <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2 text-xs sm:text-sm">
-              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 cv-item-avoid-break">
+            <div className="bg-white/70 rounded-xl p-4 border border-[#f3d2d5] space-y-2 text-sm">
+              <div data-cv-subitem="true" className="grid grid-cols-2 gap-2.5 cv-item-avoid-break">
                 {preferences.ageRange && (
                   <div>
                     <span className="font-semibold text-[#8c3554]">Age Range:</span>{' '}
@@ -471,12 +471,12 @@ export const RomanticElegantTemplate: React.FC<TemplateProps> = ({ biodata, tota
               <div className="w-6 h-6 rounded-full bg-[#fdeef1] flex items-center justify-center text-[#9d3a5a]">
                 <Phone className="w-3.5 h-3.5" />
               </div>
-              <h2 className="text-base sm:text-lg font-bold text-[#7a2040]">
+              <h2 className="text-lg font-bold text-[#7a2040]">
                 Contact &amp; Communication
               </h2>
             </div>
 
-            <div className="bg-white/80 rounded-xl p-4 border border-[#f3d2d5] space-y-2 text-xs sm:text-sm">
+            <div className="bg-white/80 rounded-xl p-4 border border-[#f3d2d5] space-y-2 text-sm">
               <div data-cv-subitem="true" className="flex flex-wrap items-center justify-between gap-2 cv-item-avoid-break">
                 {contact.contactPersonName && (
                   <div>

@@ -21,7 +21,7 @@ export const AtsStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
     skills.other.length > 0;
 
   return (
-    <div className="font-modern text-black text-[12px] leading-normal p-8 sm:p-12 bg-white min-h-[1050px]">
+    <div className="font-modern text-black text-[12px] leading-normal p-12 bg-white min-h-[1050px]">
       {/* ATS Standard Header */}
       <header className="pb-3 mb-3 border-b border-black cv-item-avoid-break">
         <div className="flex items-start justify-between gap-4">
@@ -294,7 +294,7 @@ export const AtsStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
           <h2 className="text-xs font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5 cv-heading">
             References
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+          <div className="grid grid-cols-2 gap-2 text-[11px]">
             {references.map((ref) => (
               <div key={ref.id} data-cv-item="true" className="border border-black p-1.5 cv-item-avoid-break">
                 <div className="font-bold">{ref.name}</div>

@@ -20,7 +20,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
 
   return (
     <div
-      className="w-full min-h-[1123px] bg-white text-slate-800 p-8 sm:p-12 leading-relaxed relative font-sans selection:bg-slate-200"
+      className="w-full min-h-[1123px] bg-white text-slate-800 p-12 leading-relaxed relative font-sans selection:bg-slate-200"
       style={{ boxSizing: 'border-box' }}
     >
       {/* Sleek Minimal Border for each A4 Page */}
@@ -35,7 +35,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               height: `${A4_HEIGHT_PX}px`,
             }}
           >
-            <div className="absolute inset-4 sm:inset-5 border border-slate-200 rounded-lg pointer-events-none" />
+            <div className="absolute inset-5 border border-slate-200 rounded-lg pointer-events-none" />
           </div>
         );
       })}
@@ -43,16 +43,16 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
       <div className="relative z-10 max-w-3xl mx-auto space-y-7">
         {/* Header */}
         <header className="border-b border-slate-200 pb-5 pt-2 cv-item-avoid-break">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex flex-row items-center justify-between gap-4">
             <div>
               <span className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
                 {customization.title || 'Marriage Biodata'}
               </span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mt-1">
+              <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mt-1">
                 {personal.fullName || 'Candidate Name'}
               </h1>
               {educationCareer.currentOccupation && (
-                <p className="text-sm sm:text-base font-medium text-slate-600 mt-1">
+                <p className="text-base font-medium text-slate-600 mt-1">
                   {educationCareer.currentOccupation}
                   {educationCareer.organization ? ` • ${educationCareer.organization}` : ''}
                 </p>
@@ -61,7 +61,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
 
             {/* Photo */}
             {privacy.showPhoto && personal.photoUrl ? (
-              <div className="w-24 h-32 sm:w-28 sm:h-36 rounded-lg overflow-hidden border border-slate-300 shadow-xs shrink-0 bg-slate-100">
+              <div className="w-28 h-36 rounded-lg overflow-hidden border border-slate-300 shadow-xs shrink-0 bg-slate-100">
                 <img
                   src={personal.photoUrl}
                   alt={personal.fullName || 'Candidate'}
@@ -72,7 +72,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
           </div>
 
           {customization.subtitleQuote && (
-            <p className="text-xs sm:text-sm text-slate-500 italic mt-3 pt-2 border-t border-slate-100 cv-paragraph">
+            <p className="text-sm text-slate-500 italic mt-3 pt-2 border-t border-slate-100 cv-paragraph">
               {customization.subtitleQuote}
             </p>
           )}
@@ -85,7 +85,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
             <span>Personal Particulars</span>
           </h2>
 
-          <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 text-xs sm:text-sm">
+          <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 grid grid-cols-3 gap-x-4 gap-y-3 text-sm">
             {personal.dateOfBirth && (
               <div>
                 <span className="text-slate-500 block text-[11px]">Date of Birth</span>
@@ -131,13 +131,13 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               </div>
             )}
             {personal.currentLocation && (
-              <div className="col-span-2 sm:col-span-3 pt-1 border-t border-slate-200">
+              <div className="col-span-3 pt-1 border-t border-slate-200">
                 <span className="text-slate-500 block text-[11px]">Current Location</span>
                 <span className="font-semibold text-slate-900">{personal.currentLocation}</span>
               </div>
             )}
             {privacy.showPermanentAddress && personal.permanentAddress && (
-              <div className="col-span-2 sm:col-span-3">
+              <div className="col-span-3">
                 <span className="text-slate-500 block text-[11px]">Permanent Address</span>
                 <span className="font-semibold text-slate-900">{personal.permanentAddress}</span>
               </div>
@@ -153,10 +153,10 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               <span>Education &amp; Career</span>
             </h2>
 
-            <div className="border border-slate-200 rounded-lg p-4 space-y-3 text-xs sm:text-sm">
+            <div className="border border-slate-200 rounded-lg p-4 space-y-3 text-sm">
               {educationCareer.highestDegree && (
                 <div data-cv-subitem="true" className="cv-item-avoid-break">
-                  <div className="font-bold text-slate-900 text-sm sm:text-base">
+                  <div className="font-bold text-slate-900 text-base">
                     {educationCareer.highestDegree}
                     {educationCareer.majorOrField ? ` in ${educationCareer.majorOrField}` : ''}
                   </div>
@@ -206,8 +206,8 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               <span>Family Background</span>
             </h2>
 
-            <div className="border border-slate-200 rounded-lg p-4 space-y-2 text-xs sm:text-sm">
-              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-3 cv-item-avoid-break">
+            <div className="border border-slate-200 rounded-lg p-4 space-y-2 text-sm">
+              <div data-cv-subitem="true" className="grid grid-cols-2 gap-3 cv-item-avoid-break">
                 {family.fatherName && (
                   <div>
                     <span className="text-slate-500 block text-[11px]">Father</span>
@@ -229,7 +229,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               </div>
 
               {(family.numberOfBrothers || family.numberOfSisters) && (
-                <div data-cv-subitem="true" className="pt-2 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2 cv-item-avoid-break">
+                <div data-cv-subitem="true" className="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 cv-item-avoid-break">
                   {family.numberOfBrothers && (
                     <div>
                       <span className="text-slate-500 text-xs">Brothers:</span>{' '}
@@ -277,7 +277,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               <span>Personal Outlook &amp; Lifestyle</span>
             </h2>
 
-            <div className="border border-slate-200 rounded-lg p-4 space-y-2 text-xs sm:text-sm">
+            <div className="border border-slate-200 rounded-lg p-4 space-y-2 text-sm">
               {profile.aboutMe && <p className="text-slate-700 leading-relaxed cv-paragraph">{profile.aboutMe}</p>}
 
               {profile.hobbiesAndInterests && (
@@ -305,8 +305,8 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               <span>Partner Expectations</span>
             </h2>
 
-            <div className="border border-slate-200 rounded-lg p-4 space-y-2 text-xs sm:text-sm">
-              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-2 cv-item-avoid-break">
+            <div className="border border-slate-200 rounded-lg p-4 space-y-2 text-sm">
+              <div data-cv-subitem="true" className="grid grid-cols-2 gap-2 cv-item-avoid-break">
                 {preferences.ageRange && (
                   <div>
                     <span className="text-slate-500 text-xs">Preferred Age:</span>{' '}
@@ -346,7 +346,7 @@ export const ModernMinimalTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               <span>Contact Information</span>
             </h2>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-xs sm:text-sm space-y-2">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm space-y-2">
               {contact.contactPersonName && (
                 <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-bold text-slate-900">

@@ -3,7 +3,7 @@
   <!-- Main Homepage & Professional CV Maker -->
   <url>
     <loc>https://pro-cv-make.vercel.app/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -11,7 +11,7 @@
   <!-- Marriage Biodata / Marital CV Maker -->
   <url>
     <loc>https://pro-cv-make.vercel.app/?mode=biodata</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -19,7 +19,7 @@
   <!-- College Student CV Maker -->
   <url>
     <loc>https://pro-cv-make.vercel.app/?mode=student</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>

@@ -17,12 +17,12 @@ export const ModernDataAnalystTemplate: React.FC<TemplateProps> = ({ cv }) => {
   const { personal, education, experience, projects, skillCategories, certifications, leadership, languages, interests, references, sectionVisibility } = cv;
 
   return (
-    <div className="font-modern text-slate-800 text-[12px] leading-normal p-8 sm:p-11 bg-white min-h-[1050px]">
+    <div className="font-modern text-slate-800 text-[12px] leading-normal p-11 bg-white min-h-[1050px]">
       {/* Header: Left-aligned modern layout */}
       <header className="pb-4 mb-4 border-b border-slate-200">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
               {personal.fullName || 'Full Name'}
             </h1>
             {personal.jobTitle && (
@@ -379,7 +379,7 @@ export const ModernDataAnalystTemplate: React.FC<TemplateProps> = ({ cv }) => {
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 pb-1 mb-2 border-b border-slate-200 cv-heading">
             References
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
+          <div className="grid grid-cols-2 gap-3 text-[11px]">
             {references.map((ref) => (
               <div key={ref.id} data-cv-item="true" className="cv-item-avoid-break p-2 bg-slate-50 border border-slate-200">
                 <div className="font-bold text-slate-900">{ref.name}</div>

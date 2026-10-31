@@ -28,13 +28,18 @@ export const Hero: React.FC<HeroProps> = ({
       <section className="relative pt-10 pb-14 lg:pt-16 lg:pb-20 overflow-hidden border-b border-slate-200/80 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center space-y-5">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <span>Pro CV Maker • #1 Free Online CV &amp; Resume Builder</span>
+            </div>
+
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              Free Online CV Maker &amp; <br className="hidden sm:inline" />
-              <span className="text-[#0f2b48]">Resume Builder</span>
+              Pro CV Maker — <br className="hidden sm:inline" />
+              <span className="text-[#0f2b48]">Free Online CV &amp; Resume Builder</span>
             </h1>
 
             <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Create professional, recruiter-approved resumes for college students, technical careers, and academic fellowships. Free forever with instant PDF and Word (.docx) downloads.
+              Build your professional resume with Pro CV Maker. Free forever with instant vector PDF and editable Word (.docx) downloads for college students, developers, and corporate professionals.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">

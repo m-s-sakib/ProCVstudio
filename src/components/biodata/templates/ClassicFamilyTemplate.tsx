@@ -20,7 +20,7 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
 
   return (
     <div
-      className="w-full min-h-[1123px] bg-[#fffdfa] text-[#2c1810] p-8 sm:p-12 leading-relaxed relative font-serif selection:bg-amber-100"
+      className="w-full min-h-[1123px] bg-[#fffdfa] text-[#2c1810] p-12 leading-relaxed relative font-serif selection:bg-amber-100"
       style={{ boxSizing: 'border-box' }}
     >
       {/* Traditional Double Ornate Border with Maroon and Gold for each A4 Page */}
@@ -35,8 +35,8 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               height: `${A4_HEIGHT_PX}px`,
             }}
           >
-            <div className="absolute inset-3 sm:inset-4 border-3 border-[#881337] rounded-xl pointer-events-none" />
-            <div className="absolute inset-5 sm:inset-6 border border-[#d97706] rounded-lg pointer-events-none" />
+            <div className="absolute inset-4 border-3 border-[#881337] rounded-xl pointer-events-none" />
+            <div className="absolute inset-6 border border-[#d97706] rounded-lg pointer-events-none" />
 
             {/* Traditional Corner Symbols */}
             <div className="absolute top-7 left-7 text-[#d97706] pointer-events-none text-sm">卐 / ॐ / ❖</div>
@@ -59,12 +59,12 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
           )}
 
           <div className="inline-block border-y-2 border-[#881337] py-1 px-6 my-1">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-wide text-[#881337] uppercase">
+            <h1 className="text-3xl font-bold tracking-wide text-[#881337] uppercase">
               {customization.title || 'Bio-Data For Marriage'}
             </h1>
           </div>
 
-          <div className="text-2xl sm:text-3xl font-extrabold text-[#701a75]">
+          <div className="text-3xl font-extrabold text-[#701a75]">
             {personal.fullName || 'Candidate Full Name'}
           </div>
 
@@ -76,7 +76,7 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
           )}
 
           {customization.subtitleQuote && (
-            <p className="text-xs italic text-[#78350f] max-w-lg mx-auto pt-0.5 cv-paragraph">
+            <p className="text-xs italic text-[#78350f] max-w-xl mx-auto pt-1 cv-paragraph">
               {customization.subtitleQuote}
             </p>
           )}
@@ -89,7 +89,7 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
             {personal.bloodGroup && <span>Blood Group: {personal.bloodGroup}</span>}
           </div>
 
-          <div className="p-4 flex flex-col sm:flex-row gap-5 items-center sm:items-start">
+          <div className="p-4 flex flex-row gap-5 items-start">
             {privacy.showPhoto && personal.photoUrl ? (
               <div className="w-32 h-40 rounded-lg overflow-hidden border-2 border-[#881337] shrink-0 bg-amber-50">
                 <img
@@ -100,7 +100,7 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               </div>
             ) : null}
 
-            <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs sm:text-sm font-sans">
+            <div className="flex-1 w-full grid grid-cols-2 gap-x-6 gap-y-2 text-sm font-sans">
               {personal.dateOfBirth && (
                 <div>
                   <span className="font-bold text-[#881337]">Date of Birth:</span>{' '}
@@ -136,13 +136,13 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
                 </div>
               )}
               {personal.currentLocation && (
-                <div className="sm:col-span-2">
+                <div className="col-span-2">
                   <span className="font-bold text-[#881337]">Present Residence:</span>{' '}
                   {personal.currentLocation}
                 </div>
               )}
               {privacy.showPermanentAddress && personal.permanentAddress && (
-                <div className="sm:col-span-2">
+                <div className="col-span-2">
                   <span className="font-bold text-[#881337]">Native / Permanent Address:</span>{' '}
                   {personal.permanentAddress}
                 </div>
@@ -157,7 +157,7 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
             <div className="bg-[#881337] text-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider font-sans cv-heading">
               Education &amp; Professional Profile
             </div>
-            <div className="p-4 space-y-2 text-xs sm:text-sm font-sans">
+            <div className="p-4 space-y-2 text-sm font-sans">
               {educationCareer.highestDegree && (
                 <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-bold text-[#881337]">Qualification:</span>{' '}
@@ -205,8 +205,8 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
             <div className="bg-[#881337] text-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider font-sans cv-heading">
               Family Details &amp; Background
             </div>
-            <div className="p-4 space-y-2 text-xs sm:text-sm font-sans">
-              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-3 cv-item-avoid-break">
+            <div className="p-4 space-y-2 text-sm font-sans">
+              <div data-cv-subitem="true" className="grid grid-cols-2 gap-3 cv-item-avoid-break">
                 {family.fatherName && (
                   <div>
                     <span className="font-bold text-[#881337]">Father's Name:</span> {family.fatherName}
@@ -226,7 +226,7 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               </div>
 
               {(family.numberOfBrothers || family.numberOfSisters) && (
-                <div data-cv-subitem="true" className="pt-2 border-t border-amber-100 grid grid-cols-1 sm:grid-cols-2 gap-2 cv-item-avoid-break">
+                <div data-cv-subitem="true" className="pt-2 border-t border-amber-100 grid grid-cols-2 gap-2 cv-item-avoid-break">
                   {family.numberOfBrothers && (
                     <div>
                       <span className="font-bold text-[#881337]">Brothers:</span>{' '}
@@ -276,8 +276,8 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
             <div className="bg-[#881337] text-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider font-sans cv-heading">
               Partner Preferences &amp; Expectations
             </div>
-            <div className="p-4 space-y-2 text-xs sm:text-sm font-sans">
-              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-2 cv-item-avoid-break">
+            <div className="p-4 space-y-2 text-sm font-sans">
+              <div data-cv-subitem="true" className="grid grid-cols-2 gap-2 cv-item-avoid-break">
                 {preferences.ageRange && (
                   <div>
                     <span className="font-bold text-[#881337]">Age Range:</span> {preferences.ageRange}
@@ -311,7 +311,7 @@ export const ClassicFamilyTemplate: React.FC<TemplateProps> = ({ biodata, totalP
             <div className="bg-[#881337] text-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider font-sans cv-heading">
               Contact &amp; Communication
             </div>
-            <div className="p-4 space-y-2 text-xs sm:text-sm font-sans">
+            <div className="p-4 space-y-2 text-sm font-sans">
               {contact.contactPersonName && (
                 <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-bold text-[#881337]">Contact Person:</span>{' '}

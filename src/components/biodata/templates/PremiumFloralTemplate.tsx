@@ -20,7 +20,7 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
 
   return (
     <div
-      className="w-full min-h-[1123px] bg-[#fffaf8] text-[#3e2723] p-8 sm:p-12 leading-relaxed relative font-serif selection:bg-rose-100"
+      className="w-full min-h-[1123px] bg-[#fffaf8] text-[#3e2723] p-12 leading-relaxed relative font-serif selection:bg-rose-100"
       style={{ boxSizing: 'border-box' }}
     >
       {/* Delicate Double Floral Border for each A4 Page */}
@@ -35,8 +35,8 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               height: `${A4_HEIGHT_PX}px`,
             }}
           >
-            <div className="absolute inset-3 sm:inset-4 border border-[#e5b7b9] rounded-2xl pointer-events-none" />
-            <div className="absolute inset-5 sm:inset-6 border-2 border-dashed border-[#f2d0d2] rounded-xl pointer-events-none" />
+            <div className="absolute inset-4 border border-[#e5b7b9] rounded-2xl pointer-events-none" />
+            <div className="absolute inset-6 border-2 border-dashed border-[#f2d0d2] rounded-xl pointer-events-none" />
 
             {/* Floral Icons in Corners */}
             <div className="absolute top-7 left-7 text-[#c26d83] pointer-events-none opacity-80">
@@ -59,7 +59,7 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
         {/* Header */}
         <header className="text-center space-y-2 pt-2 cv-item-avoid-break">
           {customization.showBismillah && customization.bismillahText && (
-            <div className="text-lg sm:text-xl text-[#9b3b55] font-bold mb-2">
+            <div className="text-xl text-[#9b3b55] font-bold mb-2">
               {customization.bismillahText}
             </div>
           )}
@@ -70,19 +70,19 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
             <Sparkles className="w-3 h-3 text-[#c26d83]" />
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#701a35]">
+          <h1 className="text-4xl font-bold tracking-tight text-[#701a35]">
             {personal.fullName || 'Candidate Full Name'}
           </h1>
 
           {educationCareer.currentOccupation && (
-            <p className="text-sm sm:text-base font-medium text-[#883650]">
+            <p className="text-base font-medium text-[#883650]">
               {educationCareer.currentOccupation}
               {educationCareer.organization ? ` • ${educationCareer.organization}` : ''}
             </p>
           )}
 
           {customization.subtitleQuote && (
-            <p className="text-xs sm:text-sm italic text-[#7d4e5a] max-w-xl mx-auto pt-1 cv-paragraph">
+            <p className="text-sm italic text-[#7d4e5a] max-w-xl mx-auto pt-1 cv-paragraph">
               {customization.subtitleQuote}
             </p>
           )}
@@ -97,10 +97,10 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
         {/* Profile Stats with Photo */}
         <div
           data-cv-item="true"
-          className="cv-item-avoid-break bg-white/85 rounded-xl p-5 border border-[#f2d0d2] shadow-2xs flex flex-col sm:flex-row items-center sm:items-start gap-6"
+          className="cv-item-avoid-break bg-white/85 rounded-xl p-5 border border-[#f2d0d2] shadow-2xs flex flex-row items-start gap-6"
         >
           {privacy.showPhoto && personal.photoUrl ? (
-            <div className="w-32 h-40 sm:w-36 sm:h-44 rounded-xl overflow-hidden border-2 border-[#e5b7b9] shadow-xs bg-rose-50 shrink-0">
+            <div className="w-36 h-44 rounded-xl overflow-hidden border-2 border-[#e5b7b9] shadow-xs bg-rose-50 shrink-0">
               <img
                 src={personal.photoUrl}
                 alt={personal.fullName || 'Photo'}
@@ -108,12 +108,12 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               />
             </div>
           ) : (
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-[#e5b7b9] bg-[#fff5f6] flex items-center justify-center shrink-0 text-[#9b3b55]">
+            <div className="w-28 h-28 rounded-full border-2 border-[#e5b7b9] bg-[#fff5f6] flex items-center justify-center shrink-0 text-[#9b3b55]">
               <Flower2 className="w-10 h-10 opacity-70" />
             </div>
           )}
 
-          <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs sm:text-sm font-sans">
+          <div className="flex-1 w-full grid grid-cols-2 gap-x-6 gap-y-2 text-sm font-sans">
             {personal.dateOfBirth && (
               <div>
                 <span className="font-semibold text-[#883650]">DOB / Age:</span>{' '}
@@ -155,13 +155,13 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               </div>
             )}
             {personal.currentLocation && (
-              <div className="sm:col-span-2">
+              <div className="col-span-2">
                 <span className="font-semibold text-[#883650]">Location:</span>{' '}
                 <span>{personal.currentLocation}</span>
               </div>
             )}
             {privacy.showPermanentAddress && personal.permanentAddress && (
-              <div className="sm:col-span-2">
+              <div className="col-span-2">
                 <span className="font-semibold text-[#883650]">Permanent Address:</span>{' '}
                 <span>{personal.permanentAddress}</span>
               </div>
@@ -172,12 +172,12 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
         {/* Education & Career */}
         {(educationCareer.highestDegree || educationCareer.currentOccupation) && (
           <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
-            <h2 className="text-base sm:text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
+            <h2 className="text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
               <GraduationCap className="w-4 h-4 text-[#c26d83]" />
               <span>Academic &amp; Career Journey</span>
             </h2>
 
-            <div className="bg-white/80 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-xs sm:text-sm font-sans">
+            <div className="bg-white/80 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-sm font-sans">
               {educationCareer.highestDegree && (
                 <div data-cv-subitem="true" className="cv-item-avoid-break">
                   <span className="font-semibold text-[#883650]">Qualification:</span>{' '}
@@ -222,13 +222,13 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
         {/* Family Background */}
         {(family.fatherName || family.motherName || family.familyAbout) && (
           <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
-            <h2 className="text-base sm:text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
+            <h2 className="text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
               <Home className="w-4 h-4 text-[#c26d83]" />
               <span>Family Heritage</span>
             </h2>
 
-            <div className="bg-white/80 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-xs sm:text-sm font-sans">
-              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-3 cv-item-avoid-break">
+            <div className="bg-white/80 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-sm font-sans">
+              <div data-cv-subitem="true" className="grid grid-cols-2 gap-3 cv-item-avoid-break">
                 {family.fatherName && (
                   <div>
                     <span className="font-semibold text-[#883650]">Father:</span>{' '}
@@ -250,7 +250,7 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
               </div>
 
               {(family.numberOfBrothers || family.numberOfSisters) && (
-                <div data-cv-subitem="true" className="pt-1.5 border-t border-[#fcedef] grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs cv-item-avoid-break">
+                <div data-cv-subitem="true" className="pt-1.5 border-t border-[#fcedef] grid grid-cols-2 gap-2 text-xs cv-item-avoid-break">
                   {family.numberOfBrothers && (
                     <div>
                       <span className="font-semibold text-[#883650]">Brothers:</span>{' '}
@@ -278,12 +278,12 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
         {/* Personal Profile & Interests */}
         {(profile.aboutMe || profile.hobbiesAndInterests) && (
           <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
-            <h2 className="text-base sm:text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
+            <h2 className="text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
               <Heart className="w-4 h-4 text-[#c26d83]" />
               <span>Personal Outlook</span>
             </h2>
 
-            <div className="bg-white/80 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-xs sm:text-sm font-sans">
+            <div className="bg-white/80 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-sm font-sans">
               {profile.aboutMe && <p className="leading-relaxed font-serif text-[#3e2723] cv-paragraph">{profile.aboutMe}</p>}
               {profile.hobbiesAndInterests && (
                 <div data-cv-subitem="true" className="cv-item-avoid-break">
@@ -298,13 +298,13 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
         {/* Partner Preferences */}
         {(preferences.ageRange || preferences.educationPreference || preferences.valuesExpectations) && (
           <section data-cv-item="true" className="space-y-3 cv-item-avoid-break">
-            <h2 className="text-base sm:text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
+            <h2 className="text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
               <Compass className="w-4 h-4 text-[#c26d83]" />
               <span>Partner Expectations</span>
             </h2>
 
-            <div className="bg-white/80 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-xs sm:text-sm font-sans">
-              <div data-cv-subitem="true" className="grid grid-cols-1 sm:grid-cols-2 gap-2 cv-item-avoid-break">
+            <div className="bg-white/80 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-sm font-sans">
+              <div data-cv-subitem="true" className="grid grid-cols-2 gap-2 cv-item-avoid-break">
                 {preferences.ageRange && (
                   <div>
                     <span className="font-semibold text-[#883650]">Age:</span> {preferences.ageRange}
@@ -335,12 +335,12 @@ export const PremiumFloralTemplate: React.FC<TemplateProps> = ({ biodata, totalP
         {/* Contact Details */}
         {(contact.contactPersonName || contact.phone || contact.email) && (
           <section data-cv-item="true" className="space-y-3 pt-2 cv-item-avoid-break">
-            <h2 className="text-base sm:text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
+            <h2 className="text-lg font-bold text-[#701a35] flex items-center gap-2 pb-1 border-b border-[#f2d0d2] cv-heading">
               <Phone className="w-4 h-4 text-[#c26d83]" />
               <span>Contact Information</span>
             </h2>
 
-            <div className="bg-white/90 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-xs sm:text-sm font-sans">
+            <div className="bg-white/90 rounded-xl p-4 border border-[#f2d0d2] space-y-2 text-sm font-sans">
               {contact.contactPersonName && (
                 <div data-cv-subitem="true" className="font-bold text-[#2d1b22] cv-item-avoid-break">
                   {contact.contactPersonName}{' '}

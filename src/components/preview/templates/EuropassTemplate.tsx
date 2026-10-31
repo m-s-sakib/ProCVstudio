@@ -32,7 +32,7 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
   const europassBlue = '#0e4194'; // Official European Union Europass Blue
 
   return (
-    <div className="font-modern text-slate-800 text-[11.5px] leading-relaxed p-8 sm:p-12 bg-white min-h-[1050px]">
+    <div className="font-modern text-slate-800 text-[11.5px] leading-relaxed p-12 bg-white min-h-[1050px]">
       {/* Official Europass Header Banner */}
       <div className="flex items-start justify-between border-b-2 border-[#0e4194] pb-4 mb-6">
         <div className="flex items-start gap-5">
@@ -51,7 +51,7 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
 
           {/* Name & Contact Info */}
           <div className="space-y-1">
-            <h1 style={{ color: europassBlue }} className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <h1 style={{ color: europassBlue }} className="text-3xl font-extrabold tracking-tight">
               {personal.fullName || 'Candidate Name'}
             </h1>
 
@@ -114,7 +114,7 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
         </div>
 
         {/* Europass Official Brand Mark */}
-        <div className="flex flex-col items-end shrink-0 hidden sm:flex">
+        <div className="flex flex-col items-end shrink-0">
           <div className="flex items-center gap-1.5 bg-[#0e4194] text-white px-3 py-1 rounded-sm shadow-2xs">
             <div className="w-4 h-4 rounded-full border border-amber-300 flex items-center justify-center text-[7px] text-amber-300 font-bold">
               ★
@@ -148,13 +148,13 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
       {sectionVisibility.experience && experience.length > 0 && (
         <section className="mb-5">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 sm:col-span-4">
+            <div className="col-span-4">
               <h2 style={{ color: europassBlue }} className="text-xs font-bold uppercase tracking-wider cv-heading">
                 Work Experience
               </h2>
             </div>
 
-            <div className="col-span-12 sm:col-span-8 space-y-4">
+            <div className="col-span-8 space-y-4">
               {experience.map((exp) => (
                 <div key={exp.id} data-cv-item="true" className="cv-item-avoid-break space-y-1">
                   <div className="flex flex-wrap items-baseline justify-between gap-1">
@@ -193,13 +193,13 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
       {sectionVisibility.education && education.length > 0 && (
         <section className="mb-5">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 sm:col-span-4">
+            <div className="col-span-4">
               <h2 style={{ color: europassBlue }} className="text-xs font-bold uppercase tracking-wider cv-heading">
                 Education and Training
               </h2>
             </div>
 
-            <div className="col-span-12 sm:col-span-8 space-y-4">
+            <div className="col-span-8 space-y-4">
               {education.map((edu) => (
                 <div key={edu.id} data-cv-item="true" className="cv-item-avoid-break space-y-1">
                   <div className="flex flex-wrap items-baseline justify-between gap-1">
@@ -245,13 +245,13 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
       {sectionVisibility.skills && skillCategories.length > 0 && (
         <section className="mb-5 cv-item-avoid-break" data-cv-item="true">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 sm:col-span-4">
+            <div className="col-span-4">
               <h2 style={{ color: europassBlue }} className="text-xs font-bold uppercase tracking-wider cv-heading">
                 Digital & Technical Skills
               </h2>
             </div>
 
-            <div className="col-span-12 sm:col-span-8 space-y-2">
+            <div className="col-span-8 space-y-2">
               {skillCategories.map((cat) => cat.skills.length > 0 && (
                 <div key={cat.id} className="space-y-1">
                   <div className="text-xs font-bold text-slate-800">{cat.name}</div>
@@ -277,15 +277,15 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
       {sectionVisibility.languages && languages.length > 0 && (
         <section className="mb-5 cv-item-avoid-break" data-cv-item="true">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 sm:col-span-4">
+            <div className="col-span-4">
               <h2 style={{ color: europassBlue }} className="text-xs font-bold uppercase tracking-wider cv-heading">
                 Language Skills
               </h2>
               <p className="text-[9.5px] text-slate-400 mt-0.5">CEFR European Framework</p>
             </div>
 
-            <div className="col-span-12 sm:col-span-8 space-y-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+            <div className="col-span-8 space-y-2">
+              <div className="grid grid-cols-2 gap-2 text-[11px]">
                 {languages.map((l) => (
                   <div key={l.id} className="p-2 border border-slate-200 rounded-sm bg-slate-50/50 flex items-center justify-between">
                     <span className="font-bold text-slate-900">{l.name}</span>
@@ -305,13 +305,13 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
       {sectionVisibility.projects && projects.length > 0 && (
         <section className="mb-5">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 sm:col-span-4">
+            <div className="col-span-4">
               <h2 style={{ color: europassBlue }} className="text-xs font-bold uppercase tracking-wider cv-heading">
                 Projects & Publications
               </h2>
             </div>
 
-            <div className="col-span-12 sm:col-span-8 space-y-3">
+            <div className="col-span-8 space-y-3">
               {projects.map((proj) => (
                 <div key={proj.id} data-cv-item="true" className="cv-item-avoid-break space-y-0.5">
                   <div className="flex justify-between items-baseline">
@@ -356,13 +356,13 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
       {sectionVisibility.certifications && certifications.length > 0 && (
         <section className="mb-5">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 sm:col-span-4">
+            <div className="col-span-4">
               <h2 style={{ color: europassBlue }} className="text-xs font-bold uppercase tracking-wider cv-heading">
                 Certifications
               </h2>
             </div>
 
-            <div className="col-span-12 sm:col-span-8 space-y-2 text-[11px]">
+            <div className="col-span-8 space-y-2 text-[11px]">
               {certifications.map((cert) => (
                 <div key={cert.id} data-cv-item="true" className="cv-item-avoid-break flex justify-between items-baseline">
                   <div>
@@ -387,13 +387,13 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
       {sectionVisibility.extracurricular && extracurricular && extracurricular.length > 0 && (
         <section className="mb-5">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 sm:col-span-4">
+            <div className="col-span-4">
               <h2 style={{ color: europassBlue }} className="text-xs font-bold uppercase tracking-wider cv-heading">
                 Extracurricular (ECA)
               </h2>
             </div>
 
-            <div className="col-span-12 sm:col-span-8 space-y-2.5">
+            <div className="col-span-8 space-y-2.5">
               {extracurricular.map((item) => (
                 <div key={item.id} data-cv-item="true" className="cv-item-avoid-break space-y-0.5">
                   <div className="flex justify-between items-baseline">
@@ -470,13 +470,13 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
       {((sectionVisibility.interests && interests.length > 0) || (sectionVisibility.references && references.length > 0)) && (
         <section className="cv-item-avoid-break" data-cv-item="true">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 sm:col-span-4">
+            <div className="col-span-4">
               <h2 style={{ color: europassBlue }} className="text-xs font-bold uppercase tracking-wider cv-heading">
                 Additional Information
               </h2>
             </div>
 
-            <div className="col-span-12 sm:col-span-8 space-y-2 text-[11px]">
+            <div className="col-span-8 space-y-2 text-[11px]">
               {sectionVisibility.interests && interests.length > 0 && (
                 <div>
                   <strong className="text-slate-900">Hobbies and interests: </strong>

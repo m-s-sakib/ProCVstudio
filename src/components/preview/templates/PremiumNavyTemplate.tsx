@@ -22,7 +22,7 @@ export const PremiumNavyTemplate: React.FC<TemplateProps> = ({ cv }) => {
       {/* Top Navy Accent Strip */}
       <div style={{ backgroundColor: navyColor }} className="h-3 w-full" />
 
-      <div className="p-8 sm:p-11">
+      <div className="p-11">
         {/* Header Block */}
         <header className="mb-5 pb-4 border-b-2 border-slate-200">
           <div className="flex items-start justify-between gap-4">
@@ -233,7 +233,7 @@ export const PremiumNavyTemplate: React.FC<TemplateProps> = ({ cv }) => {
             </div>
             <div className="space-y-1.5 text-[11px]">
               {skillCategories.map((cat) => cat.skills.length > 0 && (
-                <div key={cat.id} className="flex flex-col sm:flex-row sm:items-baseline gap-1">
+                <div key={cat.id} className="flex flex-row items-baseline gap-1">
                   <span className="font-bold text-slate-900 min-w-[200px]">{cat.name}:</span>
                   <span className="text-slate-700">{cat.skills.join(', ')}</span>
                 </div>
@@ -384,7 +384,7 @@ export const PremiumNavyTemplate: React.FC<TemplateProps> = ({ cv }) => {
                 Professional References
               </h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
+            <div className="grid grid-cols-2 gap-3 text-[11px]">
               {references.map((ref) => (
                 <div key={ref.id} data-cv-item="true" className="cv-item-avoid-break border-l-2 border-slate-300 pl-2">
                   <div className="font-bold text-slate-900">{ref.name}</div>
