@@ -21,6 +21,7 @@ import { BiodataCustomizationPanel } from './forms/BiodataCustomizationPanel';
 import { BiodataPreview } from './BiodataPreview';
 import { ConfirmModal } from '../ConfirmModal';
 import { exportBiodataToPdf } from '../../utils/biodataPdfExport';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   User,
   GraduationCap,
@@ -49,16 +50,6 @@ interface BiodataBuilderProps {
 
 export type BiodataViewMode = 'form' | 'preview' | 'split';
 
-const BIODATA_STEPS = [
-  { id: 'personal', title: 'Personal Info', icon: User },
-  { id: 'education', title: 'Education & Career', icon: GraduationCap },
-  { id: 'family', title: 'Family Background', icon: Home },
-  { id: 'profile', title: 'About Me & Values', icon: Heart },
-  { id: 'preferences', title: 'Partner Preferences', icon: Compass },
-  { id: 'contact', title: 'Contact Info', icon: Phone },
-  { id: 'styling', title: 'Design & Templates', icon: Palette },
-];
-
 const LOCAL_STORAGE_KEY = 'procv_marriage_biodata_v1';
 const VIEW_MODE_STORAGE_KEY = 'procv_biodata_view_mode';
 
@@ -66,6 +57,18 @@ export const BiodataBuilder: React.FC<BiodataBuilderProps> = ({
   onBackToHome,
   onSwitchToCv,
 }) => {
+  const { t } = useLanguage();
+
+  const BIODATA_STEPS = [
+    { id: 'personal', title: t.biodataBuilder.steps.personal, icon: User },
+    { id: 'education', title: t.biodataBuilder.steps.education, icon: GraduationCap },
+    { id: 'family', title: t.biodataBuilder.steps.family, icon: Home },
+    { id: 'profile', title: t.biodataBuilder.steps.profile, icon: Heart },
+    { id: 'preferences', title: t.biodataBuilder.steps.preferences, icon: Compass },
+    { id: 'contact', title: t.biodataBuilder.steps.contact, icon: Phone },
+    { id: 'styling', title: t.biodataBuilder.steps.styling, icon: Palette },
+  ];
+
   const [biodata, setBiodata] = useState<MarriageBiodata>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -152,10 +155,10 @@ export const BiodataBuilder: React.FC<BiodataBuilderProps> = ({
               <button
                 type="button"
                 onClick={onBackToHome}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-2xs transition-colors"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-2xs transition-colors cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Back to Home</span>
+                <span className="hidden sm:inline">{t.biodataBuilder.backToHome}</span>
               </button>
             )}
 
@@ -163,7 +166,7 @@ export const BiodataBuilder: React.FC<BiodataBuilderProps> = ({
               <span className="text-xl">💍</span>
               <div>
                 <h1 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
-                  <span>Marriage Biodata Maker</span>
+                  <span>{t.biodataBuilder.headerTitle}</span>
                   <span className="text-[10px] font-semibold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full">
                     Exclusive
                   </span>
@@ -182,41 +185,41 @@ export const BiodataBuilder: React.FC<BiodataBuilderProps> = ({
               <button
                 type="button"
                 onClick={() => handleSetViewMode('form')}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                   viewMode === 'form'
                     ? 'bg-rose-600 text-white shadow-2xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
                 <FileEdit className="w-3.5 h-3.5" />
-                <span>Edit Form</span>
+                <span>{t.biodataBuilder.formTab}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSetViewMode('preview')}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                   viewMode === 'preview'
                     ? 'bg-rose-600 text-white shadow-2xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
                 <Eye className="w-3.5 h-3.5" />
-                <span>Live Preview</span>
+                <span>{t.biodataBuilder.previewTab}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSetViewMode('split')}
-                className={`hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                className={`hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                   viewMode === 'split'
                     ? 'bg-rose-600 text-white shadow-2xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
-                title="Split View (Form & Preview side-by-side on desktop)"
+                title="Split View"
               >
                 <Columns2 className="w-3.5 h-3.5" />
-                <span>Split View</span>
+                <span>{t.biodataBuilder.splitTab}</span>
               </button>
             </div>
 
@@ -224,19 +227,19 @@ export const BiodataBuilder: React.FC<BiodataBuilderProps> = ({
             <button
               type="button"
               onClick={() => setShowPresetModal(true)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-rose-700 bg-white border border-rose-200 hover:bg-rose-50 rounded-lg shadow-2xs transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-rose-700 bg-white border border-rose-200 hover:bg-rose-50 rounded-lg shadow-2xs transition-colors cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-rose-500" />
-              <span>Sample Profiles</span>
+              <span>{t.biodataBuilder.loadSample}</span>
             </button>
 
             <button
               type="button"
               onClick={handleDownloadPdf}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 rounded-lg shadow-xs transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Download PDF</span>
+              <span>{t.biodataBuilder.downloadPdf}</span>
             </button>
           </div>
         </div>

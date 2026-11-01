@@ -20,6 +20,7 @@ import { SectionVisibilityForm } from './form/SectionVisibilityForm';
 import { CustomizationPanel } from './CustomizationPanel';
 import { CVPreview } from './preview/CVPreview';
 import { ConfirmModal } from './ConfirmModal';
+import { useLanguage } from '../context/LanguageContext';
 import {
   User,
   GraduationCap,
@@ -52,25 +53,27 @@ interface BuilderProps {
 
 export type ViewMode = 'form' | 'preview';
 
-const STEPS = [
-  { id: 'personal', title: 'Personal Info', icon: User },
-  { id: 'education', title: 'Education', icon: GraduationCap },
-  { id: 'experience', title: 'Experience', icon: Briefcase },
-  { id: 'projects', title: 'Projects', icon: FolderGit2 },
-  { id: 'skills', title: 'Skills', icon: Wrench },
-  { id: 'certifications', title: 'Certifications', icon: Award },
-  { id: 'leadership', title: 'Leadership', icon: Users },
-  { id: 'extracurricular', title: 'ECA / Activities', icon: Trophy },
-  { id: 'languages', title: 'Languages', icon: Globe2 },
-  { id: 'references', title: 'References', icon: UserCheck },
-  { id: 'visibility', title: 'Sections', icon: Sliders },
-  { id: 'styling', title: 'Design & Colors', icon: Palette },
-];
-
 const LOCAL_STORAGE_KEY = 'procv_studio_draft_v1';
 const VIEW_MODE_STORAGE_KEY = 'procv_studio_view_mode';
 
-export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, onSwitchToStudent }) => {
+export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
+  const { t } = useLanguage();
+
+  const STEPS = [
+    { id: 'personal', title: t.builder.steps.personal, icon: User },
+    { id: 'education', title: t.builder.steps.education, icon: GraduationCap },
+    { id: 'experience', title: t.builder.steps.experience, icon: Briefcase },
+    { id: 'projects', title: t.builder.steps.projects, icon: FolderGit2 },
+    { id: 'skills', title: t.builder.steps.skills, icon: Wrench },
+    { id: 'certifications', title: t.builder.steps.certifications, icon: Award },
+    { id: 'leadership', title: t.builder.steps.leadership, icon: Users },
+    { id: 'extracurricular', title: t.builder.steps.extracurricular, icon: Trophy },
+    { id: 'languages', title: t.builder.steps.languages, icon: Globe2 },
+    { id: 'references', title: t.builder.steps.references, icon: UserCheck },
+    { id: 'visibility', title: t.builder.steps.visibility, icon: Sliders },
+    { id: 'styling', title: t.builder.steps.styling, icon: Palette },
+  ];
+
   const [cv, setCv] = useState<CVData>(() => {
     if (initialCv) return initialCv;
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -122,14 +125,14 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
 
   const handleManualSave = () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cv));
-    setSaveToast('Draft saved securely to your browser storage.');
+    setSaveToast(t.builder.savedToast);
     setTimeout(() => setSaveToast(null), 3000);
   };
 
   const handleClearAll = () => {
     setCv({ ...emptyCVData, id: `cv_${Date.now()}` });
     setShowClearModal(false);
-    setSaveToast('CV cleared to a blank slate.');
+    setSaveToast(t.builder.clearToast);
     setTimeout(() => setSaveToast(null), 3000);
   };
 
@@ -141,7 +144,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
       updatedAt: new Date().toISOString(),
     };
     setCv(duplicated);
-    setSaveToast('CV duplicated as a new copy.');
+    setSaveToast(t.builder.duplicatedToast);
     setTimeout(() => setSaveToast(null), 3000);
   };
 
@@ -163,7 +166,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    setSaveToast('JSON draft backup downloaded.');
+    setSaveToast(t.builder.backupToast);
     setTimeout(() => setSaveToast(null), 3000);
   };
 
@@ -176,7 +179,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
           const parsed = JSON.parse(reader.result as string);
           if (parsed && typeof parsed === 'object' && parsed.personal) {
             setCv(parsed);
-            setSaveToast('Draft restored from JSON file.');
+            setSaveToast(t.builder.restoreToast);
             setTimeout(() => setSaveToast(null), 3000);
           } else {
             alert('Invalid CV JSON file structure.');
@@ -198,36 +201,39 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
       {/* Responsive View Mode Switcher: Edit Form vs Live CV Preview - Highlighted & Modern */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-gradient-to-r from-blue-50/70 via-indigo-50/30 to-white p-2.5 sm:p-3 rounded-2xl border-2 border-blue-200/90 shadow-xs ring-1 ring-blue-500/10 mb-5 sm:mb-6 no-print print:hidden">
         {/* The 2 Primary Mode Buttons: 'Edit Form' and 'Live CV Preview' */}
-        <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl flex-1 max-w-xl border border-blue-200/80 shadow-2xs">
+        <div className="flex items-center gap-2 bg-white p-1.5 rounded-xl flex-1 max-w-xl border border-blue-200/80 shadow-2xs">
           <button
             type="button"
             onClick={() => handleSetViewMode('form')}
-            className={`flex-1 py-2 px-3 sm:px-5 text-xs sm:text-sm font-bold rounded-lg flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 py-2.5 px-3 sm:px-5 text-xs sm:text-sm font-bold rounded-lg flex items-center justify-center gap-2 transition-all cursor-pointer ${
               viewMode === 'form'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <FileEdit className={`w-4 h-4 ${viewMode === 'form' ? 'text-white' : 'text-blue-600'}`} />
-            <span>Edit Form</span>
+            <FileEdit className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${viewMode === 'form' ? 'text-white' : 'text-blue-600'}`} />
+            <span>{t.builder.editForm}</span>
             <span className={`hidden sm:inline-block text-[11px] font-bold px-2 py-0.5 rounded-full ml-1 ${
               viewMode === 'form' ? 'bg-blue-700/60 text-white' : 'bg-slate-100 text-slate-600'
             }`}>
-              Step {currentStepIndex + 1}/{STEPS.length}
+              {t.builder.stepCount.replace('{current}', String(currentStepIndex + 1)).replace('{total}', String(STEPS.length))}
             </span>
           </button>
 
           <button
             type="button"
             onClick={() => handleSetViewMode('preview')}
-            className={`flex-1 py-2 px-3 sm:px-5 text-xs sm:text-sm font-bold rounded-lg flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 py-2.5 px-4 sm:px-6 text-xs sm:text-sm md:text-base font-extrabold rounded-lg flex items-center justify-center gap-2 transition-all cursor-pointer ${
               viewMode === 'preview'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md ring-2 ring-blue-400/30'
+                : 'text-blue-700 bg-blue-50/70 hover:bg-blue-100 hover:text-blue-900 border border-blue-200/70 shadow-2xs'
             }`}
           >
-            <Eye className={`w-4 h-4 ${viewMode === 'preview' ? 'text-white' : 'text-blue-600'}`} />
-            <span>Live CV Preview</span>
+            <Eye className={`w-4 h-4 sm:w-5 sm:h-5 ${viewMode === 'preview' ? 'text-white' : 'text-blue-600'}`} />
+            <span className="tracking-tight">{t.builder.livePreview}</span>
+            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${viewMode === 'preview' ? 'bg-white/20 text-white' : 'bg-blue-200/80 text-blue-900'}`}>
+              PRO
+            </span>
           </button>
         </div>
 
@@ -235,18 +241,18 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
         <div className="flex items-center justify-between sm:justify-end gap-3 px-1 text-xs text-slate-600">
           <div className="flex items-center gap-1.5 font-semibold bg-white/80 border border-slate-200/80 px-2.5 py-1 rounded-full shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span className="text-[11px] text-slate-700">Draft saved locally</span>
+            <span className="text-[11px] text-slate-700">{t.builder.draftSavedLocally}</span>
           </div>
 
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={handleManualSave}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-2xs transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-2xs transition-all active:scale-95 cursor-pointer"
               title="Save draft"
             >
               <Save className="w-3.5 h-3.5 text-blue-600" />
-              <span>Save</span>
+              <span>{t.builder.save}</span>
             </button>
           </div>
         </div>
@@ -262,7 +268,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">
-                  Step {currentStepIndex + 1} of {STEPS.length}
+                  {t.builder.stepOf.replace('{current}', String(currentStepIndex + 1)).replace('{total}', String(STEPS.length))}
                 </span>
                 <h2 className="text-base font-bold text-slate-900">{currentStep.title}</h2>
               </div>
@@ -272,36 +278,36 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
                 <button
                   type="button"
                   onClick={handleManualSave}
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer"
                   title="Save draft locally"
                 >
                   <Save className="w-3.5 h-3.5 text-slate-500" />
-                  <span className="hidden sm:inline">Save</span>
+                  <span className="hidden sm:inline">{t.builder.save}</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleExportJson}
-                  className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer"
                   title="Export JSON file backup"
                 >
                   <Download className="w-3.5 h-3.5 text-slate-500" />
-                  <span className="hidden sm:inline">Backup</span>
+                  <span className="hidden sm:inline">{t.builder.backup}</span>
                 </button>
 
                 <label className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer" title="Import JSON backup file">
                   <input type="file" accept=".json" onChange={handleImportJson} className="hidden" />
-                  <span className="hidden sm:inline">Restore</span>
+                  <span className="hidden sm:inline">{t.builder.restore}</span>
                 </label>
 
                 <button
                   type="button"
                   onClick={handleDuplicate}
-                  className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer"
                   title="Duplicate CV draft"
                 >
                   <Copy className="w-3.5 h-3.5 text-slate-500" />
-                  <span className="hidden sm:inline">Duplicate</span>
+                  <span className="hidden sm:inline">{t.builder.duplicate}</span>
                 </button>
 
                 <div className="relative inline-block text-left">
@@ -315,7 +321,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
                     defaultValue=""
                     className="px-2 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors outline-none cursor-pointer"
                   >
-                    <option value="" disabled>Other Presets...</option>
+                    <option value="" disabled>{t.builder.otherPresets}</option>
                     <option value="data-analyst">Demo: Salman Sakib (Data Analyst)</option>
                     <option value="academic">Dr. Elena Rostova (Academic)</option>
                     <option value="corporate">Marcus Vance (Corporate Leader)</option>
@@ -325,8 +331,8 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
                 <button
                   type="button"
                   onClick={() => setShowClearModal(true)}
-                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 rounded-lg transition-colors"
-                  title="Clear all fields"
+                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 rounded-lg transition-colors cursor-pointer"
+                  title={t.builder.clearAllTooltip}
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                 </button>
@@ -355,7 +361,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
                   <button
                     key={s.id}
                     onClick={() => setCurrentStepIndex(idx)}
-                    className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-colors active:scale-95 ${
+                    className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-colors active:scale-95 cursor-pointer ${
                       isActive
                         ? 'bg-blue-600 text-white font-semibold shadow-2xs'
                         : isCompleted
@@ -483,39 +489,39 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
                 type="button"
                 onClick={() => setCurrentStepIndex((prev) => Math.max(0, prev - 1))}
                 disabled={currentStepIndex === 0}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors disabled:opacity-40"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors disabled:opacity-40 cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
-                <span>Previous Step</span>
+                <span>{t.builder.previousStep}</span>
               </button>
 
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => handleSetViewMode('preview')}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors cursor-pointer"
                 >
                   <Eye className="w-3.5 h-3.5 text-blue-600" />
-                  <span>Live CV Preview</span>
+                  <span>{t.builder.livePreview}</span>
                 </button>
 
                 {currentStepIndex < STEPS.length - 1 ? (
                   <button
                     type="button"
                     onClick={() => setCurrentStepIndex((prev) => Math.min(STEPS.length - 1, prev + 1))}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-2xs cursor-pointer"
                   >
-                    <span>Next Step</span>
+                    <span>{t.builder.nextStep}</span>
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={() => handleSetViewMode('preview')}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-2xs cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
-                    <span>Final Preview & Download</span>
+                    <span>{t.builder.finalPreviewDownload}</span>
                   </button>
                 )}
               </div>
@@ -526,7 +532,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
 
         {/* PREVIEW VIEW */}
         {viewMode === 'preview' && (
-          <div className="max-w-5xl mx-auto w-full min-h-[85vh] print:static print:h-auto print:w-full print:block">
+          <div className="max-w-6xl xl:max-w-7xl mx-auto w-full min-h-[90vh] print:static print:h-auto print:w-full print:block">
             <CVPreview
               cv={cv}
               onUpdateCV={(updater) => setCv((prev) => updater(prev))}
@@ -543,10 +549,10 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
           <button
             type="button"
             onClick={() => handleSetViewMode('preview')}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-full shadow-lg border border-blue-400/40 transition-transform active:scale-95"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-full shadow-lg border border-blue-400/40 transition-transform active:scale-95 cursor-pointer"
           >
             <Eye className="w-4 h-4" />
-            <span>Live CV Preview</span>
+            <span>{t.builder.livePreview}</span>
           </button>
         </div>
       )}
@@ -554,10 +560,10 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
       {/* Confirmation Modals */}
       <ConfirmModal
         isOpen={showClearModal}
-        title="Clear All CV Data?"
-        message="This action will reset all form sections to an empty slate. Your current changes in this browser session will be cleared. Do you wish to continue?"
-        confirmLabel="Clear Everything"
-        cancelLabel="Keep My Data"
+        title={t.builder.clearModalTitle}
+        message={t.builder.clearModalMessage}
+        confirmLabel={t.builder.clearConfirm}
+        cancelLabel={t.builder.clearCancel}
         isDestructive={true}
         onConfirm={handleClearAll}
         onCancel={() => setShowClearModal(false)}
@@ -565,10 +571,10 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv, onOpenTypeModal, on
 
       <ConfirmModal
         isOpen={!!showPresetModal}
-        title="Load Demo Profile?"
-        message="Loading a demo preset will replace your currently entered information with a realistic sample CV. Ensure you have saved any work you want to keep."
-        confirmLabel="Load Demo Data"
-        cancelLabel="Cancel"
+        title={t.builder.presetModalTitle}
+        message={t.builder.presetModalMessage}
+        confirmLabel={t.builder.presetConfirm}
+        cancelLabel={t.builder.presetCancel}
         isDestructive={false}
         onConfirm={() => showPresetModal && handleApplyPreset(showPresetModal)}
         onCancel={() => setShowPresetModal(null)}

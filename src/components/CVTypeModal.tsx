@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { GraduationCap, Briefcase, BookOpen, X, Check, ArrowRight } from 'lucide-react';
+import { GraduationCap, Briefcase, BookOpen, X, ArrowRight } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export type CVTypeSelection = 'student' | 'professional' | 'academic';
 
@@ -21,6 +22,8 @@ export const CVTypeModal: React.FC<CVTypeModalProps> = ({
   onSelect,
   onClose,
 }) => {
+  const { t } = useLanguage();
+
   if (!isOpen) return null;
 
   return (
@@ -30,13 +33,13 @@ export const CVTypeModal: React.FC<CVTypeModalProps> = ({
         <div className="flex items-start justify-between pb-4 border-b border-slate-100">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-800 mb-2">
-              <span>ProCVmaKer</span>
+              <span>{t.cvTypeModal.badge}</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-              Choose Your CV Type
+              {t.cvTypeModal.title}
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Select the best CV builder tailored to your background and career stage:
+              {t.cvTypeModal.subtitle}
             </p>
           </div>
           <button
@@ -73,24 +76,24 @@ export const CVTypeModal: React.FC<CVTypeModalProps> = ({
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h4 className="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
-                  College Student CV
+                  {t.cvTypeModal.studentTitle}
                 </h4>
                 <span className="text-[10px] bg-blue-600 text-white font-extrabold px-2.5 py-0.5 rounded-full shadow-2xs">
-                  🎓 New for Students
+                  {t.cvTypeModal.studentBadge}
                 </span>
                 {activeType === 'student' && (
                   <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
-                    Active
+                    {t.cvTypeModal.activeBadge}
                   </span>
                 )}
               </div>
               <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                Designed for college and university students, fresh graduates, and beginners with little or no work experience. Simple step-by-step form focused on education, technical skills, coursework projects, and optional internships.
+                {t.cvTypeModal.studentDesc}
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-2.5 text-[11px] font-semibold text-slate-500">
-                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">Simple Form</span>
-                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">3 Student Templates</span>
-                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">No Experience Needed</span>
+                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">{t.cvTypeModal.studentTag1}</span>
+                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">{t.cvTypeModal.studentTag2}</span>
+                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">{t.cvTypeModal.studentTag3}</span>
               </div>
             </div>
 
@@ -122,21 +125,21 @@ export const CVTypeModal: React.FC<CVTypeModalProps> = ({
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h4 className="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
-                  Professional CV
+                  {t.cvTypeModal.proTitle}
                 </h4>
                 {activeType === 'professional' && (
                   <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
-                    Active
+                    {t.cvTypeModal.activeBadge}
                   </span>
                 )}
               </div>
               <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                For software engineers, data analysts, corporate leads, and experienced job seekers. Features quantified achievements, multiple job positions, certifications, and ATS-optimized Modern &amp; Premium Navy templates.
+                {t.cvTypeModal.proDesc}
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-2.5 text-[11px] font-semibold text-slate-500">
-                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">Data Analyst Template</span>
-                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">Premium Navy</span>
-                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">Europass CV</span>
+                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">{t.cvTypeModal.proTag1}</span>
+                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">{t.cvTypeModal.proTag2}</span>
+                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">{t.cvTypeModal.proTag3}</span>
               </div>
             </div>
 
@@ -168,20 +171,21 @@ export const CVTypeModal: React.FC<CVTypeModalProps> = ({
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h4 className="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
-                  Academic CV
+                  {t.cvTypeModal.academicTitle}
                 </h4>
                 {activeType === 'academic' && (
                   <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
-                    Active
+                    {t.cvTypeModal.activeBadge}
                   </span>
                 )}
               </div>
               <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                For university professors, PhD scholars, and research fellows. Centered scholarly layout with Merriweather serif typography, academic divider bars, and research appointments.
+                {t.cvTypeModal.academicDesc}
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-2.5 text-[11px] font-semibold text-slate-500">
-                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">Classic Academic Serif</span>
-                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">Scholar Format</span>
+                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">{t.cvTypeModal.academicTag1}</span>
+                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">{t.cvTypeModal.academicTag2}</span>
+                <span className="bg-white border border-slate-200 px-2 py-0.5 rounded">{t.cvTypeModal.academicTag3}</span>
               </div>
             </div>
 
@@ -193,13 +197,13 @@ export const CVTypeModal: React.FC<CVTypeModalProps> = ({
 
         {/* Footer */}
         <div className="pt-2 flex justify-between items-center text-xs text-slate-400 border-t border-slate-100">
-          <span>You can switch between CV types anytime without losing saved drafts.</span>
+          <span>{t.nav.home} • ProCVmaKer</span>
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+            className="px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
           >
-            Close
+            {t.footer.close}
           </button>
         </div>
       </div>

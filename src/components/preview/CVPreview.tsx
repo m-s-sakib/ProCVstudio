@@ -14,6 +14,7 @@ import { exportToDocx } from '../../utils/docxExport';
 import { exportToPdf } from '../../utils/pdfExport';
 import { applyPageBoundaries, resetPageBoundaries } from '../../utils/pagination';
 import { Download, FileText, ZoomIn, ZoomOut, Check, Sparkles, AlertCircle, Maximize2, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface CVPreviewProps {
   cv: CVData;
@@ -28,6 +29,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
   onBackToForm,
   showBackToFormButton = false,
 }) => {
+  const { t } = useLanguage();
   const docRef = useRef<HTMLDivElement>(null);
   const templateScrollRef = useRef<HTMLDivElement>(null);
   const [docHeight, setDocHeight] = useState<number>(1123);
@@ -40,11 +42,13 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
   };
   const [zoom, setZoom] = useState<number>(() => {
     if (typeof window !== 'undefined') {
-      if (window.innerWidth < 480) return 46;
-      if (window.innerWidth < 768) return 55;
-      if (window.innerWidth < 1024) return 75;
+      if (window.innerWidth < 480) return 55;
+      if (window.innerWidth < 768) return 70;
+      if (window.innerWidth < 1024) return 90;
+      if (window.innerWidth < 1440) return 105;
+      return 115;
     }
-    return 95;
+    return 105;
   });
   const [isExportingPdf, setIsExportingPdf] = useState<boolean>(false);
   const [isExportingDocx, setIsExportingDocx] = useState<boolean>(false);
@@ -97,7 +101,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
         setDownloadBlobUrl(res.blobUrl);
         setDownloadFilename(`${(cv.personal.fullName || 'Professional').trim().replace(/[^a-zA-Z0-9_-]/g, '_')}_CV.pdf`);
       }
-      setExportSuccess('PDF downloaded successfully!');
+      setExportSuccess(t.preview.pdfSuccess);
       setTimeout(() => setExportSuccess(null), 8000);
     } catch (err) {
       console.error('PDF Export Error:', err);
@@ -116,7 +120,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
         setDownloadBlobUrl(res.blobUrl);
         setDownloadFilename(`${(cv.personal.fullName || 'Professional').trim().replace(/[^a-zA-Z0-9_-]/g, '_')}_CV.docx`);
       }
-      setExportSuccess('Word (.docx) document ready!');
+      setExportSuccess(t.preview.wordSuccess);
       setTimeout(() => setExportSuccess(null), 8000);
     } catch (err) {
       console.error('DOCX Export Error:', err);
@@ -281,39 +285,48 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
           </div>
 
           {/* Zoom controls (Always accessible on Mobile, Tablet & PC) */}
-          <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 shadow-2xs">
             <button
               onClick={() => setZoom((z) => Math.max(40, z - 10))}
-              className="p-1 hover:bg-white text-slate-600 rounded transition-colors"
+              className="p-1.5 hover:bg-white text-slate-700 rounded-lg transition-colors active:scale-95 cursor-pointer"
               title="Zoom out"
               aria-label="Zoom out"
             >
-              <ZoomOut className="w-3.5 h-3.5" />
+              <ZoomOut className="w-4 h-4" />
             </button>
-            <span className="text-[11px] font-mono font-medium text-slate-600 px-1 min-w-8 text-center">
+            <span className="text-xs font-mono font-bold text-slate-800 px-1.5 min-w-10 text-center">
               {zoom}%
             </span>
             <button
-              onClick={() => setZoom((z) => Math.min(130, z + 10))}
-              className="p-1 hover:bg-white text-slate-600 rounded transition-colors"
-              title="Zoom in"
+              onClick={() => setZoom((z) => Math.min(160, z + 10))}
+              className="p-1.5 hover:bg-white text-slate-700 rounded-lg transition-colors active:scale-95 cursor-pointer"
+              title="Zoom in (up to 160%)"
               aria-label="Zoom in"
             >
-              <ZoomIn className="w-3.5 h-3.5" />
+              <ZoomIn className="w-4 h-4" />
             </button>
             <button
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  if (window.innerWidth < 480) setZoom(46);
-                  else if (window.innerWidth < 768) setZoom(55);
-                  else if (window.innerWidth < 1024) setZoom(75);
-                  else setZoom(95);
+                  if (window.innerWidth < 480) setZoom(55);
+                  else if (window.innerWidth < 768) setZoom(70);
+                  else if (window.innerWidth < 1024) setZoom(90);
+                  else setZoom(105);
                 }
               }}
-              className="text-[10px] font-bold px-1.5 py-0.5 text-slate-600 hover:bg-white rounded transition-colors"
+              className="text-[11px] font-bold px-2 py-1 text-slate-700 hover:bg-white rounded-lg transition-colors cursor-pointer"
               title="Fit to screen width"
             >
               Fit
+            </button>
+            <button
+              onClick={() => setZoom(100)}
+              className={`hidden sm:inline-block text-[11px] font-bold px-2 py-1 rounded-lg transition-colors cursor-pointer ${
+                zoom === 100 ? 'bg-blue-600 text-white' : 'text-slate-700 hover:bg-white'
+              }`}
+              title="Standard 100% size"
+            >
+              100%
             </button>
           </div>
 
@@ -321,20 +334,20 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
           <button
             onClick={handleDownloadDocx}
             disabled={isExportingDocx}
-            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-blue-900 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors shadow-2xs disabled:opacity-60 whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-blue-900 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors shadow-2xs disabled:opacity-60 whitespace-nowrap cursor-pointer"
           >
             <FileText className="w-3.5 h-3.5 text-blue-700" />
-            <span>{isExportingDocx ? 'Exporting...' : 'Word (.docx)'}</span>
+            <span>{isExportingDocx ? t.preview.exportingWord : t.preview.downloadWord}</span>
           </button>
 
           {/* PDF Export Button */}
           <button
             onClick={handleDownloadPdf}
             disabled={isExportingPdf}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-xs disabled:opacity-60 whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-xs disabled:opacity-60 whitespace-nowrap cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>{isExportingPdf ? 'Exporting...' : 'Download PDF'}</span>
+            <span>{isExportingPdf ? t.preview.exportingPdf : t.preview.downloadPdf}</span>
           </button>
         </div>
       </div>
@@ -424,7 +437,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
       )}
 
       {/* Scrollable Preview Canvas with Dynamic Multi-Page Boundaries */}
-      <div className="flex-1 overflow-auto p-4 sm:p-8 flex justify-center bg-slate-200/80 print:p-0 print:bg-white print:overflow-visible">
+      <div className="flex-1 overflow-auto p-3 sm:p-6 lg:p-10 flex justify-center bg-slate-200/90 print:p-0 print:bg-white print:overflow-visible min-h-[720px] lg:min-h-[860px]">
         <div
           style={{
             transform: `scale(${zoom / 100})`,

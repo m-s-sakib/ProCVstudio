@@ -4,7 +4,8 @@
  */
 
 import React, { useState } from 'react';
-import { Sparkles, FileText, Download, Menu, X, Home, GraduationCap, Briefcase, Heart, Layers, HelpCircle } from 'lucide-react';
+import { Sparkles, Menu, X, Home, GraduationCap, Briefcase, Heart, Layers, HelpCircle, Globe } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
   currentView: 'home' | 'builder' | 'student-builder' | 'biodata';
@@ -24,9 +25,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   onStartStudent,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language, toggleLanguage, t } = useLanguage();
+
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 no-print">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 sm:gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 sm:gap-6">
         {/* Zone 1: Brand wordmark */}
         <div
           onClick={() => onNavigate('home')}
@@ -52,7 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Home className="w-3.5 h-3.5" />
-            <span>Home</span>
+            <span>{t.nav.home}</span>
           </button>
 
           <button
@@ -71,9 +74,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <GraduationCap className="w-3.5 h-3.5 text-blue-600" />
-            <span>Student CV</span>
+            <span>{t.nav.studentCv}</span>
             <span className="text-[10px] bg-blue-100 text-blue-800 border border-blue-200 px-1.5 py-0.2 rounded-full font-bold">
-              New
+              {t.nav.newBadge}
             </span>
           </button>
 
@@ -93,7 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Briefcase className="w-3.5 h-3.5 text-slate-700" />
-            <span>Professional CV</span>
+            <span>{t.nav.professionalCv}</span>
           </button>
 
           <button
@@ -106,7 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-            <span>Marriage Biodata</span>
+            <span>{t.nav.marriageBiodata}</span>
             <span className="text-[10px] bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.2 rounded-full font-semibold">
               💍
             </span>
@@ -126,7 +129,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-1.5 active:scale-95"
           >
             <Layers className="w-3.5 h-3.5 text-slate-500" />
-            <span>Templates</span>
+            <span>{t.nav.templates}</span>
           </a>
 
           <a
@@ -143,19 +146,33 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 text-slate-600 hover:text-slate-900 hover:bg-white/60 hidden xl:flex items-center gap-1.5 active:scale-95"
           >
             <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
-            <span>How it Works</span>
+            <span>{t.nav.howItWorks}</span>
           </a>
         </nav>
 
-        {/* Zone 3: 1 primary action & Mobile menu toggle */}
-        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        {/* Zone 3: 1-Click Language Switcher, Action Button & Mobile menu toggle */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* 1-CLICK INSTANT LANGUAGE TOGGLE (Always visible on mobile & desktop) */}
+          <button
+            type="button"
+            onClick={toggleLanguage}
+            title={language === 'en' ? 'বাংলায় পরিবর্তন করুন' : 'Switch to English'}
+            aria-label="Toggle language between English and Bangla"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-bold rounded-lg border border-slate-200 bg-white hover:bg-blue-50/70 text-slate-800 hover:text-blue-700 transition-all active:scale-95 shadow-2xs cursor-pointer select-none ring-1 ring-slate-100"
+          >
+            <Globe className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+            <span className="font-extrabold text-blue-700 tracking-wide text-[11px] sm:text-xs">
+              {language === 'en' ? '🇧🇩 বাংলা' : '🇬🇧 English'}
+            </span>
+          </button>
+
           {currentView === 'home' ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={() => onNavigate('biodata')}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-colors whitespace-nowrap"
+                className="hidden lg:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-colors whitespace-nowrap"
               >
-                <span>Biodata 💍</span>
+                <span>{t.nav.marriageBiodata} 💍</span>
               </button>
               <button
                 onClick={() => {
@@ -165,10 +182,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onNavigate('builder');
                   }
                 }}
-                className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-xs whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-xs whitespace-nowrap active:scale-95"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Create CV</span>
+                <span>{t.nav.createCv}</span>
               </button>
             </div>
           ) : currentView === 'biodata' ? (
@@ -180,10 +197,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onNavigate('builder');
                 }
               }}
-              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-xs whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-xs whitespace-nowrap active:scale-95"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>CV Maker</span>
+              <span>{t.nav.cvMaker}</span>
             </button>
           ) : null}
 
@@ -202,6 +219,21 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Slide-down Navigation Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-lg px-4 py-3 space-y-2 shadow-lg animate-in slide-in-from-top-2 duration-150">
+          {/* Quick Language Toggle in Mobile Drawer */}
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+            <span className="text-xs font-semibold text-slate-500">Language / ভাষা</span>
+            <button
+              type="button"
+              onClick={() => {
+                toggleLanguage();
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 transition-colors"
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>{language === 'en' ? '🇧🇩 বাংলায় দেখুন' : '🇬🇧 Switch to English'}</span>
+            </button>
+          </div>
+
           <button
             onClick={() => {
               onNavigate('home');
@@ -211,7 +243,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               currentView === 'home' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50'
             }`}
           >
-            Home
+            {t.nav.home}
           </button>
           <button
             onClick={() => {
@@ -226,8 +258,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               currentView === 'student-builder' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50'
             }`}
           >
-            <span>College Student CV 🎓</span>
-            <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">New</span>
+            <span>{t.nav.studentCv} 🎓</span>
+            <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">{t.nav.newBadge}</span>
           </button>
           <button
             onClick={() => {
@@ -242,7 +274,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               currentView === 'builder' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50'
             }`}
           >
-            Professional CV Builder (Blank)
+            {t.nav.professionalCv}
           </button>
           <button
             onClick={() => {
@@ -253,8 +285,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               currentView === 'biodata' ? 'bg-rose-50 text-rose-700 font-bold' : 'text-slate-700 hover:bg-rose-50/60'
             }`}
           >
-            <span>Marriage Biodata Maker 💍</span>
-            <span className="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full font-bold">New</span>
+            <span>{t.nav.marriageBiodata} 💍</span>
+            <span className="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full font-bold">{t.nav.newBadge}</span>
           </button>
           <a
             href="#templates"
@@ -270,7 +302,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
             className="block w-full text-left px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
           >
-            Templates
+            {t.nav.templates}
           </a>
           <a
             href="#how-it-works"
@@ -286,7 +318,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
             className="block w-full text-left px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
           >
-            How it Works
+            {t.nav.howItWorks}
           </a>
         </div>
       )}

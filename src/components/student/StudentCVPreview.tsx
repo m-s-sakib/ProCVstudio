@@ -49,11 +49,13 @@ export const StudentCVPreview: React.FC<StudentCVPreviewProps> = ({
   };
   const [zoom, setZoom] = useState<number>(() => {
     if (typeof window !== 'undefined') {
-      if (window.innerWidth < 480) return 46;
-      if (window.innerWidth < 768) return 55;
-      if (window.innerWidth < 1024) return 75;
+      if (window.innerWidth < 480) return 55;
+      if (window.innerWidth < 768) return 70;
+      if (window.innerWidth < 1024) return 90;
+      if (window.innerWidth < 1440) return 105;
+      return 115;
     }
-    return 95;
+    return 105;
   });
   const [isExportingPdf, setIsExportingPdf] = useState<boolean>(false);
   const [isExportingDocx, setIsExportingDocx] = useState<boolean>(false);

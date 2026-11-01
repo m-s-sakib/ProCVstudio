@@ -8,6 +8,7 @@ import { StudentCVData, StudentTemplateId } from '../../types/studentCv';
 import { emptyStudentCVData, OBJECTIVE_PRESETS } from '../../data/sampleStudentData';
 import { StudentCVPreview } from './StudentCVPreview';
 import { ConfirmModal } from '../ConfirmModal';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   User,
   GraduationCap,
@@ -44,18 +45,6 @@ interface StudentCVBuilderProps {
 
 export type StudentViewMode = 'form' | 'preview' | 'split';
 
-const STEPS = [
-  { id: 'personal', title: 'Personal Info', icon: User },
-  { id: 'objective', title: 'Career Objective', icon: BookOpen },
-  { id: 'education', title: 'Education', icon: GraduationCap },
-  { id: 'skills', title: 'Skills', icon: Wrench },
-  { id: 'projects', title: 'Projects', icon: FolderGit2 },
-  { id: 'experience', title: 'Experience / Internship', icon: Briefcase },
-  { id: 'activities', title: 'Certifications & ECA', icon: Award },
-  { id: 'languages', title: 'Languages & References', icon: Globe2 },
-  { id: 'template', title: 'Template & Design', icon: Palette },
-];
-
 const LOCAL_STORAGE_KEY = 'procv_student_cv_draft_v1';
 const VIEW_MODE_STORAGE_KEY = 'procv_student_view_mode';
 
@@ -63,6 +52,20 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
   onSwitchCvType,
   onBackToHome,
 }) => {
+  const { t } = useLanguage();
+
+  const STEPS = [
+    { id: 'personal', title: t.studentBuilder.steps.personal, icon: User },
+    { id: 'objective', title: t.studentBuilder.steps.objective, icon: BookOpen },
+    { id: 'education', title: t.studentBuilder.steps.education, icon: GraduationCap },
+    { id: 'skills', title: t.studentBuilder.steps.skills, icon: Wrench },
+    { id: 'projects', title: t.studentBuilder.steps.projects, icon: FolderGit2 },
+    { id: 'experience', title: t.studentBuilder.steps.experience, icon: Briefcase },
+    { id: 'activities', title: t.studentBuilder.steps.activities, icon: Award },
+    { id: 'languages', title: t.studentBuilder.steps.languages, icon: Globe2 },
+    { id: 'template', title: t.studentBuilder.steps.template, icon: Palette },
+  ];
+
   const [cv, setCv] = useState<StudentCVData>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -480,20 +483,20 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
             <div className="flex items-center gap-2">
               <span className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-xs flex items-center gap-2 shadow-sm ring-2 ring-blue-400/20">
                 <GraduationCap className="w-4 h-4 text-blue-100" />
-                <span>College Student CV</span>
-                <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">PRO</span>
+                <span>{t.studentBuilder.headerTitle}</span>
+                <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">{t.studentBuilder.proBadge}</span>
               </span>
               <button
                 type="button"
                 onClick={() => setShowTypeModal(true)}
-                className="text-xs font-bold text-blue-700 hover:text-blue-900 bg-white hover:bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg shadow-2xs transition-all hover:shadow-xs active:scale-95 flex items-center gap-1"
+                className="text-xs font-bold text-blue-700 hover:text-blue-900 bg-white hover:bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg shadow-2xs transition-all hover:shadow-xs active:scale-95 flex items-center gap-1 cursor-pointer"
               >
-                Change CV Type
+                {t.studentBuilder.changeTypeBtn}
               </button>
             </div>
             <span className="hidden md:inline text-slate-300">|</span>
             <span className="hidden md:inline-flex items-center text-xs font-medium text-slate-600 bg-white/80 border border-slate-200/80 px-2.5 py-1 rounded-full shadow-2xs">
-              Tailored for students &amp; fresh graduates with little or no experience
+              {t.studentBuilder.headerSubtitle}
             </span>
           </div>
 
@@ -502,11 +505,11 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
             <button
               type="button"
               onClick={() => setShowClearModal(true)}
-              className="text-xs font-semibold text-slate-600 hover:text-rose-700 bg-white hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 border border-slate-200 shadow-2xs active:scale-95"
+              className="text-xs font-semibold text-slate-600 hover:text-rose-700 bg-white hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 border border-slate-200 shadow-2xs active:scale-95 cursor-pointer"
               title="Clear all fields to blank"
             >
               <RotateCcw className="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-600" />
-              <span className="hidden sm:inline">Clear All</span>
+              <span className="hidden sm:inline">{t.studentBuilder.clearAll}</span>
             </button>
 
             {/* View Mode Toggle: Form / Split / Preview */}
@@ -514,38 +517,38 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
               <button
                 type="button"
                 onClick={() => handleSetViewMode('form')}
-                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
                   viewMode === 'form'
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <FileEdit className={`w-3.5 h-3.5 ${viewMode === 'form' ? 'text-white' : 'text-blue-600'}`} />
-                <span>Form</span>
+                <span>{t.studentBuilder.formTab}</span>
               </button>
               <button
                 type="button"
                 onClick={() => handleSetViewMode('split')}
-                className={`hidden lg:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                className={`hidden lg:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   viewMode === 'split'
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <Columns2 className="w-3.5 h-3.5" />
-                <span>Split</span>
+                <span>{t.studentBuilder.splitTab}</span>
               </button>
               <button
                 type="button"
                 onClick={() => handleSetViewMode('preview')}
-                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
                   viewMode === 'preview'
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <Eye className={`w-3.5 h-3.5 ${viewMode === 'preview' ? 'text-white' : 'text-blue-600'}`} />
-                <span>Preview</span>
+                <span>{t.studentBuilder.previewTab}</span>
               </button>
             </div>
 
@@ -555,11 +558,11 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
               onClick={() => {
                 handleSetViewMode('preview');
               }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-95 rounded-xl shadow-sm hover:shadow transition-all whitespace-nowrap ring-2 ring-blue-500/20"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-95 rounded-xl shadow-sm hover:shadow transition-all whitespace-nowrap ring-2 ring-blue-500/20 cursor-pointer"
               title="Preview & Download PDF"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Download CV</span>
+              <span>{t.preview.downloadPdf}</span>
             </button>
           </div>
         </div>
