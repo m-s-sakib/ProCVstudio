@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Main Homepage & Professional CV Maker -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Main Homepage & Pro CV Maker -->
   <url>
     <loc>https://pro-cv-make.vercel.app/</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-
-  <!-- Marriage Biodata / Marital CV Maker -->
-  <url>
-    <loc>https://pro-cv-make.vercel.app/?mode=biodata</loc>
-    <lastmod>2026-10-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pro-cv-make.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://pro-cv-make.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="bn" href="https://pro-cv-make.vercel.app/" />
+    <image:image>
+      <image:loc>https://pro-cv-make.vercel.app/assets/aistudio/ProCVmaKer_Resume_Builder_Logo_ccf153de.png</image:loc>
+      <image:title>Pro CV Maker Logo</image:title>
+      <image:caption>Pro CV Maker - Free Online CV Maker and Resume Builder</image:caption>
+    </image:image>
   </url>
 
   <!-- College Student CV Maker -->
   <url>
     <loc>https://pro-cv-make.vercel.app/?mode=student</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pro-cv-make.vercel.app/?mode=student" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://pro-cv-make.vercel.app/?mode=student" />
+    <xhtml:link rel="alternate" hreflang="bn" href="https://pro-cv-make.vercel.app/?mode=student" />
+  </url>
+
+  <!-- Marriage Biodata Maker -->
+  <url>
+    <loc>https://pro-cv-make.vercel.app/?mode=biodata</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pro-cv-make.vercel.app/?mode=biodata" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://pro-cv-make.vercel.app/?mode=biodata" />
+    <xhtml:link rel="alternate" hreflang="bn" href="https://pro-cv-make.vercel.app/?mode=biodata" />
   </url>
 </urlset>

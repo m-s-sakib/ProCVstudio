@@ -1,7 +1,7 @@
 {
-  "name": "ProCVmaKer - Free Online CV Maker",
-  "short_name": "ProCVmaKer",
-  "description": "Free Online CV Maker and Resume Builder (PDF & Word) with Professional CV Templates",
+  "name": "Pro CV Maker - Free Online CV & Resume Builder",
+  "short_name": "Pro CV Maker",
+  "description": "Pro CV Maker is the #1 free online CV maker and resume builder in PDF and Word formats.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
