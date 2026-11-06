@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { CVData } from '../../../types/cv';
-import { formatUrlLabel, mailtoHref, normalizeUrl, telHref } from '../../../utils/links';
+import { formatUrlLabel, formatLinkedInLabel, formatGitHubLabel, normalizeLinkedInUrl, normalizeGitHubUrl, mailtoHref, normalizeUrl, telHref } from '../../../utils/links';
 import { ensureFullStop, renderSentenceSpans } from '../../../utils/sentenceUtils';
 import { Mail, Phone, MapPin, Globe, Linkedin, Github } from 'lucide-react';
 
@@ -67,21 +67,21 @@ export const PremiumNavyTemplate: React.FC<TemplateProps> = ({ cv }) => {
               </a>
             )}
             {personal.linkedin && (
-              <a href={normalizeUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-blue-900 font-medium">
+              <a href={normalizeLinkedInUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-blue-900 font-medium">
                 <Linkedin className="w-3 h-3 text-blue-700 shrink-0" />
-                <span className="underline decoration-slate-300">{formatUrlLabel(personal.linkedin, 'LinkedIn')}</span>
+                <span className="underline decoration-slate-300">{formatLinkedInLabel(personal.linkedin)}</span>
               </a>
             )}
             {personal.github && (
-              <a href={normalizeUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-blue-900 font-medium">
+              <a href={normalizeGitHubUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-blue-900 font-medium">
                 <Github className="w-3 h-3 text-slate-800 shrink-0" />
-                <span className="underline decoration-slate-300">{formatUrlLabel(personal.github, 'GitHub')}</span>
+                <span className="underline decoration-slate-300">{formatGitHubLabel(personal.github)}</span>
               </a>
             )}
             {personal.website && (
               <a href={normalizeUrl(personal.website)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-blue-900 font-medium">
                 <Globe className="w-3 h-3 text-slate-500 shrink-0" />
-                <span className="underline decoration-slate-300">{formatUrlLabel(personal.website, 'Portfolio')}</span>
+                <span className="underline decoration-slate-300">{formatUrlLabel(personal.website)}</span>
               </a>
             )}
           </div>

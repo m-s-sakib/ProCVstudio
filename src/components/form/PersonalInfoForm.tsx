@@ -210,15 +210,15 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ personal, on
 
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
-            LinkedIn Profile URL
+            LinkedIn Profile URL / Username
           </label>
           <div className="relative">
             <Linkedin className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             <input
-              type="url"
+              type="text"
               value={personal.linkedin || ''}
               onChange={(e) => handleChange('linkedin', e.target.value)}
-              placeholder="https://linkedin.com/in/username"
+              placeholder="e.g. linkedin.com/in/username or username"
               className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none"
             />
           </div>
@@ -226,15 +226,15 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ personal, on
 
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
-            GitHub Profile URL
+            GitHub Profile URL / Username
           </label>
           <div className="relative">
             <Github className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             <input
-              type="url"
+              type="text"
               value={personal.github || ''}
               onChange={(e) => handleChange('github', e.target.value)}
-              placeholder="https://github.com/username"
+              placeholder="e.g. github.com/username or username"
               className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none"
             />
           </div>

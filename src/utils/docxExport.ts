@@ -17,7 +17,7 @@ import {
   AlignmentType,
 } from 'docx';
 import { CVData } from '../types/cv';
-import { formatUrlLabel, normalizeUrl } from './links';
+import { formatUrlLabel, formatLinkedInLabel, formatGitHubLabel, normalizeLinkedInUrl, normalizeGitHubUrl, normalizeUrl } from './links';
 import { downloadBlobFile } from './mobileDownload';
 
 export async function exportToDocx(cv: CVData): Promise<{ blobUrl: string }> {
@@ -143,14 +143,14 @@ export async function exportToDocx(cv: CVData): Promise<{ blobUrl: string }> {
       new ExternalHyperlink({
         children: [
           new TextRun({
-            text: formatUrlLabel(cv.personal.linkedin, 'LinkedIn'),
+            text: formatLinkedInLabel(cv.personal.linkedin),
             size: 18,
             font,
             color: '0284C7',
             underline: {},
           }),
         ],
-        link: normalizeUrl(cv.personal.linkedin),
+        link: normalizeLinkedInUrl(cv.personal.linkedin),
       })
     );
   }
@@ -161,14 +161,14 @@ export async function exportToDocx(cv: CVData): Promise<{ blobUrl: string }> {
       new ExternalHyperlink({
         children: [
           new TextRun({
-            text: formatUrlLabel(cv.personal.github, 'GitHub'),
+            text: formatGitHubLabel(cv.personal.github),
             size: 18,
             font,
             color: '0284C7',
             underline: {},
           }),
         ],
-        link: normalizeUrl(cv.personal.github),
+        link: normalizeGitHubUrl(cv.personal.github),
       })
     );
   }
@@ -179,7 +179,7 @@ export async function exportToDocx(cv: CVData): Promise<{ blobUrl: string }> {
       new ExternalHyperlink({
         children: [
           new TextRun({
-            text: formatUrlLabel(cv.personal.website, 'Portfolio'),
+            text: formatUrlLabel(cv.personal.website),
             size: 18,
             font,
             color: '0284C7',

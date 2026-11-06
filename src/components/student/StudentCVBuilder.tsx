@@ -791,10 +791,10 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
                         LinkedIn Profile (optional)
                       </label>
                       <input
-                        type="url"
+                        type="text"
                         value={cv.personal.linkedin || ''}
                         onChange={(e) => updatePersonal('linkedin', e.target.value)}
-                        placeholder="https://linkedin.com/in/username"
+                        placeholder="e.g. linkedin.com/in/username or username"
                         className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                       />
                     </div>
@@ -804,10 +804,10 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
                         GitHub Profile (optional)
                       </label>
                       <input
-                        type="url"
+                        type="text"
                         value={cv.personal.github || ''}
                         onChange={(e) => updatePersonal('github', e.target.value)}
-                        placeholder="https://github.com/username"
+                        placeholder="e.g. github.com/username or username"
                         className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                       />
                     </div>

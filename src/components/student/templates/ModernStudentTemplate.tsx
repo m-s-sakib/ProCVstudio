@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { StudentCVData } from '../../../types/studentCv';
-import { mailtoHref, telHref, normalizeUrl, formatUrlLabel } from '../../../utils/links';
+import { mailtoHref, telHref, normalizeUrl, formatUrlLabel, formatLinkedInLabel, formatGitHubLabel, normalizeLinkedInUrl, normalizeGitHubUrl } from '../../../utils/links';
 import { Mail, Phone, MapPin, Globe, Linkedin, Github, GraduationCap, Wrench, FolderGit2, Briefcase, Award, Users, Globe2, BookOpen } from 'lucide-react';
 
 interface TemplateProps {
@@ -70,21 +70,21 @@ export const ModernStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
             </a>
           )}
           {personal.linkedin && (
-            <a href={normalizeUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-700">
+            <a href={normalizeLinkedInUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-700">
               <Linkedin className="w-3 h-3 text-[#0077b5] shrink-0" />
-              <span className="underline decoration-slate-300">{formatUrlLabel(personal.linkedin, 'LinkedIn')}</span>
+              <span className="underline decoration-slate-300">{formatLinkedInLabel(personal.linkedin)}</span>
             </a>
           )}
           {personal.github && (
-            <a href={normalizeUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-700">
+            <a href={normalizeGitHubUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-700">
               <Github className="w-3 h-3 text-slate-800 shrink-0" />
-              <span className="underline decoration-slate-300">{formatUrlLabel(personal.github, 'GitHub')}</span>
+              <span className="underline decoration-slate-300">{formatGitHubLabel(personal.github)}</span>
             </a>
           )}
           {personal.website && (
             <a href={normalizeUrl(personal.website)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-700">
               <Globe className="w-3 h-3 text-slate-500 shrink-0" />
-              <span className="underline decoration-slate-300">{formatUrlLabel(personal.website, 'Portfolio')}</span>
+              <span className="underline decoration-slate-300">{formatUrlLabel(personal.website)}</span>
             </a>
           )}
         </div>

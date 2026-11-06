@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { CVData } from '../../../types/cv';
-import { formatUrlLabel, mailtoHref, normalizeUrl, telHref } from '../../../utils/links';
+import { formatUrlLabel, formatLinkedInLabel, formatGitHubLabel, normalizeLinkedInUrl, normalizeGitHubUrl, mailtoHref, normalizeUrl, telHref } from '../../../utils/links';
 import { ensureFullStop, renderSentenceSpans } from '../../../utils/sentenceUtils';
 import { Mail, Phone, MapPin, Globe, Linkedin, Github, ExternalLink } from 'lucide-react';
 
@@ -89,23 +89,23 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
                 <div className="flex items-center gap-1.5">
                   <Globe className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                   <a href={normalizeUrl(personal.website)} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-700">
-                    {formatUrlLabel(personal.website, 'Website')}
+                    {formatUrlLabel(personal.website)}
                   </a>
                 </div>
               )}
               {personal.linkedin && (
                 <div className="flex items-center gap-1.5">
                   <Linkedin className="w-3.5 h-3.5 text-[#0077b5] shrink-0" />
-                  <a href={normalizeUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-700">
-                    {formatUrlLabel(personal.linkedin, 'LinkedIn Profile')}
+                  <a href={normalizeLinkedInUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-700">
+                    {formatLinkedInLabel(personal.linkedin)}
                   </a>
                 </div>
               )}
               {personal.github && (
                 <div className="flex items-center gap-1.5">
                   <Github className="w-3.5 h-3.5 text-slate-700 shrink-0" />
-                  <a href={normalizeUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-700">
-                    {formatUrlLabel(personal.github, 'GitHub Repository')}
+                  <a href={normalizeGitHubUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-700">
+                    {formatGitHubLabel(personal.github)}
                   </a>
                 </div>
               )}

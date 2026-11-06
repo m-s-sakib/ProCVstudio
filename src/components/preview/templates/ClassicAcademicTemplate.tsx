@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { CVData } from '../../../types/cv';
-import { formatUrlLabel, mailtoHref, normalizeUrl, telHref } from '../../../utils/links';
+import { formatUrlLabel, formatLinkedInLabel, formatGitHubLabel, normalizeLinkedInUrl, normalizeGitHubUrl, mailtoHref, normalizeUrl, telHref } from '../../../utils/links';
 import { ensureFullStop, renderSentenceSpans } from '../../../utils/sentenceUtils';
 
 interface TemplateProps {
@@ -61,16 +61,16 @@ export const ClassicAcademicTemplate: React.FC<TemplateProps> = ({ cv }) => {
           {personal.linkedin && (
             <>
               <span className="text-slate-400">|</span>
-              <a href={normalizeUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="hover:text-blue-800 underline decoration-slate-400">
-                {formatUrlLabel(personal.linkedin, 'LinkedIn')}
+              <a href={normalizeLinkedInUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="hover:text-blue-800 underline decoration-slate-400">
+                {formatLinkedInLabel(personal.linkedin)}
               </a>
             </>
           )}
           {personal.github && (
             <>
               <span className="text-slate-400">|</span>
-              <a href={normalizeUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="hover:text-blue-800 underline decoration-slate-400">
-                {formatUrlLabel(personal.github, 'GitHub')}
+              <a href={normalizeGitHubUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="hover:text-blue-800 underline decoration-slate-400">
+                {formatGitHubLabel(personal.github)}
               </a>
             </>
           )}
@@ -78,7 +78,7 @@ export const ClassicAcademicTemplate: React.FC<TemplateProps> = ({ cv }) => {
             <>
               <span className="text-slate-400">|</span>
               <a href={normalizeUrl(personal.website)} target="_blank" rel="noopener noreferrer" className="hover:text-blue-800 underline decoration-slate-400">
-                {formatUrlLabel(personal.website, 'Scholar / Web')}
+                {formatUrlLabel(personal.website)}
               </a>
             </>
           )}

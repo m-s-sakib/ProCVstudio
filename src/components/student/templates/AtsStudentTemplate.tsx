@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { StudentCVData } from '../../../types/studentCv';
-import { mailtoHref, telHref, normalizeUrl, formatUrlLabel } from '../../../utils/links';
+import { mailtoHref, telHref, normalizeUrl, formatUrlLabel, formatLinkedInLabel, formatGitHubLabel, normalizeLinkedInUrl, normalizeGitHubUrl } from '../../../utils/links';
 
 interface TemplateProps {
   cv: StudentCVData;
@@ -50,16 +50,16 @@ export const AtsStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
               {personal.linkedin && (
                 <>
                   <span>•</span>
-                  <a href={normalizeUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="underline">
-                    {formatUrlLabel(personal.linkedin, 'LinkedIn')}
+                  <a href={normalizeLinkedInUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="underline">
+                    {formatLinkedInLabel(personal.linkedin)}
                   </a>
                 </>
               )}
               {personal.github && (
                 <>
                   <span>•</span>
-                  <a href={normalizeUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="underline">
-                    {formatUrlLabel(personal.github, 'GitHub')}
+                  <a href={normalizeGitHubUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="underline">
+                    {formatGitHubLabel(personal.github)}
                   </a>
                 </>
               )}
@@ -67,7 +67,7 @@ export const AtsStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
                 <>
                   <span>•</span>
                   <a href={normalizeUrl(personal.website)} target="_blank" rel="noopener noreferrer" className="underline">
-                    {formatUrlLabel(personal.website, 'Portfolio')}
+                    {formatUrlLabel(personal.website)}
                   </a>
                 </>
               )}
