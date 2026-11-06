@@ -162,19 +162,31 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ personal, on
 
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
-            City & Country
+            City
           </label>
           <div className="relative">
             <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             <input
               type="text"
-              value={[personal.city, personal.country].filter(Boolean).join(', ')}
-              onChange={(e) => {
-                const parts = e.target.value.split(',');
-                handleChange('city', parts[0]?.trim() || '');
-                handleChange('country', parts.slice(1).join(',').trim() || '');
-              }}
-              placeholder="e.g. San Francisco, United States"
+              value={personal.city || ''}
+              onChange={(e) => handleChange('city', e.target.value)}
+              placeholder="e.g. Dhaka or San Francisco"
+              className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">
+            Country
+          </label>
+          <div className="relative">
+            <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              value={personal.country || ''}
+              onChange={(e) => handleChange('country', e.target.value)}
+              placeholder="e.g. Bangladesh or United States"
               className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none"
             />
           </div>

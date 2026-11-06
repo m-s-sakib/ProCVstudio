@@ -766,7 +766,7 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
                       </label>
                       <input
                         type="text"
-                        value={cv.personal.city}
+                        value={cv.personal.city || ''}
                         onChange={(e) => updatePersonal('city', e.target.value)}
                         placeholder="Dhaka"
                         className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
@@ -779,7 +779,7 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
                       </label>
                       <input
                         type="text"
-                        value={cv.personal.country}
+                        value={cv.personal.country || ''}
                         onChange={(e) => updatePersonal('country', e.target.value)}
                         placeholder="Bangladesh"
                         className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
