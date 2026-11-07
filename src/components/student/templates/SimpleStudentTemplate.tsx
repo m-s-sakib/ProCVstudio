@@ -92,7 +92,7 @@ export const SimpleStudentTemplate: React.FC<TemplateProps> = ({ cv }) => {
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 pb-1 mb-1.5 border-b border-slate-300 cv-heading">
             Career Objective
           </h2>
-          <p className="text-slate-700 leading-relaxed text-[11.5px] text-justify cv-paragraph">
+          <p className="text-slate-700 leading-relaxed text-[11.5px] text-left cv-paragraph">
             {objective}
           </p>
         </section>

@@ -8,18 +8,26 @@
 
 .font-academic {
   font-family: 'Merriweather', 'Source Serif 4', Georgia, serif;
+  text-rendering: geometricPrecision;
+  letter-spacing: 0.01px;
 }
 
 .font-editorial {
   font-family: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  text-rendering: geometricPrecision;
+  letter-spacing: 0.01px;
 }
 
 .font-modern {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  text-rendering: geometricPrecision;
+  letter-spacing: 0.01px;
 }
 
 .font-mono-code {
   font-family: 'JetBrains Mono', monospace;
+  text-rendering: geometricPrecision;
+  letter-spacing: 0.01px;
 }
 
 /* Ensure the A4 CV document paper always renders at canonical A4 dimensions on all devices */

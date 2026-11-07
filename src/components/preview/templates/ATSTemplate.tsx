@@ -34,19 +34,19 @@ export const ATSTemplate: React.FC<TemplateProps> = ({ cv }) => {
           )}
           {personal.phone && (
             <>
-              <span>•</span>
+              <span className="mx-1.5 text-slate-500">•</span>
               <a href={telHref(personal.phone)}>{personal.phone}</a>
             </>
           )}
           {(personal.city || personal.country) && (
             <>
-              <span>•</span>
+              <span className="mx-1.5 text-slate-500">•</span>
               <span>{[personal.city, personal.country].filter(Boolean).join(', ')}</span>
             </>
           )}
           {personal.linkedin && (
             <>
-              <span>•</span>
+              <span className="mx-1.5 text-slate-500">•</span>
               <a href={normalizeLinkedInUrl(personal.linkedin)} target="_blank" rel="noopener noreferrer" className="underline">
                 {formatLinkedInLabel(personal.linkedin)}
               </a>
@@ -54,7 +54,7 @@ export const ATSTemplate: React.FC<TemplateProps> = ({ cv }) => {
           )}
           {personal.github && (
             <>
-              <span>•</span>
+              <span className="mx-1.5 text-slate-500">•</span>
               <a href={normalizeGitHubUrl(personal.github)} target="_blank" rel="noopener noreferrer" className="underline">
                 {formatGitHubLabel(personal.github)}
               </a>
@@ -62,7 +62,7 @@ export const ATSTemplate: React.FC<TemplateProps> = ({ cv }) => {
           )}
           {personal.website && (
             <>
-              <span>•</span>
+              <span className="mx-1.5 text-slate-500">•</span>
               <a href={normalizeUrl(personal.website)} target="_blank" rel="noopener noreferrer" className="underline">
                 {formatUrlLabel(personal.website)}
               </a>

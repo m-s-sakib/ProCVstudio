@@ -91,7 +91,7 @@ export const ClassicAcademicTemplate: React.FC<TemplateProps> = ({ cv }) => {
           <h2 className="text-[11px] font-bold tracking-widest text-slate-900 uppercase border-b border-slate-900 pb-0.5 mb-2">
             Research Profile & Objective
           </h2>
-          <p className="text-justify text-slate-800 leading-normal">
+          <p className="text-left text-slate-800 leading-normal">
             {renderSentenceSpans(personal.summary)}
           </p>
         </section>

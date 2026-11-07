@@ -61,25 +61,16 @@ export function splitSentences(text: string): string[] {
 }
 
 /**
- * Renders prose text with clean punctuation and natural inline spacing.
+ * Renders prose text with clean punctuation and natural inline spacing,
+ * strictly preserving all spaces, word breaks, and newlines.
+ * Does NOT split text into separate disjoint span elements to ensure html2canvas
+ * never collapses spaces between sentences or words during PDF export.
  */
 export function renderSentenceSpans(text: string, className = ''): React.ReactNode {
   if (!text) return null;
-  const sentences = splitSentences(text);
-  if (sentences.length <= 1) {
-    return (
-      <span className={`inline ${className}`}>
-        {ensureFullStop(text)}
-      </span>
-    );
-  }
-
-  return sentences.map((sentence, idx) => (
-    <span
-      key={idx}
-      className={`inline ${className}`}
-    >
-      {ensureFullStop(sentence)}{' '}
+  return (
+    <span className={`whitespace-pre-line ${className}`}>
+      {ensureFullStop(text)}
     </span>
-  ));
+  );
 }

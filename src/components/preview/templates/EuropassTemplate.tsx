@@ -136,7 +136,7 @@ export const EuropassTemplate: React.FC<TemplateProps> = ({ cv }) => {
                 About Me / Profile
               </h2>
             </div>
-            <div className="col-span-8 text-slate-700 text-justify text-[11px] leading-relaxed">
+            <div className="col-span-8 text-slate-700 text-left text-[11px] leading-relaxed">
               {renderSentenceSpans(personal.summary)}
             </div>
           </div>

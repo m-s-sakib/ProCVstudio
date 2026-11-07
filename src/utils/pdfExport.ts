@@ -85,7 +85,7 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
       scrollY: 0,
       x: 0,
       y: 0,
-      onclone: (clonedDoc, clonedElement) => {
+      onclone: async (clonedDoc, clonedElement) => {
         // 1. Strip any mobile viewport meta tags from the cloned document
         // to prevent mobile browser engines from overriding iframe media query thresholds
         const viewportMetas = clonedDoc.querySelectorAll('meta[name="viewport"]');
@@ -96,7 +96,16 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
         fixedMeta.content = 'width=794, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
         clonedDoc.head.appendChild(fixedMeta);
 
-        // 2. Lock html and body to exact 794px canonical A4 dimensions and disable text inflation
+        // 2. Ensure Google Fonts and stylesheets from parent document are present in cloned iframe
+        const styleAndFontLinks = document.querySelectorAll('link[rel="stylesheet"], link[href*="fonts.googleapis.com"], link[href*="fonts.gstatic.com"]');
+        styleAndFontLinks.forEach((node) => {
+          const href = (node as HTMLLinkElement).getAttribute('href');
+          if (href && !clonedDoc.querySelector(`link[href="${href}"]`)) {
+            clonedDoc.head.appendChild(node.cloneNode(true));
+          }
+        });
+
+        // 3. Lock html and body to exact 794px canonical A4 dimensions and disable text inflation
         clonedDoc.documentElement.style.width = `${targetWidth}px`;
         clonedDoc.documentElement.style.minWidth = `${targetWidth}px`;
         clonedDoc.documentElement.style.maxWidth = `${targetWidth}px`;
@@ -110,12 +119,14 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
         clonedDoc.body.style.padding = '0';
         clonedDoc.body.style.webkitTextSizeAdjust = '100%';
 
-        // 3. Inject CSS to lock A4 document container and ensure print consistency
+        // 4. Inject CSS to lock A4 document container, preserve natural word/letter spacing,
+        // and eliminate text-justify which causes html2canvas to merge words or drop spaces.
         const overrideStyle = clonedDoc.createElement('style');
         overrideStyle.textContent = `
           * {
             -webkit-text-size-adjust: 100% !important;
             text-size-adjust: 100% !important;
+            text-rendering: geometricPrecision !important;
           }
           .cv-document-container,
           .biodata-document-container {
@@ -126,10 +137,28 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
             margin: 0 auto !important;
             transform: none !important;
           }
+          /* Enforce explicit micro-spacing on text elements so html2canvas computes individual word bounding boxes */
+          .cv-document-container,
+          .cv-document-container *,
+          .biodata-document-container,
+          .biodata-document-container * {
+            letter-spacing: 0.02px !important;
+            word-spacing: 0.05px !important;
+          }
+          /* Prevent text-justify which causes html2canvas to collapse word spaces */
+          .cv-document-container p,
+          .cv-document-container li,
+          .cv-document-container div,
+          .cv-document-container span {
+            text-align: left;
+          }
+          .cv-document-container .whitespace-pre-line {
+            white-space: pre-line !important;
+          }
         `;
         clonedDoc.head.appendChild(overrideStyle);
 
-        // 4. Enforce exact 794px canonical A4 dimensions on the cloned element in iframe
+        // 5. Enforce exact 794px canonical A4 dimensions on the cloned element in iframe
         clonedElement.style.transform = 'none';
         clonedElement.style.transition = 'none';
         clonedElement.style.width = `${targetWidth}px`;
@@ -147,7 +176,19 @@ export async function exportToPdf(cv: CVData, options?: ExportPdfOptions): Promi
           p = p.parentElement;
         }
 
-        // 5. Measure links directly on clonedElement inside the unscaled iframe
+        // 6. Ensure fonts inside cloned iframe are settled before canvas rasterization
+        if (clonedDoc.fonts) {
+          try {
+            await Promise.race([
+              clonedDoc.fonts.ready,
+              new Promise((resolve) => setTimeout(resolve, 350)),
+            ]);
+          } catch {
+            // continue gracefully
+          }
+        }
+
+        // 7. Measure links directly on clonedElement inside the unscaled iframe
         const clonedContainerRect = clonedElement.getBoundingClientRect();
         const linkElements = Array.from(clonedElement.querySelectorAll('a[href]'));
 
