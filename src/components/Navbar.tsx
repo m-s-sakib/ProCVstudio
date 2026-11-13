@@ -8,12 +8,13 @@ import { Sparkles, Menu, X, Home, GraduationCap, Briefcase, Heart, Layers, HelpC
 import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
-  currentView: 'home' | 'builder' | 'student-builder' | 'biodata';
-  onNavigate: (view: 'home' | 'builder' | 'student-builder' | 'biodata') => void;
+  currentView: 'home' | 'builder' | 'student-builder' | 'biodata' | 'updater';
+  onNavigate: (view: 'home' | 'builder' | 'student-builder' | 'biodata' | 'updater') => void;
   onOpenQuickExport?: () => void;
   onOpenTypeModal?: () => void;
   onStartProfessional?: () => void;
   onStartStudent?: () => void;
+  onStartUpdater?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -23,6 +24,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenTypeModal,
   onStartProfessional,
   onStartStudent,
+  onStartUpdater,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { language, toggleLanguage, t } = useLanguage();
@@ -97,6 +99,28 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <Briefcase className="w-3.5 h-3.5 text-slate-700" />
             <span>{t.nav.professionalCv}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (onStartUpdater) {
+                onStartUpdater();
+              } else {
+                onNavigate('updater');
+              }
+            }}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 flex items-center gap-1.5 active:scale-95 ${
+              currentView === 'updater'
+                ? 'bg-white text-indigo-700 shadow-xs font-bold border border-indigo-200/90'
+                : 'text-slate-700 hover:text-indigo-700 hover:bg-white/60'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+            <span>{t.nav.aiUpdater}</span>
+            <span className="text-[10px] bg-indigo-100 text-indigo-800 border border-indigo-200 px-1.5 py-0.2 rounded-full font-bold">
+              {t.nav.aiBadge}
+            </span>
           </button>
 
           <button
@@ -275,6 +299,25 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             {t.nav.professionalCv}
+          </button>
+          <button
+            onClick={() => {
+              if (onStartUpdater) {
+                onStartUpdater();
+              } else {
+                onNavigate('updater');
+              }
+              setMobileMenuOpen(false);
+            }}
+            className={`w-full text-left px-3 py-2 text-sm font-medium rounded-lg transition-colors flex items-center justify-between ${
+              currentView === 'updater' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700 hover:bg-indigo-50/60'
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-indigo-600" />
+              <span>{t.nav.aiUpdater}</span>
+            </span>
+            <span className="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded-full font-bold">{t.nav.aiBadge}</span>
           </button>
           <button
             onClick={() => {

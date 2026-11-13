@@ -107,11 +107,17 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
 
   const handleSetViewMode = (mode: ViewMode) => {
     setViewMode(mode);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     try {
       localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
     } catch {
       // ignore
     }
+  };
+
+  const goToStep = (index: number) => {
+    setCurrentStepIndex(index);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const [saveToast, setSaveToast] = useState<string | null>(null);
@@ -360,8 +366,8 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
                 return (
                   <button
                     key={s.id}
-                    onClick={() => setCurrentStepIndex(idx)}
-                    className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-colors active:scale-95 cursor-pointer ${
+                    onClick={() => goToStep(idx)}
+                    className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
                       isActive
                         ? 'bg-blue-600 text-white font-semibold shadow-2xs'
                         : isCompleted
@@ -379,7 +385,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
 
           {/* Toast Notification */}
           {saveToast && (
-            <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-4 py-2.5 rounded-xl flex items-center justify-between no-print">
+            <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-4 py-2.5 rounded-xl flex items-center justify-between no-print animate-fade-in">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>{saveToast}</span>
@@ -388,7 +394,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
           )}
 
           {/* Form Step Body */}
-          <div className="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-2xs">
+          <div key={currentStep.id} className="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-2xs animate-page-enter">
             {currentStep.id === 'personal' && (
               <PersonalInfoForm
                 personal={cv.personal}
@@ -487,9 +493,9 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
             <div className="flex items-center justify-between pt-6 mt-6 border-t border-slate-100 no-print">
               <button
                 type="button"
-                onClick={() => setCurrentStepIndex((prev) => Math.max(0, prev - 1))}
+                onClick={() => goToStep(Math.max(0, currentStepIndex - 1))}
                 disabled={currentStepIndex === 0}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors disabled:opacity-40 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all active:scale-95 disabled:opacity-40 cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>{t.builder.previousStep}</span>
@@ -499,7 +505,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
                 <button
                   type="button"
                   onClick={() => handleSetViewMode('preview')}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-all active:scale-95 cursor-pointer"
                 >
                   <Eye className="w-3.5 h-3.5 text-blue-600" />
                   <span>{t.builder.livePreview}</span>
@@ -508,8 +514,8 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
                 {currentStepIndex < STEPS.length - 1 ? (
                   <button
                     type="button"
-                    onClick={() => setCurrentStepIndex((prev) => Math.min(STEPS.length - 1, prev + 1))}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-2xs cursor-pointer"
+                    onClick={() => goToStep(Math.min(STEPS.length - 1, currentStepIndex + 1))}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all active:scale-95 shadow-2xs cursor-pointer"
                   >
                     <span>{t.builder.nextStep}</span>
                     <ChevronRight className="w-4 h-4" />
@@ -518,7 +524,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
                   <button
                     type="button"
                     onClick={() => handleSetViewMode('preview')}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-2xs cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all active:scale-95 shadow-2xs cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                     <span>{t.builder.finalPreviewDownload}</span>
@@ -532,7 +538,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialCv }) => {
 
         {/* PREVIEW VIEW */}
         {viewMode === 'preview' && (
-          <div className="max-w-6xl xl:max-w-7xl mx-auto w-full min-h-[90vh] print:static print:h-auto print:w-full print:block">
+          <div key="builder-preview" className="max-w-6xl xl:max-w-7xl mx-auto w-full min-h-[90vh] animate-page-enter print:static print:h-auto print:w-full print:block">
             <CVPreview
               cv={cv}
               onUpdateCV={(updater) => setCv((prev) => updater(prev))}

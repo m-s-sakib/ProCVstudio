@@ -9,6 +9,7 @@ import { Hero } from './components/Hero';
 import { Builder } from './components/Builder';
 import { StudentCVBuilder } from './components/student/StudentCVBuilder';
 import { BiodataBuilder } from './components/biodata/BiodataBuilder';
+import { AICVUpdater } from './components/updater/AICVUpdater';
 import { Footer } from './components/Footer';
 import { CVTypeModal, CVTypeSelection } from './components/CVTypeModal';
 import { CVData, TemplateId } from './types/cv';
@@ -16,7 +17,7 @@ import { dataAnalystSample, academicSample, corporateSample, europassSample, emp
 import { exportToPdf } from './utils/pdfExport';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'builder' | 'student-builder' | 'biodata'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'builder' | 'student-builder' | 'biodata' | 'updater'>('home');
   const [activeCv, setActiveCv] = useState<CVData>(() => ({
     ...emptyCVData,
     id: `cv_empty_${Date.now()}`,
@@ -131,6 +132,11 @@ export default function App() {
       ? 'academic'
       : 'professional';
 
+  const handleStartUpdater = () => {
+    setCurrentView('updater');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
       <Navbar
@@ -141,45 +147,61 @@ export default function App() {
         }}
         onStartProfessional={() => handleStartBuilder('data-analyst', true)}
         onStartStudent={handleStartStudentBuilder}
+        onStartUpdater={handleStartUpdater}
         onOpenQuickExport={handleQuickExport}
         onOpenTypeModal={() => setIsTypeModalOpen(true)}
       />
 
       <main className="flex-1">
-        {currentView === 'home' ? (
-          <Hero
-            onStartBuilder={handleStartBuilder}
-            onStartStudentBuilder={handleStartStudentBuilder}
-            onLoadPreset={handleLoadPreset}
-            onOpenBiodata={handleOpenBiodata}
-            onOpenTypeModal={() => setIsTypeModalOpen(true)}
-          />
-        ) : currentView === 'student-builder' ? (
-          <StudentCVBuilder
-            onSwitchCvType={handleSelectCvType}
-            onBackToHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          />
-        ) : currentView === 'biodata' ? (
-          <BiodataBuilder
-            onBackToHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onSwitchToCv={() => {
-              setCurrentView('builder');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          />
-        ) : (
-          <Builder
-            initialCv={activeCv}
-            onOpenTypeModal={() => setIsTypeModalOpen(true)}
-            onSwitchToStudent={handleStartStudentBuilder}
-          />
-        )}
+        <div key={currentView} className="animate-page-enter">
+          {currentView === 'home' ? (
+            <Hero
+              onStartBuilder={handleStartBuilder}
+              onStartStudentBuilder={handleStartStudentBuilder}
+              onStartUpdater={handleStartUpdater}
+              onLoadPreset={handleLoadPreset}
+              onOpenBiodata={handleOpenBiodata}
+              onOpenTypeModal={() => setIsTypeModalOpen(true)}
+            />
+          ) : currentView === 'updater' ? (
+            <AICVUpdater
+              onBackToHome={() => {
+                setCurrentView('home');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onOpenInFullBuilder={(cv) => {
+                setActiveCv(cv);
+                setCurrentView('builder');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          ) : currentView === 'student-builder' ? (
+            <StudentCVBuilder
+              onSwitchCvType={handleSelectCvType}
+              onBackToHome={() => {
+                setCurrentView('home');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          ) : currentView === 'biodata' ? (
+            <BiodataBuilder
+              onBackToHome={() => {
+                setCurrentView('home');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onSwitchToCv={() => {
+                setCurrentView('builder');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          ) : (
+            <Builder
+              initialCv={activeCv}
+              onOpenTypeModal={() => setIsTypeModalOpen(true)}
+              onSwitchToStudent={handleStartStudentBuilder}
+            />
+          )}
+        </div>
       </main>
 
       <Footer />

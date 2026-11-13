@@ -11,6 +11,7 @@ import { useLanguage } from '../context/LanguageContext';
 interface HeroProps {
   onStartBuilder: (templateId?: TemplateId) => void;
   onStartStudentBuilder?: () => void;
+  onStartUpdater?: () => void;
   onLoadPreset: (presetKey: 'academic' | 'data-analyst' | 'corporate' | 'europass') => void;
   onOpenBiodata?: () => void;
   onOpenTypeModal?: () => void;
@@ -19,6 +20,7 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({
   onStartBuilder,
   onStartStudentBuilder,
+  onStartUpdater,
   onLoadPreset,
   onOpenBiodata,
 }) => {
@@ -65,6 +67,17 @@ export const Hero: React.FC<HeroProps> = ({
                 <ArrowRight className="w-4 h-4" />
               </button>
 
+              {onStartUpdater && (
+                <button
+                  type="button"
+                  onClick={onStartUpdater}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <span>{t.hero.updaterBtn}</span>
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={() => onLoadPreset('data-analyst')}
@@ -106,7 +119,7 @@ export const Hero: React.FC<HeroProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Card 1: College Student CV */}
-          <div className="p-6 bg-white rounded-2xl border-2 border-blue-500/80 shadow-xs flex flex-col justify-between relative hover:border-blue-600 transition-all">
+          <div className="p-6 bg-white rounded-2xl border-2 border-blue-500/80 shadow-xs flex flex-col justify-between relative hover:border-blue-600 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
             <div className="absolute top-4 right-4 bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-200">
               {t.hero.studentCardBadge}
             </div>
@@ -123,7 +136,7 @@ export const Hero: React.FC<HeroProps> = ({
               <button
                 type="button"
                 onClick={onStartStudentBuilder}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all shadow-xs"
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all active:scale-95 shadow-xs cursor-pointer"
               >
                 <span>{t.hero.studentCardBtn}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -132,7 +145,7 @@ export const Hero: React.FC<HeroProps> = ({
           </div>
 
           {/* Card 2: Professional CV */}
-          <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+          <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center font-bold">
                 <Briefcase className="w-5 h-5" />
@@ -146,7 +159,7 @@ export const Hero: React.FC<HeroProps> = ({
               <button
                 type="button"
                 onClick={() => onStartBuilder('data-analyst')}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-[#0f2b48] hover:bg-slate-900 rounded-xl transition-all shadow-xs"
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-[#0f2b48] hover:bg-slate-900 rounded-xl transition-all active:scale-95 shadow-xs cursor-pointer"
               >
                 <span>{t.hero.proCardBtn}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -155,7 +168,7 @@ export const Hero: React.FC<HeroProps> = ({
           </div>
 
           {/* Card 3: Academic CV */}
-          <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+          <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center font-bold">
                 <BookOpen className="w-5 h-5" />
@@ -169,7 +182,7 @@ export const Hero: React.FC<HeroProps> = ({
               <button
                 type="button"
                 onClick={() => onStartBuilder('academic')}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-all shadow-xs"
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-all active:scale-95 shadow-xs cursor-pointer"
               >
                 <span>{t.hero.academicCardBtn}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -177,6 +190,61 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Feature Card: AI CV Updater */}
+        {onStartUpdater && (
+          <div className="mt-8 relative overflow-hidden rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/50 p-6 sm:p-8 shadow-sm hover:shadow-md transition-all">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              <div className="space-y-3 max-w-2xl">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200 text-[11px] font-bold">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>{t.hero.updaterCardBadge}</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                  {t.hero.updaterCardTitle}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  {t.hero.updaterCardDesc}
+                </p>
+
+                {/* Suggested Workflow Pills */}
+                <div className="pt-2 flex flex-wrap items-center gap-2 text-[11px] font-semibold text-slate-700">
+                  <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs">
+                    1. Upload CV (PDF/DOCX)
+                  </span>
+                  <span className="text-indigo-400 font-bold">→</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs">
+                    2. AI Analysis
+                  </span>
+                  <span className="text-indigo-400 font-bold">→</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs">
+                    3. Review & Edit
+                  </span>
+                  <span className="text-indigo-400 font-bold">→</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-2xs">
+                    4. Choose Template
+                  </span>
+                  <span className="text-indigo-400 font-bold">→</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-indigo-600 text-white shadow-2xs">
+                    5. Download PDF / Word
+                  </span>
+                </div>
+              </div>
+
+              <div className="shrink-0 w-full lg:w-auto">
+                <button
+                  type="button"
+                  onClick={onStartUpdater}
+                  className="w-full lg:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95 whitespace-nowrap"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <span>{t.hero.updaterCardBtn}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* 3 Step Workflow Explanation */}

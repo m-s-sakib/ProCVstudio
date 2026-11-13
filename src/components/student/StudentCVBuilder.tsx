@@ -1902,8 +1902,11 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
               <button
                 type="button"
                 disabled={currentStepIndex === 0}
-                onClick={() => setCurrentStepIndex((prev) => Math.max(0, prev - 1))}
-                className="inline-flex items-center gap-1 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg transition-colors disabled:opacity-40"
+                onClick={() => {
+                  setCurrentStepIndex((prev) => Math.max(0, prev - 1));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-1 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg transition-all active:scale-95 disabled:opacity-40 cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Previous</span>
@@ -1912,8 +1915,11 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => handleSetViewMode('preview')}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors"
+                  onClick={() => {
+                    handleSetViewMode('preview');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-all active:scale-95 cursor-pointer"
                 >
                   <Eye className="w-3.5 h-3.5" />
                   <span>Preview CV</span>
@@ -1922,8 +1928,11 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
                 {currentStepIndex < STEPS.length - 1 ? (
                   <button
                     type="button"
-                    onClick={() => setCurrentStepIndex((prev) => Math.min(STEPS.length - 1, prev + 1))}
-                    className="inline-flex items-center gap-1 px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-2xs"
+                    onClick={() => {
+                      setCurrentStepIndex((prev) => Math.min(STEPS.length - 1, prev + 1));
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-1 px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all active:scale-95 shadow-2xs cursor-pointer"
                   >
                     <span>Next: {STEPS[currentStepIndex + 1].title}</span>
                     <ChevronRight className="w-4 h-4" />
@@ -1931,8 +1940,11 @@ export const StudentCVBuilder: React.FC<StudentCVBuilderProps> = ({
                 ) : (
                   <button
                     type="button"
-                    onClick={() => handleSetViewMode('preview')}
-                    className="inline-flex items-center gap-1 px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-2xs"
+                    onClick={() => {
+                      handleSetViewMode('preview');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-1 px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all active:scale-95 shadow-2xs cursor-pointer"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>Finish &amp; Download</span>

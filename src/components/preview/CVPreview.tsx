@@ -29,10 +29,13 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
   onBackToForm,
   showBackToFormButton = false,
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isBn = language === 'bn';
   const docRef = useRef<HTMLDivElement>(null);
   const templateScrollRef = useRef<HTMLDivElement>(null);
+  const previewScrollRef = useRef<HTMLDivElement>(null);
   const [docHeight, setDocHeight] = useState<number>(1123);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const scrollTemplates = (direction: 'left' | 'right') => {
     if (templateScrollRef.current) {
@@ -58,6 +61,36 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
   // Dynamically calculate document page count based on rendered A4 height (1123px at standard DPI)
   const A4_HEIGHT_PX = 1123;
   const totalPages = Math.max(1, Math.ceil((docHeight - 20) / A4_HEIGHT_PX));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
+
+  const goToPage = (pageNum: number) => {
+    const targetPage = Math.max(1, Math.min(totalPages, pageNum));
+    setCurrentPage(targetPage);
+    if (previewScrollRef.current) {
+      const scaledPageHeight = A4_HEIGHT_PX * (zoom / 100);
+      const topOffset = Math.max(0, (targetPage - 1) * scaledPageHeight);
+      previewScrollRef.current.scrollTo({
+        top: topOffset,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const handlePreviewScroll = () => {
+    if (!previewScrollRef.current || totalPages <= 1) return;
+    const scaledPageHeight = A4_HEIGHT_PX * (zoom / 100);
+    if (scaledPageHeight <= 0) return;
+    const scrollTop = previewScrollRef.current.scrollTop;
+    const detected = Math.min(totalPages, Math.max(1, Math.floor((scrollTop + scaledPageHeight * 0.35) / scaledPageHeight) + 1));
+    if (detected !== currentPage) {
+      setCurrentPage(detected);
+    }
+  };
 
   // In the live screen preview, automatically identify the last full stop of page 1
   // and push any sentence spilling into page 2 so it starts cleanly from page 2!
@@ -171,6 +204,17 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
       {/* Top Preview Control Toolbar */}
       <div className="bg-white px-3 sm:px-4 py-2 sm:py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 shrink-0 no-print">
         <div className="flex items-center gap-2 max-w-full w-full sm:w-auto min-w-0">
+          {showBackToFormButton && onBackToForm && (
+            <button
+              type="button"
+              onClick={onBackToForm}
+              className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all active:scale-95 cursor-pointer"
+              title={isBn ? 'পূর্ববর্তী পেজে ফিরে যান' : 'Go back to edit'}
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{isBn ? 'পূর্ববর্তী' : 'Previous'}</span>
+            </button>
+          )}
           {/* Template Selector with horizontal touch sliding on mobile */}
           <div className="relative flex items-center min-w-0 max-w-full w-full sm:w-auto">
             {/* Mobile Left Slide Button */}
@@ -352,16 +396,58 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
         </div>
       </div>
 
-      {/* Multi-Page Optimizer Helper (Shows when CV exceeds 1 Page) */}
+      {/* Multi-Page Optimizer & Page Navigator Helper (Shows when CV exceeds 1 Page) */}
       {totalPages > 1 && (
         <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-slate-50 border-b border-blue-200/90 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs no-print shadow-2xs">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 flex-wrap">
             <span className="px-2 py-0.5 rounded-full bg-blue-700 text-white font-bold text-[10px] uppercase tracking-wide">
               {totalPages} Pages (A4)
             </span>
-            <span className="text-slate-800 font-medium text-xs">
-              Well-organized multi-page layout. Content flows cleanly without cutting entries in half.
-            </span>
+
+            {/* Previous / Next Page Controls */}
+            <div className="inline-flex items-center gap-1 bg-white border border-blue-200 rounded-lg p-0.5 shadow-2xs">
+              <button
+                type="button"
+                disabled={currentPage <= 1}
+                onClick={() => goToPage(currentPage - 1)}
+                className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
+                title="Previous Page"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+                <span>{isBn ? 'আগের পেজ' : 'Prev Page'}</span>
+              </button>
+
+              <div className="flex items-center gap-0.5 px-1">
+                {Array.from({ length: totalPages }).map((_, idx) => {
+                  const p = idx + 1;
+                  return (
+                    <button
+                      key={`page-btn-${p}`}
+                      type="button"
+                      onClick={() => goToPage(p)}
+                      className={`w-6 h-6 rounded-md text-[11px] font-bold tabular-nums transition-all cursor-pointer ${
+                        currentPage === p
+                          ? 'bg-blue-600 text-white shadow-2xs'
+                          : 'text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                type="button"
+                disabled={currentPage >= totalPages}
+                onClick={() => goToPage(currentPage + 1)}
+                className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
+                title="Next Page"
+              >
+                <span>{isBn ? 'পরের পেজ' : 'Next Page'}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -378,7 +464,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
                   },
                 }));
               }}
-              className="px-2.5 py-1 rounded-md bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-[11px] font-semibold shadow-2xs transition-colors"
+              className="px-2.5 py-1 rounded-md bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-[11px] font-semibold shadow-2xs transition-colors cursor-pointer"
               title="Tighten spacing & font to fit onto fewer pages"
             >
               Fit to 1 Page
@@ -395,7 +481,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
                   },
                 }));
               }}
-              className="px-2.5 py-1 rounded-md bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-[11px] font-semibold shadow-2xs transition-colors"
+              className="px-2.5 py-1 rounded-md bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-[11px] font-semibold shadow-2xs transition-colors cursor-pointer"
               title="Spacious standard spacing for balanced multi-page document"
             >
               Spacious Multi-Page
@@ -437,7 +523,11 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
       )}
 
       {/* Scrollable Preview Canvas with Dynamic Multi-Page Boundaries */}
-      <div className="flex-1 overflow-auto p-3 sm:p-6 lg:p-10 flex justify-center bg-slate-200/90 print:p-0 print:bg-white print:overflow-visible min-h-[720px] lg:min-h-[860px]">
+      <div
+        ref={previewScrollRef}
+        onScroll={handlePreviewScroll}
+        className="relative flex-1 overflow-auto p-3 sm:p-6 lg:p-10 flex justify-center bg-slate-200/90 scroll-smooth print:p-0 print:bg-white print:overflow-visible min-h-[720px] lg:min-h-[860px]"
+      >
         <div
           style={{
             transform: `scale(${zoom / 100})`,
@@ -502,7 +592,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
       </div>
 
       {/* Footer Info bar */}
-      <div className="bg-white px-4 py-2 border-t border-slate-200 text-xs text-slate-500 flex flex-wrap items-center justify-between no-print">
+      <div className="bg-white px-4 py-2 border-t border-slate-200 text-xs text-slate-500 flex flex-wrap items-center justify-between gap-2 no-print">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1 font-medium text-slate-700">
             <Sparkles className="w-3.5 h-3.5 text-blue-600" />
@@ -513,6 +603,33 @@ export const CVPreview: React.FC<CVPreviewProps> = ({
             Target standard A4 (210×297mm) · Clickable hyperlinks enabled
           </span>
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              disabled={currentPage <= 1}
+              onClick={() => goToPage(currentPage - 1)}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold disabled:opacity-40 transition-all cursor-pointer"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+              <span>{isBn ? 'পূর্ববর্তী পেজ' : 'Previous'}</span>
+            </button>
+            <span className="text-[11px] font-bold text-slate-700 px-1.5 tabular-nums">
+              {currentPage} / {totalPages}
+            </span>
+            <button
+              type="button"
+              disabled={currentPage >= totalPages}
+              onClick={() => goToPage(currentPage + 1)}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold disabled:opacity-40 transition-all cursor-pointer"
+            >
+              <span>{isBn ? 'পরবর্তী পেজ' : 'Next'}</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
         <div className="text-[11px] text-slate-600">
           Last updated: {new Date(cv.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
